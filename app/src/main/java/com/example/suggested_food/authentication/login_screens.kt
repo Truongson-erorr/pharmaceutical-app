@@ -7,13 +7,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.suggested_food.viewmodels.AuthViewModel
 
 @Composable
 fun LoginScreen(
     navController: NavController,
+    authViewModel: AuthViewModel
 ) {
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+
+    val loading by authViewModel.loading.collectAsState()
+    val error by authViewModel.error.collectAsState()
+
+    LaunchedEffect(authViewModel.getCurrentUser()) {
+        if (authViewModel.getCurrentUser() != null) {
+            navController.navigate("home") {
+                popUpTo("login") { inclusive = true }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -46,13 +59,26 @@ fun LoginScreen(
 
         Button(
             onClick = {
-
+                authViewModel.login(email, password)
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            enabled = !loading
         ) {
-            Text("Đăng nhập")
+            if (loading) {
+                CircularProgressIndicator(
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    modifier = Modifier.size(24.dp)
+                )
+            } else {
+                Text("Đăng nhập")
+            }
         }
         Spacer(modifier = Modifier.height(12.dp))
+
+        if (error != null) {
+            Text(text = error ?: "", color = MaterialTheme.colorScheme.error)
+            Spacer(modifier = Modifier.height(12.dp))
+        }
 
         TextButton(
             onClick = {
@@ -63,3 +89,5 @@ fun LoginScreen(
         }
     }
 }
+
+
