@@ -5,8 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 
 @Composable
-fun ProfileContent(
+fun MedicineScreen(
     navController: NavController
 ) {
-    Text("Tài khoản")
+    Text(
+        "don thuoc")
 }

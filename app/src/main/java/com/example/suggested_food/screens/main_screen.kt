@@ -2,31 +2,25 @@ package com.example.suggested_food.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ShoppingCart
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodels.AuthViewModel
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.ui.graphics.vector.ImageVector
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
 
 sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
-    object Home : BottomNavItem("home", Icons.Default.Home, "Trang chủ")
-    object Categories : BottomNavItem("categories", Icons.Default.List, "Danh mục")
-    object Cart : BottomNavItem("cart", Icons.Default.ShoppingCart, "Giỏ hàng")
-    object Profile : BottomNavItem("profile", Icons.Default.Person, "Tài khoản")
+    object Home : BottomNavItem("home", Icons.Outlined.Home, "Trang chủ")
+    object Categories : BottomNavItem("categories", Icons.Outlined.List, "Danh mục")
+    object Cart : BottomNavItem("cart", Icons.Outlined.LocalHospital, "Đơn thuốc")
+    object Profile : BottomNavItem("profile", Icons.Outlined.Person, "Tài khoản")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -45,7 +39,9 @@ fun MainScreen(
         BottomNavItem.Profile
     )
 
-    var selectedBottomItem by remember { mutableStateOf<BottomNavItem>(BottomNavItem.Home) }
+    var selectedBottomItem by remember {
+        mutableStateOf<BottomNavItem>(BottomNavItem.Home)
+    }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -53,23 +49,34 @@ fun MainScreen(
             ModalDrawerSheet(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .width(LocalConfiguration.current.screenWidthDp.dp * 0.5f)
+                    .width(LocalConfiguration.current.screenWidthDp.dp * 0.7f),
+                drawerContainerColor = Color(0xFF8B0000)
             ) {
-                Column(modifier = Modifier.fillMaxSize()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(start = 8.dp, top = 16.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
                     Text(
-                        "Menu",
+                        text = "Menu",
                         style = MaterialTheme.typography.headlineMedium,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(bottom = 8.dp),
+                        color = Color.White
                     )
-                    Divider()
+
+                    Divider(color = Color.White.copy(alpha = 0.4f))
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    DrawerItem("Profile") { navController.navigate("profile") }
-                    DrawerItem("Thông báo") { /* TODO */ }
-                    DrawerItem("Cài đặt") { /* TODO */ }
-                    DrawerItem("Đăng xuất") {
+                    DrawerItemWithIcon("Thông báo", Icons.Outlined.Notifications) { }
+                    DrawerItemWithIcon("Cài đặt", Icons.Outlined.Settings) { }
+                    DrawerItemWithIcon("Hỗ trợ", Icons.Outlined.HelpOutline) { }
+                    DrawerItemWithIcon("Về ứng dụng", Icons.Outlined.Info) { }
+                    DrawerItemWithIcon("Đăng xuất", Icons.Outlined.Logout) {
                         authViewModel.logout()
-                        navController.navigate("login") { popUpTo("home") { inclusive = true } }
+                        navController.navigate("login") {
+                            popUpTo("home") { inclusive = true }
+                        }
                     }
                 }
             }
@@ -78,33 +85,66 @@ fun MainScreen(
         Scaffold(
             topBar = {
                 SmallTopAppBar(
-                    title = { Text(selectedBottomItem.label) },
+                    title = {
+                        Text(
+                            text = "Nhà thuốc SK",
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
                     navigationIcon = {
-                        IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(Icons.Default.Menu, contentDescription = "Menu")
+                        IconButton(
+                            onClick = { scope.launch { drawerState.open() } }
+                        ) {
+                            Icon(
+                                Icons.Outlined.Menu,
+                                contentDescription = "Menu",
+                                tint = Color.White
+                            )
                         }
-                    }
+                    },
+                    colors = TopAppBarDefaults.smallTopAppBarColors(
+                        containerColor = Color(0xFF8B0000)
+                    )
                 )
             },
             bottomBar = {
-                NavigationBar {
+                NavigationBar(
+                    containerColor = Color.White
+                ) {
                     bottomItems.forEach { item ->
                         NavigationBarItem(
-                            icon = { Icon(item.icon, contentDescription = item.label) },
-                            label = { Text(item.label) },
+                            icon = {
+                                Icon(
+                                    item.icon,
+                                    contentDescription = item.label
+                                )
+                            },
+                            label = {
+                                Text(text = item.label)
+                            },
                             selected = selectedBottomItem.route == item.route,
-                            onClick = { selectedBottomItem = item }
+                            onClick = { selectedBottomItem = item },
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color(0xFF8B0000),
+                                selectedTextColor = Color(0xFF8B0000),
+                                unselectedIconColor = Color(0xFF9CA3AF),
+                                unselectedTextColor = Color(0xFF9CA3AF),
+                                indicatorColor = Color.Transparent
+                            )
                         )
                     }
                 }
             }
         ) { innerPadding ->
-            Box(modifier = Modifier.padding(innerPadding)) {
+            Box(
+                modifier = Modifier.padding(innerPadding)
+            ) {
                 when (selectedBottomItem) {
-                    BottomNavItem.Home -> HomeContent()
+                    BottomNavItem.Home -> HomeContent(navController)
                     BottomNavItem.Categories -> CategoriesContent()
-                    BottomNavItem.Cart -> CartContent()
-                    BottomNavItem.Profile -> ProfileContent()
+                    BottomNavItem.Cart -> MedicineScreen(navController)
+                    BottomNavItem.Profile -> ProfileContent(navController)
                 }
             }
         }
@@ -112,12 +152,36 @@ fun MainScreen(
 }
 
 @Composable
-fun DrawerItem(name: String, onClick: () -> Unit) {
+fun DrawerItemWithIcon(
+    label: String,
+    icon: ImageVector,
+    onClick: () -> Unit
+) {
     TextButton(
         onClick = onClick,
-        modifier = Modifier.fillMaxWidth().padding(8.dp)
+        colors = ButtonDefaults.textButtonColors(
+            contentColor = Color.White
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
-        Text(name, style = MaterialTheme.typography.bodyLarge)
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Icon(
+                icon,
+                contentDescription = label,
+                modifier = Modifier.size(24.dp),
+                tint = Color.White
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+            Text(
+                text = label,
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White
+            )
+        }
     }
 }
-

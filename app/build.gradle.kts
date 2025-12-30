@@ -42,18 +42,16 @@ android {
 
 dependencies {
 
+    implementation ("com.google.accompanist:accompanist-navigation-animation:0.33.2-alpha")
     implementation("androidx.navigation:navigation-compose:2.7.3")
     implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-analytics")
-
     implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("com.google.android.gms:play-services-safetynet:18.0.1")
-    implementation("com.google.accompanist:accompanist-navigation-animation:0.33.2-alpha")
     implementation("androidx.compose.material:material-icons-extended")
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

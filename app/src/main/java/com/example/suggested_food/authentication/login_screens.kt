@@ -22,7 +22,7 @@ fun LoginScreen(
 
     LaunchedEffect(authViewModel.getCurrentUser()) {
         if (authViewModel.getCurrentUser() != null) {
-            navController.navigate("home") {
+            navController.navigate("MainScreen") {
                 popUpTo("login") { inclusive = true }
             }
         }

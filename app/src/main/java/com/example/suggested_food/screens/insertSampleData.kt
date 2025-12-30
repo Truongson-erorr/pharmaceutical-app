@@ -2,7 +2,6 @@ package com.example.suggested_food.screens
 
 import com.google.firebase.firestore.FirebaseFirestore
 
-
 fun insertSampleData(firestore: FirebaseFirestore) {
     val categoryNames = listOf(
         "Cảm cúm", "Vitamin", "Đau nhức", "Tiêu hóa",
