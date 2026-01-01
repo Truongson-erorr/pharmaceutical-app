@@ -11,12 +11,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.suggested_food.authentication.LoginScreen
 import com.example.suggested_food.authentication.RegisterScreen
 import com.example.suggested_food.screens.AllCategoriesScreen
 import com.example.suggested_food.screens.CartContent
+import com.example.suggested_food.screens.CategoryProductsScreen
 import com.example.suggested_food.screens.MainScreen
+import com.example.suggested_food.screens.ProductDetailScreen
 import com.example.suggested_food.screens.ProfileContent
 import com.example.suggested_food.screens.SearchScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
@@ -91,5 +95,31 @@ fun AppNavigation(
         composable("AllCategoriesScreen") {
             AllCategoriesScreen(navController = navController)
         }
+        composable(
+            route = "category/{categoryId}",
+            arguments = listOf(
+                navArgument("categoryId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val categoryId = backStackEntry.arguments?.getString("categoryId") ?: ""
+            CategoryProductsScreen(
+                navController = navController,
+                categoryId = categoryId
+            )
+        }
+        composable(
+            route = "ProductDetail/{productId}",
+            arguments = listOf(
+                navArgument("productId") { type = NavType.StringType }
+            )
+        ) {
+            val productId = it.arguments?.getString("productId") ?: ""
+            ProductDetailScreen(
+                navController = navController,
+                productId = productId
+            )
+        }
+
+
     }
 }

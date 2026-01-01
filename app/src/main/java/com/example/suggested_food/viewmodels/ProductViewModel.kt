@@ -19,6 +19,12 @@ class ProductViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
+    private val _productDetail = MutableStateFlow<ProductModel?>(null)
+    val productDetail: StateFlow<ProductModel?> = _productDetail
+
+    private val _detailLoading = MutableStateFlow(false)
+    val detailLoading: StateFlow<Boolean> = _detailLoading
+
     init {
         fetchProducts()
     }
@@ -40,23 +46,36 @@ class ProductViewModel : ViewModel() {
             }
     }
 
-    // Lấy sản phẩm theo category
+    fun fetchProductById(productId: String) {
+        _detailLoading.value = true
+        firestore.collection("products")
+            .document(productId)
+            .get()
+            .addOnSuccessListener { doc ->
+                _productDetail.value =
+                    doc.toObject(ProductModel::class.java)?.copy(id = doc.id)
+                _detailLoading.value = false
+            }
+            .addOnFailureListener {
+                _detailLoading.value = false
+            }
+    }
+
     fun getProductsByCategory(categoryId: String): List<ProductModel> {
         return _products.value.filter { it.categoryId == categoryId }
     }
 
-    // Lọc sản phẩm còn hàng
     fun getAvailableProducts(): List<ProductModel> {
         return _products.value.filter { it.stock > 0 }
     }
 
-    // Lấy sản phẩm đang sale
     fun getSaleProducts(): List<ProductModel> {
         return _products.value.filter { it.onSale }
     }
 
-    // Lấy sản phẩm theo tên (search)
     fun searchProducts(query: String): List<ProductModel> {
-        return _products.value.filter { it.name.contains(query, ignoreCase = true) }
+        return _products.value.filter {
+            it.name.contains(query, ignoreCase = true)
+        }
     }
 }

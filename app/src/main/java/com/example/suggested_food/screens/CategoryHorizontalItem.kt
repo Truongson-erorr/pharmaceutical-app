@@ -1,6 +1,7 @@
 package com.example.suggested_food.screens
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -25,10 +26,13 @@ import coil.compose.AsyncImage
 @Composable
 fun CategoryHorizontalItem(
     name: String,
-    imageUrl: String
+    imageUrl: String,
+    onClick: () -> Unit
 ) {
     Surface(
-        modifier = Modifier.width(90.dp),
+        modifier = Modifier
+            .width(90.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(14.dp),
         color = Color.Transparent,
         shadowElevation = 0.dp
@@ -45,17 +49,17 @@ fun CategoryHorizontalItem(
                     .clip(RoundedCornerShape(10.dp)),
                 contentScale = ContentScale.Crop
             )
+
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
                 text = name,
-                fontSize = MaterialTheme.typography.bodySmall.fontSize,
                 fontWeight = FontWeight.Medium,
-                color = Color.Black,
                 maxLines = 2,
                 textAlign = TextAlign.Center
             )
         }
     }
 }
+
 

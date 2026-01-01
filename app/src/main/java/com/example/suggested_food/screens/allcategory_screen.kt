@@ -2,6 +2,7 @@ package com.example.suggested_food.screens
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -86,7 +87,10 @@ fun AllCategoriesScreen(
                 items(categories) { category ->
                     CategoryGridItem(
                         name = category.name,
-                        imageUrl = category.imageUrl
+                        imageUrl = category.imageUrl,
+                        onClick = {
+                            navController.navigate("category/${category.id}")
+                        }
                     )
                 }
             }
@@ -97,12 +101,13 @@ fun AllCategoriesScreen(
 @Composable
 fun CategoryGridItem(
     name: String,
-    imageUrl: String
+    imageUrl: String,
+    onClick: () -> Unit
 ) {
     Surface(
         modifier = Modifier
-            .background(Color.White)
-            .size(120.dp),
+            .size(120.dp)
+            .clickable { onClick() },
         shape = RoundedCornerShape(14.dp),
         color = Color.White,
         shadowElevation = 2.dp
@@ -112,7 +117,6 @@ fun CategoryGridItem(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
             AsyncImage(
                 model = imageUrl,
                 contentDescription = name,
@@ -121,7 +125,6 @@ fun CategoryGridItem(
                     .clip(RoundedCornerShape(10.dp)),
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
@@ -134,3 +137,4 @@ fun CategoryGridItem(
         }
     }
 }
+

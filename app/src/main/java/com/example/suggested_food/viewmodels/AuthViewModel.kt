@@ -20,38 +20,40 @@ class AuthViewModel : ViewModel() {
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error
 
+    val isLoggedIn: Boolean
+        get() = auth.currentUser != null
+
     fun register(email: String, password: String, name: String) {
-        viewModelScope.launch {
-            _loading.value = true
-            try {
-                auth.createUserWithEmailAndPassword(email, password)
-                    .addOnSuccessListener { result ->
-                        val uid = result.user!!.uid
+        _loading.value = true
 
-                        val user = UserModel(
-                            uid = uid,
-                            email = email,
-                            name = name
-                        )
+        auth.createUserWithEmailAndPassword(email, password)
+            .addOnSuccessListener { result ->
+                val uid = result.user?.uid ?: return@addOnSuccessListener
 
-                        firestore.collection("users")
-                            .document(uid)
-                            .set(user)
-                            .addOnFailureListener {
-                                _error.value = it.message
-                            }
-                    }
+                val user = UserModel(
+                    uid = uid,
+                    email = email,
+                    name = name
+                )
+
+                firestore.collection("users")
+                    .document(uid)
+                    .set(user)
                     .addOnFailureListener {
                         _error.value = it.message
                     }
-            } finally {
+
                 _loading.value = false
             }
-        }
+            .addOnFailureListener {
+                _error.value = it.message
+                _loading.value = false
+            }
     }
 
     fun login(email: String, password: String) {
         _loading.value = true
+
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener {
                 _loading.value = false

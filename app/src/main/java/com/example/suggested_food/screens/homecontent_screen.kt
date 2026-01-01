@@ -13,6 +13,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.outlined.FilterAlt
+import androidx.compose.material.icons.outlined.FilterList
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.*
@@ -107,7 +109,10 @@ fun HomeContent(
                     items(categories) { category ->
                         CategoryHorizontalItem(
                             name = category.name,
-                            imageUrl = category.imageUrl
+                            imageUrl = category.imageUrl,
+                            onClick = {
+                                navController.navigate("category/${category.id}")
+                            }
                         )
                     }
                 }
@@ -115,7 +120,29 @@ fun HomeContent(
         }
 
         item(span = { GridItemSpan(2) }) {
-            Text("Sản phẩm phổ biến", fontWeight = FontWeight.Bold)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "Sản phẩm phổ biến",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium
+                )
+
+                IconButton(onClick = {
+
+                }) {
+                    Icon(
+                        imageVector = Icons.Outlined.FilterAlt,
+                        contentDescription = "Lọc",
+                        tint = Color.Black
+                    )
+                }
+            }
         }
 
         if (productLoading) {
@@ -134,4 +161,3 @@ fun HomeContent(
         }
     }
 }
-
