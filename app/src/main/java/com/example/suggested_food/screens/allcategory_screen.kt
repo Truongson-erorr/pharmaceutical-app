@@ -101,6 +101,7 @@ fun CategoryGridItem(
 ) {
     Surface(
         modifier = Modifier
+            .background(Color.White)
             .size(120.dp),
         shape = RoundedCornerShape(14.dp),
         color = Color.White,
