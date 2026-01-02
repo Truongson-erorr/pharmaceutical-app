@@ -10,6 +10,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -25,6 +26,7 @@ import com.example.suggested_food.screens.ProfileContent
 import com.example.suggested_food.screens.SearchScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodels.AuthViewModel
+import com.example.suggested_food.viewmodels.CartViewModel
 import com.example.suggested_food.viewmodels.CategoryViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -48,9 +50,14 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation(
     authViewModel: AuthViewModel = viewModel(),
     categoryViewModel: CategoryViewModel = viewModel(),
-    productViewModel: ProductViewModel = viewModel()
+    productViewModel: ProductViewModel = viewModel(),
+    cartViewModel: CartViewModel = viewModel()
 ) {
     val navController = rememberAnimatedNavController()
+
+    LaunchedEffect(Unit) {
+        cartViewModel.loadCartFromFirestore()
+    }
 
     AnimatedNavHost(
         navController = navController,
@@ -90,7 +97,10 @@ fun AppNavigation(
             SearchScreen(navController = navController)
         }
         composable("CartContent") {
-            CartContent(navController = navController)
+            CartContent(
+                navController = navController,
+                cartViewModel = cartViewModel
+            )
         }
         composable("AllCategoriesScreen") {
             AllCategoriesScreen(navController = navController)
@@ -116,7 +126,8 @@ fun AppNavigation(
             val productId = it.arguments?.getString("productId") ?: ""
             ProductDetailScreen(
                 navController = navController,
-                productId = productId
+                productId = productId,
+                cartViewModel = cartViewModel
             )
         }
 

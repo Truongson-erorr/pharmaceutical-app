@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 
 @Composable
@@ -49,10 +50,10 @@ fun CategoryHorizontalItem(
                     .clip(RoundedCornerShape(10.dp)),
                 contentScale = ContentScale.Crop
             )
-
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
+                fontSize = 14.sp,
                 text = name,
                 fontWeight = FontWeight.Medium,
                 maxLines = 2,

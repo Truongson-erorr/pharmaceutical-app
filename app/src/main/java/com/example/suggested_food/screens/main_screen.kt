@@ -18,9 +18,9 @@ import androidx.compose.ui.text.font.FontWeight
 
 sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
     object Home : BottomNavItem("home", Icons.Outlined.Home, "Trang chủ")
-    object Categories : BottomNavItem("categories", Icons.Outlined.List, "Danh mục")
+    object Utilities : BottomNavItem("utilities", Icons.Outlined.Lightbulb, "Tiện ích")
     object Cart : BottomNavItem("cart", Icons.Outlined.LocalHospital, "Đơn thuốc")
-    object Profile : BottomNavItem("profile", Icons.Outlined.Person, "Tài khoản")
+    object Profile : BottomNavItem("profile", Icons.Outlined.Person, "Tôi")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,7 +34,7 @@ fun MainScreen(
 
     val bottomItems = listOf(
         BottomNavItem.Home,
-        BottomNavItem.Categories,
+        BottomNavItem.Utilities,
         BottomNavItem.Cart,
         BottomNavItem.Profile
     )
@@ -142,7 +142,7 @@ fun MainScreen(
             ) {
                 when (selectedBottomItem) {
                     BottomNavItem.Home -> HomeContent(navController)
-                    BottomNavItem.Categories -> CategoriesContent()
+                    BottomNavItem.Utilities -> UtilitiesContent(navController)
                     BottomNavItem.Cart -> MedicineScreen(navController)
                     BottomNavItem.Profile -> ProfileContent(navController)
                 }

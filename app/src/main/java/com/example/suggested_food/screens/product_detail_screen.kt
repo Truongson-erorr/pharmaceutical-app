@@ -1,5 +1,6 @@
 package com.example.suggested_food.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
@@ -19,11 +20,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.suggested_food.models.CartItemModel
+import com.example.suggested_food.viewmodels.CartViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -31,12 +35,14 @@ import com.example.suggested_food.viewmodels.ProductViewModel
 fun ProductDetailScreen(
     navController: NavController,
     productId: String,
-    productViewModel: ProductViewModel = viewModel()
+    productViewModel: ProductViewModel = viewModel(),
+    cartViewModel: CartViewModel
 ) {
-
     val product by productViewModel.productDetail.collectAsState()
     val loading by productViewModel.detailLoading.collectAsState()
     val scrollState = rememberScrollState()
+
+    val context = LocalContext.current
 
     LaunchedEffect(productId) {
         productViewModel.fetchProductById(productId)
@@ -79,7 +85,20 @@ fun ProductDetailScreen(
                     ) {
 
                         OutlinedButton(
-                            onClick = { },
+                            onClick = {
+                                Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
+                                product?.let {
+                                    cartViewModel.addToCart(
+                                        CartItemModel(
+                                            productId = it.id,
+                                            name = it.name,
+                                            image = it.images.firstOrNull() ?: "",
+                                            price = it.price,
+                                            quantity = 1
+                                        )
+                                    )
+                                }
+                            },
                             modifier = Modifier
                                 .weight(0.3f)
                                 .height(48.dp),
@@ -198,8 +217,8 @@ fun ProductDetailScreen(
                         Spacer(Modifier.height(8.dp))
 
                         Text(
-                            text = "${product!!.price} đ",
-                            color = Color(0xFF8B0000),
+                            text = formatVND(product!!.price),
+                            color = Color.Red,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )

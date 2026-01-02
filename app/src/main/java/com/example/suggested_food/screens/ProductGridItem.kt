@@ -62,7 +62,7 @@ fun ProductGridItem(
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
-                text = "${product.price} đ",
+                text = formatVND(product.price),
                 color = Color.Red,
                 fontWeight = FontWeight.Bold
             )
