@@ -1,8 +1,10 @@
 package com.example.suggested_food
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -20,6 +22,7 @@ import com.example.suggested_food.authentication.RegisterScreen
 import com.example.suggested_food.screens.AllCategoriesScreen
 import com.example.suggested_food.screens.CartContent
 import com.example.suggested_food.screens.CategoryProductsScreen
+import com.example.suggested_food.screens.CheckoutScreen
 import com.example.suggested_food.screens.MainScreen
 import com.example.suggested_food.screens.ProductDetailScreen
 import com.example.suggested_food.screens.ProfileContent
@@ -33,6 +36,7 @@ import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -45,6 +49,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigation(
@@ -91,7 +96,10 @@ fun AppNavigation(
             RegisterScreen(navController = navController)
         }
         composable("ProfileContent") {
-            ProfileContent(navController = navController)
+            ProfileContent(
+                navController = navController,
+                authViewModel = authViewModel
+            )
         }
         composable("SearchScreen") {
             SearchScreen(navController = navController)
@@ -99,7 +107,8 @@ fun AppNavigation(
         composable("CartContent") {
             CartContent(
                 navController = navController,
-                cartViewModel = cartViewModel
+                cartViewModel = cartViewModel,
+                authViewModel = authViewModel
             )
         }
         composable("AllCategoriesScreen") {
@@ -127,10 +136,13 @@ fun AppNavigation(
             ProductDetailScreen(
                 navController = navController,
                 productId = productId,
-                cartViewModel = cartViewModel
+                cartViewModel = cartViewModel,
+                authViewModel = authViewModel
             )
         }
-
+        composable("checkout") {
+            CheckoutScreen(navController, cartViewModel)
+        }
 
     }
 }

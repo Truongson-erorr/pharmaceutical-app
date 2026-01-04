@@ -1,6 +1,5 @@
 package com.example.suggested_food.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,20 +14,35 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CartViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CartContent(
     navController: NavController,
-    cartViewModel: CartViewModel
+    cartViewModel: CartViewModel,
+    authViewModel: AuthViewModel
 ) {
     val cartItems by cartViewModel.cartItems.collectAsState()
-
     var selectedIds by remember { mutableStateOf(setOf<String>()) }
 
     val selectedItems = cartItems.filter { selectedIds.contains(it.productId) }
     val selectedTotal = selectedItems.sumOf { it.price * it.quantity }
+
+    val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
+
+    LaunchedEffect(isLoggedIn) {
+        if (isLoggedIn) {
+            cartViewModel.loadCartFromFirestore()
+        } else {
+            navController.navigate("login") {
+                popUpTo("CartContent") { inclusive = true }
+            }
+        }
+    }
+
+    if (!isLoggedIn) return
 
     Scaffold(
         containerColor = Color.White,
@@ -67,7 +81,10 @@ fun CartContent(
                         }
 
                         Button(
-                            onClick = {  },
+                            onClick = {
+                                cartViewModel.setCheckoutItems(selectedItems)
+                                navController.navigate("checkout")
+                            },
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = Color(0xFF8B0000)
@@ -140,3 +157,5 @@ fun CartContent(
         }
     }
 }
+
+

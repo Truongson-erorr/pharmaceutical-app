@@ -17,6 +17,9 @@ class CartViewModel : ViewModel() {
 
     private fun userId(): String? = auth.currentUser?.uid
 
+    private val _checkoutItems = MutableStateFlow<List<CartItemModel>>(emptyList())
+    val checkoutItems: StateFlow<List<CartItemModel>> = _checkoutItems
+
     fun loadCartFromFirestore() {
         val uid = userId() ?: return
 
@@ -115,5 +118,9 @@ class CartViewModel : ViewModel() {
 
     fun totalPrice(): Double {
         return _cartItems.value.sumOf { it.price * it.quantity }
+    }
+
+    fun setCheckoutItems(items: List<CartItemModel>) {
+        _checkoutItems.value = items
     }
 }

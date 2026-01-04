@@ -1,5 +1,8 @@
 package com.example.suggested_food.screens
 
+import android.os.Build
+import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
@@ -14,6 +17,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 
 sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
@@ -23,6 +27,7 @@ sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: 
     object Profile : BottomNavItem("profile", Icons.Outlined.Person, "Tôi")
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
@@ -42,6 +47,9 @@ fun MainScreen(
     var selectedBottomItem by remember {
         mutableStateOf<BottomNavItem>(BottomNavItem.Home)
     }
+
+    val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
+    val context = LocalContext.current
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -72,12 +80,19 @@ fun MainScreen(
                     DrawerItemWithIcon("Cài đặt", Icons.Outlined.Settings) { }
                     DrawerItemWithIcon("Hỗ trợ", Icons.Outlined.HelpOutline) { }
                     DrawerItemWithIcon("Về ứng dụng", Icons.Outlined.Info) { }
-                    DrawerItemWithIcon("Đăng xuất", Icons.Outlined.Logout) {
-                        authViewModel.logout()
-                        navController.navigate("login") {
-                            popUpTo("home") { inclusive = true }
+                    if (isLoggedIn) {
+                        DrawerItemWithIcon("Đăng xuất", Icons.Outlined.Logout) {
+                            authViewModel.logout()
+                            navController.navigate("login") {
+                                popUpTo("home") { inclusive = true }
+                            }
+                        }
+                    } else {
+                        DrawerItemWithIcon("Đăng nhập", Icons.Outlined.Login) {
+                            navController.navigate("login")
                         }
                     }
+
                 }
             }
         }
@@ -124,7 +139,25 @@ fun MainScreen(
                                 Text(text = item.label)
                             },
                             selected = selectedBottomItem.route == item.route,
-                            onClick = { selectedBottomItem = item },
+                            onClick = {
+                                when (item) {
+                                    BottomNavItem.Profile,
+                                    BottomNavItem.Cart -> {
+                                        if (!isLoggedIn) {
+                                            Toast.makeText(
+                                                context,
+                                                "Vui lòng đăng nhập để sử dụng chức năng này",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        } else {
+                                            selectedBottomItem = item
+                                        }
+                                    }
+                                    else -> {
+                                        selectedBottomItem = item
+                                    }
+                                }
+                            },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = Color(0xFF8B0000),
                                 selectedTextColor = Color(0xFF8B0000),
@@ -141,10 +174,10 @@ fun MainScreen(
                 modifier = Modifier.padding(innerPadding)
             ) {
                 when (selectedBottomItem) {
-                    BottomNavItem.Home -> HomeContent(navController)
+                    BottomNavItem.Home -> HomeContent(navController, authViewModel = authViewModel)
                     BottomNavItem.Utilities -> UtilitiesContent(navController)
                     BottomNavItem.Cart -> MedicineScreen(navController)
-                    BottomNavItem.Profile -> ProfileContent(navController)
+                    BottomNavItem.Profile -> ProfileContent(navController, authViewModel = authViewModel)
                 }
             }
         }

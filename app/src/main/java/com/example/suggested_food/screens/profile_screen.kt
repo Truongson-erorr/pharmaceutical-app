@@ -1,12 +1,174 @@
 package com.example.suggested_food.screens
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.suggested_food.viewmodels.AuthViewModel
 
 @Composable
 fun ProfileContent(
-    navController: NavController
+    navController: NavController,
+    authViewModel: AuthViewModel
 ) {
-    Text("Tài khoản")
+    val userName by authViewModel.userName.collectAsState()
+    val user = authViewModel.getCurrentUser()
+
+    val displayName = userName ?: "Người dùng"
+    val email = user?.email ?: "Chưa có email"
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        ProfileHeaderUI(
+            userName = displayName,
+            email = email
+        )
+
+        ProfileMenuItem(
+            icon = Icons.Outlined.ReceiptLong,
+            title = "Lịch sử mua hàng"
+        )
+
+        ProfileMenuItem(
+            icon = Icons.Outlined.LocalShipping,
+            title = "Đơn hàng đang xử lý"
+        )
+
+        ProfileMenuItem(
+            icon = Icons.Outlined.LocationOn,
+            title = "Địa chỉ giao hàng"
+        )
+
+        ProfileMenuItem(
+            icon = Icons.Outlined.HelpOutline,
+            title = "Hỗ trợ & trợ giúp"
+        )
+
+        ProfileMenuItem(
+            icon = Icons.Outlined.Logout,
+            title = "Đăng xuất",
+            isDanger = true,
+            onClick = {
+                authViewModel.logout()
+                navController.navigate("login") {
+                    popUpTo("MainScreen") { inclusive = true }
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun ProfileHeaderUI(
+    userName: String,
+    email: String
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Surface(
+            shape = CircleShape,
+            color = Color(0xFF8B0000),
+            modifier = Modifier
+                .size(72.dp)
+                .offset(y = (-12).dp)
+        ) {
+            Box(contentAlignment = Alignment.Center) {
+                Text(
+                    text = userName.firstOrNull()?.uppercase() ?: "U",
+                    color = Color.White,
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column {
+            Text(
+                text = userName,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                text = email,
+                fontSize = 14.sp,
+                color = Color.Gray
+            )
+        }
+    }
+}
+
+@Composable
+fun ProfileMenuItem(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    isDanger: Boolean = false,
+    onClick: () -> Unit = {}
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onClick() },
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        )
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                icon,
+                contentDescription = title,
+                tint = if (isDanger) Color.Red else Color(0xFF8B0000)
+            )
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Text(
+                text = title,
+                fontWeight = FontWeight.Medium,
+                modifier = Modifier.weight(1f),
+                color = if (isDanger) Color.Red else Color.Black
+            )
+
+            Icon(
+                Icons.Outlined.ChevronRight,
+                contentDescription = null,
+                tint = Color.Gray
+            )
+        }
+    }
 }

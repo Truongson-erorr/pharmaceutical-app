@@ -27,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.models.CartItemModel
+import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CartViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 
@@ -36,13 +37,16 @@ fun ProductDetailScreen(
     navController: NavController,
     productId: String,
     productViewModel: ProductViewModel = viewModel(),
-    cartViewModel: CartViewModel
+    cartViewModel: CartViewModel,
+    authViewModel: AuthViewModel
 ) {
     val product by productViewModel.productDetail.collectAsState()
     val loading by productViewModel.detailLoading.collectAsState()
     val scrollState = rememberScrollState()
 
     val context = LocalContext.current
+
+    val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
 
     LaunchedEffect(productId) {
         productViewModel.fetchProductById(productId)
@@ -86,7 +90,15 @@ fun ProductDetailScreen(
 
                         OutlinedButton(
                             onClick = {
-                                Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
+                                if (!isLoggedIn) {
+                                    Toast.makeText(
+                                        context,
+                                        "Vui lòng đăng nhập để thêm vào giỏ hàng",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                    return@OutlinedButton
+                                }
+
                                 product?.let {
                                     cartViewModel.addToCart(
                                         CartItemModel(
@@ -97,6 +109,7 @@ fun ProductDetailScreen(
                                             quantity = 1
                                         )
                                     )
+                                    Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
                                 }
                             },
                             modifier = Modifier
