@@ -123,4 +123,56 @@ class CartViewModel : ViewModel() {
     fun setCheckoutItems(items: List<CartItemModel>) {
         _checkoutItems.value = items
     }
+
+    fun createOrder(
+        cartItems: List<CartItemModel>,
+        subtotal: Double,
+        shippingFee: Double,
+        total: Double,
+        note: String,
+        paymentMethod: String,
+        onSuccess: (String) -> Unit
+    ) {
+        val uid = auth.currentUser?.uid ?: return
+        val orderId = "DH${System.currentTimeMillis()}"
+
+        val items = cartItems.map {
+            hashMapOf(
+                "productId" to it.productId,
+                "name" to it.name,
+                "image" to it.image,
+                "price" to it.price,
+                "quantity" to it.quantity
+            )
+        }
+
+        val order = hashMapOf(
+            "userId" to uid,
+            "subtotal" to subtotal,
+            "shippingFee" to shippingFee,
+            "total" to total,
+            "note" to note,
+            "paymentMethod" to paymentMethod,
+            "status" to if (paymentMethod == "COD") "PENDING" else "WAITING_PAYMENT",
+            "items" to items,
+            "createdAt" to System.currentTimeMillis()
+        )
+
+        firestore.collection("orders")
+            .document(orderId)
+            .set(order)
+            .addOnSuccessListener {
+                onSuccess(orderId)
+            }
+    }
+
+    fun markOrderPaid(orderId: String) {
+        firestore.collection("orders")
+            .document(orderId)
+            .update("status", "PAID")
+            .addOnSuccessListener {
+                clearCart()
+            }
+    }
+
 }

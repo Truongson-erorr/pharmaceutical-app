@@ -33,16 +33,17 @@ fun CheckoutScreen(
     val shippingFee = 30000.0
     val total = subtotal + shippingFee
 
-    var showNoteSheet by remember { mutableStateOf(false) }
     var note by remember { mutableStateOf("") }
+    var showQr by remember { mutableStateOf(false) }
+    var orderId by remember { mutableStateOf("") }
+    var paymentMethod by remember { mutableStateOf("COD") }
+    var showNoteSheet by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = Color.White,
         topBar = {
             SmallTopAppBar(
-                title = {
-                    Text("Xác nhận đơn hàng", fontWeight = FontWeight.Bold, color = Color.White)
-                },
+                title = { Text("Xác nhận đơn hàng", color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, null, tint = Color.White)
@@ -58,7 +59,6 @@ fun CheckoutScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White)
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -72,12 +72,29 @@ fun CheckoutScreen(
                 }
 
                 Button(
-                    onClick = { },
+                    onClick = {
+                        cartViewModel.createOrder(
+                            cartItems = cartItems,
+                            subtotal = subtotal,
+                            shippingFee = shippingFee,
+                            total = total,
+                            note = note,
+                            paymentMethod = paymentMethod
+                        ) { id ->
+                            orderId = id
+                            if (paymentMethod == "VIETQR") {
+                                showQr = true
+                            } else {
+                                navController.navigate("payment_success") {
+                                    popUpTo("checkout") { inclusive = true }
+                                }
+                            }
+                        }
+                    },
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color(0xFF8B0000)
-                    ),
-                    modifier = Modifier.height(48.dp)
+                    )
                 ) {
                     Text("Đặt hàng")
                 }
@@ -89,17 +106,18 @@ fun CheckoutScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            item {
-                Spacer(modifier = Modifier.height(1.dp))
-            }
 
             item { AddressSection() }
 
             item {
-                Text("Sản phẩm", fontWeight = FontWeight.Bold)
+                Text(
+                    "Chi tiết đơn hàng",
+                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.titleMedium
+                )
             }
 
             items(cartItems) {
@@ -109,17 +127,67 @@ fun CheckoutScreen(
             item {
                 NoteRow(
                     note = note,
-                    onClick = { showNoteSheet = true }
+                    onClick = {
+                        showNoteSheet = true
+                    }
                 )
             }
 
-            item { ShippingMethod() }
-            item { PaymentMethod() }
+            item {
+                PaymentMethodSelector(
+                    selected = paymentMethod,
+                    onSelect = { paymentMethod = it }
+                )
+            }
+
             item {
                 PaymentSummary(subtotal, shippingFee, total)
             }
 
             item { Spacer(modifier = Modifier.height(80.dp)) }
+        }
+    }
+
+    if (showQr) {
+        ModalBottomSheet(onDismissRequest = {}) {
+            val qrUrl = vietQrUrl(amount = total, orderId = orderId)
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text("Quét mã để thanh toán", fontWeight = FontWeight.Bold)
+                Spacer(modifier = Modifier.height(16.dp))
+
+                AsyncImage(
+                    model = qrUrl,
+                    contentDescription = null,
+                    modifier = Modifier.size(260.dp)
+                )
+
+                Text("Số tiền: ${formatVND(total)}")
+                Text("Nội dung: $orderId", color = Color.Gray)
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Button(
+                    onClick = {
+                        cartViewModel.markOrderPaid(orderId)
+                        showQr = false
+                        navController.navigate("payment_success") {
+                            popUpTo("checkout") { inclusive = true }
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF8B0000)
+                    )
+                ) {
+                    Text("Tôi đã thanh toán")
+                }
+            }
         }
     }
 
@@ -142,7 +210,9 @@ fun CheckoutScreen(
                 TextField(
                     value = note,
                     onValueChange = { note = it },
-                    placeholder = { Text("Ví dụ: Giao giờ hành chính") },
+                    placeholder = {
+                        Text("Ví dụ: Giao giờ hành chính")
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .heightIn(min = 100.dp),
@@ -150,7 +220,6 @@ fun CheckoutScreen(
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color(0xFFF2F2F2),
                         unfocusedContainerColor = Color(0xFFF2F2F2),
-                        disabledContainerColor = Color(0xFFF2F2F2),
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent
                     )
@@ -159,165 +228,20 @@ fun CheckoutScreen(
 
                 Button(
                     onClick = { showNoteSheet = false },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
+                    modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF8B0000) // cherry
+                        containerColor = Color(0xFF8B0000)
                     )
                 ) {
-                    Text(
-                        "Xong",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
+                    Text("Xong", color = Color.White)
                 }
+
                 Spacer(modifier = Modifier.height(20.dp))
             }
         }
     }
-}
 
-@Composable
-fun AddressSection() {
-        Column {
-        Text("Địa chỉ nhận hàng", fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(8.dp))
-        Text("Nguyễn Văn A | 0123 456 789")
-        Text("123 Nguyễn Trãi, Quận 1, TP.HCM", color = Color.Gray)
-    }
-}
-
-@Composable
-fun CheckoutItemRow(item: CartItemModel) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-
-        AsyncImage(
-            model = item.image,
-            contentDescription = item.name,
-            modifier = Modifier
-                .size(64.dp)
-                .background(Color(0xFFF2F2F2), RoundedCornerShape(12.dp))
-        )
-
-        Spacer(modifier = Modifier.width(12.dp))
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(item.name, fontWeight = FontWeight.Medium)
-            Text(
-                "Số lượng: ${item.quantity}",
-                color = Color.Gray,
-                style = MaterialTheme.typography.bodySmall
-            )
-        }
-
-        Text(
-            formatVND(item.price * item.quantity),
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF8B0000)
-        )
-    }
-}
-
-@Composable
-fun NoteRow(
-    note: String,
-    onClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable { onClick() },
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text("Lời nhắn cho shop", fontWeight = FontWeight.Bold)
-            if (note.isNotEmpty()) {
-                Text(note, color = Color.Gray)
-            } else {
-                Text("Thêm lời nhắn", color = Color.Gray)
-            }
-        }
-
-        Icon(Icons.Default.KeyboardArrowRight, null)
-    }
-}
-
-@Composable
-fun ShippingMethod() {
-    var selected by remember { mutableStateOf("standard") }
-
-    Column {
-        Text("Phương thức vận chuyển", fontWeight = FontWeight.Bold)
-
-        ShippingOption("Giao hàng tiêu chuẩn (30.000đ)", selected == "standard") {
-            selected = "standard"
-        }
-
-        ShippingOption("Giao hàng nhanh", selected == "fast") {
-            selected = "fast"
-        }
-    }
-}
-
-@Composable
-fun PaymentMethod() {
-    var selected by remember { mutableStateOf("cod") }
-
-    Column {
-        Text("Phương thức thanh toán", fontWeight = FontWeight.Bold)
-
-        ShippingOption("Thanh toán khi nhận hàng (COD)", selected == "cod") {
-            selected = "cod"
-        }
-
-        ShippingOption("Chuyển khoản ngân hàng", selected == "bank") {
-            selected = "bank"
-        }
-    }
-}
-
-@Composable
-fun ShippingOption(
-    text: String,
-    selected: Boolean,
-    onClick: () -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 6.dp)
-    ) {
-        RadioButton(selected = selected, onClick = onClick)
-        Text(text)
-    }
-}
-
-@Composable
-fun PaymentSummary(
-    subtotal: Double,
-    shippingFee: Double,
-    total: Double
-) {
-    Column {
-        Text("Chi tiết thanh toán", fontWeight = FontWeight.Bold)
-        Spacer(modifier = Modifier.height(8.dp))
-
-        SummaryRow("Tạm tính", formatVND(subtotal))
-        SummaryRow("Phí vận chuyển", formatVND(shippingFee))
-
-        Divider(modifier = Modifier.padding(vertical = 8.dp))
-
-        SummaryRow(
-            "Tổng cộng",
-            formatVND(total),
-            isBold = true,
-            highlight = true
-        )
-    }
 }
 
 @Composable
@@ -339,3 +263,4 @@ fun SummaryRow(
         )
     }
 }
+

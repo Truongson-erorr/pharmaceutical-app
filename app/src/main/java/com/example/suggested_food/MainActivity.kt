@@ -24,6 +24,7 @@ import com.example.suggested_food.screens.CartContent
 import com.example.suggested_food.screens.CategoryProductsScreen
 import com.example.suggested_food.screens.CheckoutScreen
 import com.example.suggested_food.screens.MainScreen
+import com.example.suggested_food.screens.PaymentSuccessScreen
 import com.example.suggested_food.screens.ProductDetailScreen
 import com.example.suggested_food.screens.ProfileContent
 import com.example.suggested_food.screens.SearchScreen
@@ -142,6 +143,9 @@ fun AppNavigation(
         }
         composable("checkout") {
             CheckoutScreen(navController, cartViewModel)
+        }
+        composable("payment_success") {
+            PaymentSuccessScreen(navController)
         }
 
     }
