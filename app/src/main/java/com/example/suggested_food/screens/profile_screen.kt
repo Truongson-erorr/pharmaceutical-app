@@ -3,8 +3,10 @@ package com.example.suggested_food.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -35,25 +37,35 @@ fun ProfileContent(
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
 
         Spacer(modifier = Modifier.height(8.dp))
-
         ProfileHeaderUI(
             userName = displayName,
             email = email
         )
 
         ProfileMenuItem(
-            icon = Icons.Outlined.ReceiptLong,
-            title = "Lịch sử mua hàng"
+            icon = Icons.Outlined.MedicalServices,
+            title = "Thuốc của tôi"
         )
 
         ProfileMenuItem(
-            icon = Icons.Outlined.LocalShipping,
-            title = "Đơn hàng đang xử lý"
+            icon = Icons.Outlined.NotificationsActive,
+            title = "Nhắc uống thuốc"
+        )
+
+        ProfileMenuItem(
+            icon = Icons.Outlined.FavoriteBorder,
+            title = "Thuốc yêu thích"
+        )
+
+        ProfileMenuItem(
+            icon = Icons.Outlined.ReceiptLong,
+            title = "Lịch sử mua hàng"
         )
 
         ProfileMenuItem(
@@ -108,7 +120,6 @@ fun ProfileHeaderUI(
                 )
             }
         }
-
         Spacer(modifier = Modifier.width(16.dp))
 
         Column {

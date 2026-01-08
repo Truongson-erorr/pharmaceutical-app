@@ -1,5 +1,6 @@
 package com.example.suggested_food.viewmodels
 
+import androidx.compose.runtime.Composable
 import androidx.lifecycle.ViewModel
 import com.example.suggested_food.models.CartItemModel
 import com.google.firebase.auth.FirebaseAuth

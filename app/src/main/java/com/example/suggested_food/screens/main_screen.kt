@@ -5,6 +5,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -23,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
     object Home : BottomNavItem("home", Icons.Outlined.Home, "Trang chủ")
     object Utilities : BottomNavItem("utilities", Icons.Outlined.Lightbulb, "Tiện ích")
-    object Cart : BottomNavItem("cart", Icons.Outlined.LocalHospital, "Đơn thuốc")
+    object Cart : BottomNavItem("cart", Icons.Outlined.LocalShipping, "Theo dõi đơn")
     object Profile : BottomNavItem("profile", Icons.Outlined.Person, "Tôi")
 }
 
@@ -114,6 +115,52 @@ fun MainScreen(
                             Icon(
                                 Icons.Outlined.Menu,
                                 contentDescription = "Menu",
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    actions = {
+
+                        IconButton(
+                            onClick = {
+                                navController.navigate("SearchScreen")
+                            }
+                        ) {
+                            Icon(
+                                Icons.Default.Search,
+                                contentDescription = "Search",
+                                tint = Color.White
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
+                                navController.navigate("NotificationsScreen")
+                            }
+                        ) {
+                            Icon(
+                                Icons.Outlined.Notifications,
+                                contentDescription = "Notifications",
+                                tint = Color.White
+                            )
+                        }
+
+                        IconButton(
+                            onClick = {
+                                if (!isLoggedIn) {
+                                    Toast.makeText(
+                                        context,
+                                        "Vui lòng đăng nhập để xem giỏ hàng",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                } else {
+                                    navController.navigate("CartContent")
+                                }
+                            }
+                        ) {
+                            Icon(
+                                Icons.Outlined.ShoppingCart,
+                                contentDescription = "Cart",
                                 tint = Color.White
                             )
                         }

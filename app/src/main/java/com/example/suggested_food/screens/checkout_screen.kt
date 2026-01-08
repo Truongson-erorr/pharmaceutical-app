@@ -1,7 +1,6 @@
 package com.example.suggested_food.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -20,6 +19,8 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.models.CartItemModel
 import com.example.suggested_food.viewmodels.CartViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -38,6 +39,8 @@ fun CheckoutScreen(
     var orderId by remember { mutableStateOf("") }
     var paymentMethod by remember { mutableStateOf("COD") }
     var showNoteSheet by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         containerColor = Color.White,
@@ -73,6 +76,8 @@ fun CheckoutScreen(
 
                 Button(
                     onClick = {
+                        isLoading = true
+
                         cartViewModel.createOrder(
                             cartItems = cartItems,
                             subtotal = subtotal,
@@ -82,11 +87,17 @@ fun CheckoutScreen(
                             paymentMethod = paymentMethod
                         ) { id ->
                             orderId = id
-                            if (paymentMethod == "VIETQR") {
-                                showQr = true
-                            } else {
-                                navController.navigate("payment_success") {
-                                    popUpTo("checkout") { inclusive = true }
+
+                            scope.launch {
+                                delay(3500)
+                                isLoading = false
+
+                                if (paymentMethod == "VIETQR") {
+                                    showQr = true
+                                } else {
+                                    navController.navigate("payment_success") {
+                                        popUpTo("checkout") { inclusive = true }
+                                    }
                                 }
                             }
                         }
@@ -169,7 +180,6 @@ fun CheckoutScreen(
 
                 Text("Số tiền: ${formatVND(total)}")
                 Text("Nội dung: $orderId", color = Color.Gray)
-
                 Spacer(modifier = Modifier.height(20.dp))
 
                 Button(
@@ -242,6 +252,33 @@ fun CheckoutScreen(
         }
     }
 
+    if (isLoading) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(alpha = 0.35f)),
+            contentAlignment = Alignment.Center
+        ) {
+            Card(
+                shape = RoundedCornerShape(16.dp),
+                elevation = CardDefaults.cardElevation(8.dp)
+            ) {
+                Column(
+                    modifier = Modifier.padding(24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    CircularProgressIndicator(
+                        color = Color(0xFF8B0000)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Text(
+                        "Đang xử lý đơn hàng...",
+                        fontWeight = FontWeight.Medium
+                    )
+                }
+            }
+        }
+    }
 }
 
 @Composable

@@ -51,7 +51,6 @@ fun HomeContent(
     val productLoading by productViewModel.loading.collectAsState()
 
     val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
-    val context = LocalContext.current
     val userName by authViewModel.userName.collectAsState()
 
     LazyVerticalGrid(
@@ -88,30 +87,6 @@ fun HomeContent(
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF8B0000)
                     )
-                }
-
-                IconButton(onClick = { navController.navigate("SearchScreen") }) {
-                    Icon(Icons.Default.Search, null)
-                }
-                IconButton(onClick = { navController.navigate("NotificationsScreen") }) {
-                    Icon(Icons.Outlined.Notifications, null)
-                }
-                IconButton(
-                    onClick = {
-                        if (!isLoggedIn) {
-                            Toast
-                                .makeText(
-                                    context,
-                                    "Vui lòng đăng nhập để xem giỏ hàng",
-                                    Toast.LENGTH_SHORT
-                                )
-                                .show()
-                        } else {
-                            navController.navigate("CartContent")
-                        }
-                    }
-                ) {
-                    Icon(Icons.Outlined.ShoppingCart, null)
                 }
             }
         }
