@@ -22,6 +22,7 @@ import com.example.suggested_food.authentication.RegisterScreen
 import com.example.suggested_food.screens.AllCategoriesScreen
 import com.example.suggested_food.screens.CartContent
 import com.example.suggested_food.screens.CategoryProductsScreen
+import com.example.suggested_food.screens.ChatScreen
 import com.example.suggested_food.screens.CheckoutScreen
 import com.example.suggested_food.screens.MainScreen
 import com.example.suggested_food.screens.PaymentSuccessScreen
@@ -147,6 +148,8 @@ fun AppNavigation(
         composable("payment_success") {
             PaymentSuccessScreen(navController)
         }
-
+        composable("chat") {
+            ChatScreen(navController)
+        }
     }
 }

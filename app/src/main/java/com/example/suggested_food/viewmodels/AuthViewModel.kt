@@ -84,6 +84,7 @@ class AuthViewModel : ViewModel() {
         _isLoggedIn.value = false
         _userName.value = null
     }
+
     fun getCurrentUser() = auth.currentUser
 
     private fun loadUserName(uid: String) {

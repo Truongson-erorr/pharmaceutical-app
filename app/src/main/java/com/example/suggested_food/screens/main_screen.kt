@@ -222,7 +222,7 @@ fun MainScreen(
             ) {
                 when (selectedBottomItem) {
                     BottomNavItem.Home -> HomeContent(navController, authViewModel = authViewModel)
-                    BottomNavItem.Utilities -> UtilitiesContent(navController)
+                    BottomNavItem.Utilities -> UtilitiesContent(navController, authViewModel = authViewModel)
                     BottomNavItem.Cart -> MedicineScreen(navController)
                     BottomNavItem.Profile -> ProfileContent(navController, authViewModel = authViewModel)
                 }

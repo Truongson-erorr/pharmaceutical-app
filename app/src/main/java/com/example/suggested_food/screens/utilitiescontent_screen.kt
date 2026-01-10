@@ -1,5 +1,6 @@
 package com.example.suggested_food.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -11,6 +12,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,19 +24,32 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.suggested_food.models.UtilityItem
+import com.example.suggested_food.viewmodels.AuthViewModel
 
 @Composable
 fun UtilitiesContent(
-    navController: NavController
+    navController: NavController,
+    authViewModel: AuthViewModel
 ) {
+    val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
+    val context = navController.context
+
     val utilities = listOf(
-        UtilityItem("Chat tư vấn", Icons.Outlined.Chat) {
-            // navController.navigate("chat")
-        },
-        UtilityItem("Nhắc uống thuốc", Icons.Outlined.Alarm) {},
-        UtilityItem("Đơn thuốc của tôi", Icons.Outlined.Description) {},
-        UtilityItem("Tính liều dùng", Icons.Outlined.Calculate) {},
-        UtilityItem("Hỗ trợ", Icons.Outlined.SupportAgent) {}
+            UtilityItem("Chat tư vấn", Icons.Outlined.Chat) {
+                if (isLoggedIn) {
+                    navController.navigate("chat")
+                } else {
+                    Toast.makeText(
+                        context,
+                        "Vui lòng đăng nhập để được AI tư vấn chi tiết",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
+            UtilityItem("Nhắc uống thuốc", Icons.Outlined.Alarm) {},
+            UtilityItem("Đơn thuốc của tôi", Icons.Outlined.Description) {},
+            UtilityItem("Tính liều dùng", Icons.Outlined.Calculate) {},
+            UtilityItem("Hỗ trợ", Icons.Outlined.SupportAgent) {}
     )
 
     Column(
