@@ -1,6 +1,5 @@
 package com.example.suggested_food.viewmodels
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.suggested_food.BuildConfig
@@ -13,12 +12,12 @@ import kotlinx.coroutines.launch
 class ChatViewModel : ViewModel() {
 
     private val _messages = MutableStateFlow(
-            listOf(
-                ChatMessage(
-                    "Xin chào 👋\nTôi có thể giúp gì cho bạn hôm nay?",
-                    isUser = false
-                )
+        listOf(
+            ChatMessage(
+                text = "Xin chào 👋\nTôi có thể giúp gì cho bạn hôm nay?",
+                isUser = false
             )
+        )
     )
     val messages: StateFlow<List<ChatMessage>> = _messages
 
@@ -30,40 +29,60 @@ class ChatViewModel : ViewModel() {
         apiKey = BuildConfig.GEMINI_API_KEY
     )
 
-    fun sendMessage(userMsg: String) {
-            if (userMsg.isBlank() || _isLoading.value) return
+    fun sendMessage(
+        userMsg: String,
+        productNames: List<String>
+    ) {
+        if (userMsg.isBlank() || _isLoading.value) return
 
-            _messages.value += ChatMessage(userMsg, true)
-            _isLoading.value = true
+        _messages.value += ChatMessage(userMsg, true)
+        _isLoading.value = true
 
-            viewModelScope.launch {
-                try {
-                    Log.d("ChatViewModel", "User: $userMsg")
+        val productListText =
+            if (productNames.isNotEmpty())
+                productNames.joinToString(", ")
+            else
+                "Không có thuốc nào trong hệ thống"
 
-                    val response = geminiClient.generateContent(userMsg)
-                    val botReply =
-                        response.text ?: "Xin lỗi, tôi chưa có câu trả lời phù hợp."
+        val prompt = """
+        Bạn là trợ lý tư vấn dược.
+        
+        Danh sách thuốc hiện có:
+        $productListText
+        
+        YÊU CẦU BẮT BUỘC:
+        - CHỈ chọn thuốc trong danh sách trên
+        - KHÔNG bịa thuốc mới
+        - Nếu không có thuốc phù hợp, nói rõ
+        - Trả về theo format:
+        
+        Những thuốc phù hợp với triệu chứng của bạn là:
+        - TenThuoc1
+        - TenThuoc2
+        
+        Sau đó giải thích ngắn gọn.
+        Kèm cảnh báo hỏi dược sĩ/bác sĩ.
+        
+        Triệu chứng người dùng:
+        "$userMsg"
+        """.trimIndent()
 
-                    Log.d("ChatViewModel", "Bot: $botReply")
+        viewModelScope.launch {
+            try {
+                val response = geminiClient.generateContent(prompt)
+                val botReply =
+                    response.text ?: "Xin lỗi, tôi chưa tìm được thuốc phù hợp."
 
-                    _messages.value += ChatMessage(botReply, false)
+                _messages.value += ChatMessage(botReply, false)
 
-                } catch (e: Exception) {
-                    Log.e("GeminiError", "Message: ${e.message}")
-                    Log.e("GeminiError", "Cause: ${e.cause}")
-                    Log.e("GeminiError", "Stacktrace:", e)
-
-                    _messages.value += ChatMessage(
-                        "⚠️ Lỗi hệ thống:\n${e.message}",
-                        false
-                    )
-                } finally {
-                    _isLoading.value = false
-                }
+            } catch (e: Exception) {
+                _messages.value += ChatMessage(
+                    "⚠️ Lỗi hệ thống: ${e.message}",
+                    false
+                )
+            } finally {
+                _isLoading.value = false
             }
         }
-        init {
-            Log.d("GeminiInit", "API_KEY length = ${BuildConfig.GEMINI_API_KEY.length}")
-            Log.d("GeminiInit", "Using model = gemini-2.5-flash")
-        }
+    }
 }

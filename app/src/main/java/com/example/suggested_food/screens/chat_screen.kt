@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
@@ -16,20 +17,44 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.suggested_food.models.ChatMessage
+import com.example.suggested_food.models.ProductModel
 import com.example.suggested_food.viewmodels.ChatViewModel
+import com.example.suggested_food.viewmodels.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatScreen(
     navController: NavController,
-    viewModel: ChatViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+    chatViewModel: ChatViewModel = viewModel(),
+    productViewModel: ProductViewModel = viewModel()
 ) {
-    val messages by viewModel.messages.collectAsState()
+    val messages by chatViewModel.messages.collectAsState()
+    val products by productViewModel.products.collectAsState()
+
+    val productNames = products.map { it.name }
     var input by remember { mutableStateOf("") }
+
+    var suggestedProducts by remember {
+        mutableStateOf<List<ProductModel>>(emptyList())
+    }
+    val isLoading by chatViewModel.isLoading.collectAsState()
+
+    LaunchedEffect(messages) {
+        val lastBotMessage = messages.lastOrNull { !it.isUser } ?: return@LaunchedEffect
+
+        val drugNames = extractDrugNames(lastBotMessage.text)
+
+        suggestedProducts = products.filter { product ->
+            drugNames.any { it.equals(product.name, ignoreCase = true) }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -69,14 +94,39 @@ fun ChatScreen(
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            items(messages) { msg ->
+            itemsIndexed(messages) { index, msg ->
                 ChatBubble(msg)
-            }
-        }
 
-        if (messages.size == 1) {
-            QuickSuggestionsHorizontal {
-                viewModel.sendMessage(it)
+                val isLastBotMessage =
+                    !msg.isUser && index == messages.lastIndex
+
+                if (isLastBotMessage && suggestedProducts.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(suggestedProducts) { product ->
+                            ProductSuggestionCard(
+                                product = product,
+                                onClick = {
+                                    navController.navigate("ProductDetail/${product.id}")
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+
+            if (isLoading) {
+                item {
+                    ChatBubble(
+                        ChatMessage(
+                            text = "…",
+                            isUser = false
+                        )
+                    )
+                }
             }
         }
 
@@ -91,7 +141,7 @@ fun ChatScreen(
                 value = input,
                 onValueChange = { input = it },
                 modifier = Modifier.weight(1f),
-                placeholder = { Text("Nhập tin nhắn...") },
+                placeholder = { Text("Nhập triệu chứng hoặc câu hỏi...") },
                 shape = RoundedCornerShape(24.dp),
                 singleLine = true
             )
@@ -99,7 +149,10 @@ fun ChatScreen(
             IconButton(
                 onClick = {
                     if (input.isNotBlank()) {
-                        viewModel.sendMessage(input)
+                        chatViewModel.sendMessage(
+                            userMsg = input,
+                            productNames = productNames
+                        )
                         input = ""
                     }
                 }
@@ -116,6 +169,8 @@ fun ChatScreen(
 
 @Composable
 fun ChatBubble(message: ChatMessage) {
+    val isTyping = message.text == "…"
+
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = if (message.isUser)
@@ -131,46 +186,82 @@ fun ChatBubble(message: ChatMessage) {
                     RoundedCornerShape(16.dp)
                 )
                 .padding(12.dp)
-                .widthIn(max = 260.dp)
         ) {
-            Text(
-                text = message.text,
-                color = if (message.isUser) Color.White else Color.Black
-            )
+            if (isTyping) {
+                TypingDots()
+            } else {
+                Text(
+                    text = message.text,
+                    color = if (message.isUser) Color.White else Color.Black
+                )
+            }
         }
     }
 }
 
 @Composable
-fun QuickSuggestionsHorizontal(
-    onSelect: (String) -> Unit
-) {
-    val suggestions = listOf(
-        "💊 Công dụng thuốc",
-        "📄 Tra cứu đơn thuốc",
-        "🤒 Tư vấn triệu chứng",
-        "⏰ Cách dùng & liều lượng",
-    )
+fun TypingDots() {
+    var dots by remember { mutableStateOf("") }
 
-    LazyRow(
+    LaunchedEffect(Unit) {
+        while (true) {
+            dots = when (dots.length) {
+                0 -> "."
+                1 -> ".."
+                2 -> "..."
+                else -> ""
+            }
+            kotlinx.coroutines.delay(400)
+        }
+    }
+
+    Text(
+        text = dots,
+        fontWeight = FontWeight.Bold,
+        color = Color.Gray
+    )
+}
+
+fun extractDrugNames(text: String): List<String> {
+    return text.lines()
+        .filter { it.startsWith("- ") }
+        .map { it.removePrefix("- ").trim() }
+}
+
+@Composable
+fun ProductSuggestionCard(
+    product: ProductModel,
+    onClick: () -> Unit = {}
+) {
+    Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 8.dp, bottom = 4.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+            .width(130.dp)
+            .clickable { onClick() },
+        shape = RoundedCornerShape(14.dp),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
-        items(suggestions) { text ->
-            Surface(
-                shape = RoundedCornerShape(20.dp),
-                color = Color.White,
-                shadowElevation = 1.dp,
+        Column {
+            AsyncImage(
+                model = product.images.firstOrNull(),
+                contentDescription = product.name,
                 modifier = Modifier
-                    .clickable { onSelect(text) }
-            ) {
+                    .fillMaxWidth()
+                    .height(80.dp),
+                contentScale = ContentScale.Crop
+            )
+
+            Column(modifier = Modifier.padding(8.dp)) {
                 Text(
-                    text = text,
-                    modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
+                    text = product.name,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 2
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+
+                Text(
+                    text = "${product.price} ₫",
                     color = Color(0xFF8B0000),
-                    fontWeight = FontWeight.Medium
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
