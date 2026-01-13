@@ -64,11 +64,6 @@ fun ProfileContent(
         )
 
         ProfileMenuItem(
-            icon = Icons.Outlined.ReceiptLong,
-            title = "Lịch sử mua hàng"
-        )
-
-        ProfileMenuItem(
             icon = Icons.Outlined.LocationOn,
             title = "Địa chỉ giao hàng"
         )

@@ -208,8 +208,8 @@ fun MainScreen(
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = Color(0xFF8B0000),
                                 selectedTextColor = Color(0xFF8B0000),
-                                unselectedIconColor = Color(0xFF9CA3AF),
-                                unselectedTextColor = Color(0xFF9CA3AF),
+                                unselectedIconColor = Color.Black,
+                                unselectedTextColor = Color.Black,
                                 indicatorColor = Color.Transparent
                             )
                         )
@@ -223,7 +223,7 @@ fun MainScreen(
                 when (selectedBottomItem) {
                     BottomNavItem.Home -> HomeContent(navController, authViewModel = authViewModel)
                     BottomNavItem.Utilities -> UtilitiesContent(navController, authViewModel = authViewModel)
-                    BottomNavItem.Cart -> MedicineScreen(navController)
+                    BottomNavItem.Cart -> OrderHistoryScreen(navController)
                     BottomNavItem.Profile -> ProfileContent(navController, authViewModel = authViewModel)
                 }
             }

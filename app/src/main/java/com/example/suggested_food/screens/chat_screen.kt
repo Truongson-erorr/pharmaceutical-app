@@ -23,8 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.suggested_food.models.CartItemModel
 import com.example.suggested_food.models.ChatMessage
 import com.example.suggested_food.models.ProductModel
+import com.example.suggested_food.viewmodels.CartViewModel
 import com.example.suggested_food.viewmodels.ChatViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 
@@ -45,6 +47,21 @@ fun ChatScreen(
         mutableStateOf<List<ProductModel>>(emptyList())
     }
     val isLoading by chatViewModel.isLoading.collectAsState()
+    val cartViewModel: CartViewModel = viewModel()
+
+    LaunchedEffect(Unit) {
+        chatViewModel.addToCartEvent.collect { product ->
+            cartViewModel.addToCart(
+                CartItemModel(
+                    productId = product.id,
+                    name = product.name,
+                    image = product.images.firstOrNull() ?: "",
+                    price = product.price,
+                    quantity = 1
+                )
+            )
+        }
+    }
 
     LaunchedEffect(messages) {
         val lastBotMessage = messages.lastOrNull { !it.isUser } ?: return@LaunchedEffect
@@ -147,11 +164,13 @@ fun ChatScreen(
             )
 
             IconButton(
+                enabled = !isLoading,
                 onClick = {
                     if (input.isNotBlank()) {
                         chatViewModel.sendMessage(
                             userMsg = input,
-                            productNames = productNames
+                            productNames = productNames,
+                            allProducts = products
                         )
                         input = ""
                     }

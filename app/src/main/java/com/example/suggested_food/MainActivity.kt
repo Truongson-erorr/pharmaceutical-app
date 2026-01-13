@@ -25,6 +25,8 @@ import com.example.suggested_food.screens.CategoryProductsScreen
 import com.example.suggested_food.screens.ChatScreen
 import com.example.suggested_food.screens.CheckoutScreen
 import com.example.suggested_food.screens.MainScreen
+import com.example.suggested_food.screens.OrderDetailScreen
+import com.example.suggested_food.screens.OrderHistoryScreen
 import com.example.suggested_food.screens.PaymentSuccessScreen
 import com.example.suggested_food.screens.ProductDetailScreen
 import com.example.suggested_food.screens.ProfileContent
@@ -33,6 +35,7 @@ import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CartViewModel
 import com.example.suggested_food.viewmodels.CategoryViewModel
+import com.example.suggested_food.viewmodels.OrderHistoryViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
@@ -58,7 +61,8 @@ fun AppNavigation(
     authViewModel: AuthViewModel = viewModel(),
     categoryViewModel: CategoryViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
-    cartViewModel: CartViewModel = viewModel()
+    cartViewModel: CartViewModel = viewModel(),
+    orderHistoryViewModel: OrderHistoryViewModel = viewModel()
 ) {
     val navController = rememberAnimatedNavController()
 
@@ -150,6 +154,18 @@ fun AppNavigation(
         }
         composable("chat") {
             ChatScreen(navController)
+        }
+        composable("OrderHistoryScreen") {
+            OrderHistoryScreen(navController, orderHistoryViewModel)
+        }
+        composable(
+            route = "order_detail/{orderId}",
+            arguments = listOf(
+                navArgument("orderId") { type = NavType.StringType }
+            )
+        ) { backStackEntry ->
+            val orderId = backStackEntry.arguments?.getString("orderId") ?: return@composable
+            OrderDetailScreen(orderId = orderId, navController = navController)
         }
     }
 }
