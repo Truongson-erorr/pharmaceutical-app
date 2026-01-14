@@ -1,5 +1,6 @@
 package com.example.suggested_food.screens
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,7 +34,8 @@ fun CartItemRow(
     onCheckedChange: (Boolean) -> Unit,
     onIncrease: () -> Unit,
     onDecrease: () -> Unit,
-    onRemove: () -> Unit
+    onRemove: () -> Unit,
+    onClick: () -> Unit
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -47,7 +49,7 @@ fun CartItemRow(
                     showDialog = false
                     onRemove()
                 }) {
-                        Text(text = "Xóa",)
+                    Text("Xóa")
                 }
             },
             dismissButton = {
@@ -58,58 +60,65 @@ fun CartItemRow(
         )
     }
 
-    Row(
+    Surface(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
+        onClick = onClick,
+        shape = RoundedCornerShape(12.dp),
+        tonalElevation = 0.dp,
+        shadowElevation = 0.dp,
+        color = Color.Transparent
     ) {
+        Row(
+            modifier = Modifier.padding(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
 
-        Checkbox(
-            checked = checked,
-            onCheckedChange = onCheckedChange
-        )
-
-        AsyncImage(
-            model = item.image,
-            contentDescription = item.name,
-            modifier = Modifier
-                .size(64.dp)
-                .padding(end = 8.dp)
-        )
-
-        Column(modifier = Modifier.weight(1f)) {
-            Text(item.name, fontWeight = FontWeight.Bold)
-            Text(
-                text = formatVND(item.price),
-                color = Color.Gray
+            Checkbox(
+                checked = checked,
+                onCheckedChange = onCheckedChange
             )
 
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                IconButton(onClick = onDecrease) {
-                    Text("−", fontSize = MaterialTheme.typography.titleLarge.fontSize)
-                }
-                Text("${item.quantity}", modifier = Modifier.padding(horizontal = 8.dp))
-                IconButton(onClick = onIncrease) {
-                    Text("+", fontSize = MaterialTheme.typography.titleLarge.fontSize)
+            AsyncImage(
+                model = item.image,
+                contentDescription = item.name,
+                modifier = Modifier
+                    .size(64.dp)
+                    .padding(end = 8.dp)
+            )
+
+            Column(modifier = Modifier.weight(1f)) {
+                Text(item.name, fontWeight = FontWeight.Bold)
+                Text(
+                    text = formatVND(item.price),
+                    color = Color.Gray
+                )
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    IconButton(onClick = onDecrease) {
+                        Text("−", fontSize = MaterialTheme.typography.titleLarge.fontSize)
+                    }
+                    Text("${item.quantity}", modifier = Modifier.padding(horizontal = 8.dp))
+                    IconButton(onClick = onIncrease) {
+                        Text("+", fontSize = MaterialTheme.typography.titleLarge.fontSize)
+                    }
                 }
             }
-        }
 
-        Surface(
-            onClick = { showDialog = true },
-            color = Color(0xFFFFE4E4),
-            shape = RoundedCornerShape(8.dp)
-        ) {
-            Text(
-                text = "Xóa",
-                color = Color(0xFFB00020),
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(
-                    horizontal = 12.dp,
-                    vertical = 6.dp
+            Surface(
+                onClick = { showDialog = true },
+                color = Color(0xFFE3F2FD),
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Text(
+                    text = "Xóa",
+                    color = Color(0xFF1E88E5),
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                 )
-            )
+            }
         }
     }
 }
+

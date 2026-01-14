@@ -95,7 +95,7 @@ fun UtilityCard(item: UtilityItem) {
             Icon(
                 imageVector = item.icon,
                 contentDescription = item.title,
-                tint = Color(0xFF8B0000),
+                tint = Color(0xFF1E88E5),
                 modifier = Modifier.size(36.dp)
             )
             Spacer(modifier = Modifier.height(12.dp))

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -58,7 +59,7 @@ fun CartContent(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF8B0000)
+                    containerColor = Color(0xFF1E88E5)
                 )
             )
         },
@@ -77,7 +78,7 @@ fun CartContent(
                             Text(
                                 text = formatVND(selectedTotal),
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF8B0000)
+                                color = Color(0xFF1E88E5)
                             )
                         }
 
@@ -88,7 +89,7 @@ fun CartContent(
                             },
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF8B0000)
+                                containerColor = Color(0xFF1E88E5)
                             )
                         ) {
                             Text("Mua hàng")
@@ -106,7 +107,31 @@ fun CartContent(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                Text("Giỏ hàng trống", color = Color.Gray)
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.ShoppingCart,
+                        contentDescription = "Giỏ hàng trống",
+                        tint = Color(0xFF1E88E5),
+                        modifier = Modifier.size(66.dp)
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = "Giỏ hàng của bạn đang trống",
+                        color = Color.Black,
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = "Hãy thêm thuốc để tiếp tục",
+                        color = Color.Gray,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
             }
         } else {
             LazyColumn(
@@ -145,6 +170,9 @@ fun CartContent(
                         onRemove = {
                             cartViewModel.removeItem(item.productId)
                             selectedIds = selectedIds - item.productId
+                        },
+                        onClick = {
+                            navController.navigate("ProductDetail/${item.productId}")
                         }
                     )
                     Divider()

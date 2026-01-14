@@ -58,7 +58,7 @@ fun OrderDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF8B0000)
+                    containerColor = Color(0xFF1E88E5)
                 )
             )
         },
@@ -72,7 +72,7 @@ fun OrderDetailScreen(
                     .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Color(0xFF8B0000))
+                CircularProgressIndicator(color = Color(0xFF1E88E5))
             }
             return@Scaffold
         }
@@ -141,7 +141,7 @@ fun OrderDetailScreen(
                     Text(
                         formatVND(item.price * item.quantity),
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF8B0000)
+                        color = Color(0xFF1E88E5)
                     )
                 }
             }
@@ -160,7 +160,7 @@ fun OrderDetailScreen(
                         Text(
                             formatVND(order.total),
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF8B0000)
+                            color = Color(0xFF1E88E5)
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))

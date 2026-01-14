@@ -46,14 +46,14 @@ fun CheckoutScreen(
         containerColor = Color.White,
         topBar = {
             SmallTopAppBar(
-                title = { Text("Xác nhận đơn hàng", color = Color.White) },
+                title = { Text("Xác nhận đơn hàng", color = Color.White, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, null, tint = Color.White)
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF8B0000)
+                    containerColor = Color(0xFF1E88E5)
                 )
             )
         },
@@ -70,7 +70,7 @@ fun CheckoutScreen(
                     Text(
                         formatVND(total),
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF8B0000)
+                        color = Color(0xFF1E88E5)
                     )
                 }
 
@@ -104,7 +104,7 @@ fun CheckoutScreen(
                     },
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF8B0000)
+                        containerColor = Color(0xFF1E88E5)
                     )
                 ) {
                     Text("Đặt hàng")
@@ -192,7 +192,7 @@ fun CheckoutScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF8B0000)
+                        containerColor = Color(0xFF1E88E5)
                     )
                 ) {
                     Text("Tôi đã thanh toán")
@@ -241,7 +241,7 @@ fun CheckoutScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF8B0000)
+                        containerColor = Color(0xFF1E88E5)
                     )
                 ) {
                     Text("Xong", color = Color.White)
@@ -268,7 +268,7 @@ fun CheckoutScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator(
-                        color = Color(0xFF8B0000)
+                        color = Color(0xFF1E88E5)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -296,7 +296,7 @@ fun SummaryRow(
         Text(
             value,
             fontWeight = if (isBold) FontWeight.Bold else FontWeight.Normal,
-            color = if (highlight) Color(0xFF8B0000) else Color.Black
+            color = if (highlight) Color(0xFF1E88E5) else Color.Black
         )
     }
 }

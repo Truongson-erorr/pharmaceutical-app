@@ -101,7 +101,7 @@ fun ChatScreen(
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF8B0000)
+                containerColor = Color(0xFF1E88E5)
             )
         )
 
@@ -179,7 +179,7 @@ fun ChatScreen(
                 Icon(
                     Icons.Filled.Send,
                     null,
-                    tint = Color(0xFF8B0000)
+                    tint = Color(0xFF1E88E5)
                 )
             }
         }
@@ -199,7 +199,7 @@ fun ChatBubble(message: ChatMessage) {
             modifier = Modifier
                 .background(
                     if (message.isUser)
-                        Color(0xFF8B0000)
+                        Color(0xFF1E88E5)
                     else
                         Color(0xFFE5E7EB),
                     RoundedCornerShape(16.dp)
@@ -243,8 +243,14 @@ fun TypingDots() {
 
 fun extractDrugNames(text: String): List<String> {
     return text.lines()
-        .filter { it.startsWith("- ") }
-        .map { it.removePrefix("- ").trim() }
+        .mapNotNull { line ->
+            Regex("""^\s*\d+\.\s*(.+)$""")
+                .find(line)
+                ?.groupValues
+                ?.get(1)
+                ?.trim()
+        }
+        .distinct()
 }
 
 @Composable
@@ -279,7 +285,7 @@ fun ProductSuggestionCard(
 
                 Text(
                     text = "${product.price} ₫",
-                    color = Color(0xFF8B0000),
+                    color = Color.Black,
                     fontWeight = FontWeight.Bold
                 )
             }

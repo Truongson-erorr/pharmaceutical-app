@@ -79,11 +79,11 @@ fun OrderHistoryScreen(
                 selectedTabIndex = selectedTab,
                 edgePadding = 0.dp,
                 containerColor = Color.White,
-                contentColor = Color(0xFF8B0000),
+                contentColor = Color(0xFF1E88E5),
                 indicator = { tabPositions ->
                     TabRowDefaults.Indicator(
                         Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
-                        color = Color(0xFF8B0000)
+                        color = Color(0xFF1E88E5)
                     )
                 }
             ) {
@@ -108,7 +108,7 @@ fun OrderHistoryScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFF8B0000))
+                    CircularProgressIndicator(color = Color(0xFF1E88E5))
                 }
                 return@Column
             }
@@ -200,7 +200,6 @@ fun OrderHistoryCard(
                     )
                 }
             }
-
             Spacer(modifier = Modifier.height(8.dp))
         }
 
@@ -212,7 +211,7 @@ fun OrderHistoryCard(
             Text(
                 formatVND(order.total),
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF8B0000)
+                color = Color.Black
             )
         }
     }

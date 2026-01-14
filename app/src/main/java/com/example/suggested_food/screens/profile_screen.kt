@@ -101,7 +101,7 @@ fun ProfileHeaderUI(
 
         Surface(
             shape = CircleShape,
-            color = Color(0xFF8B0000),
+            color = Color(0xFF1E88E5),
             modifier = Modifier
                 .size(72.dp)
                 .offset(y = (-12).dp)
@@ -158,7 +158,7 @@ fun ProfileMenuItem(
             Icon(
                 icon,
                 contentDescription = title,
-                tint = if (isDanger) Color.Red else Color(0xFF8B0000)
+                tint = if (isDanger) Color.Red else Color(0xFF1E88E5)
             )
 
             Spacer(modifier = Modifier.width(16.dp))

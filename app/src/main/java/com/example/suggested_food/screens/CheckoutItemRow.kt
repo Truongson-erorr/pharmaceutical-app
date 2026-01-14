@@ -63,7 +63,7 @@ fun CheckoutItemRow(item: CartItemModel) {
         Text(
             text = formatVND(item.price * item.quantity),
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF8B0000)
+            color = Color(0xFF1E88E5)
         )
     }
 }

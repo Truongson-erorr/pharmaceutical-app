@@ -11,12 +11,10 @@ import kotlinx.coroutines.launch
 
 class ChatViewModel : ViewModel() {
 
-    /* -------------------- STATE -------------------- */
-
     private val _messages = MutableStateFlow(
         listOf(
             ChatMessage(
-                text = "Xin chào 👋\nTôi có thể giúp gì cho bạn hôm nay?",
+                text = "Xin chào 👋\nBạn hãy mô tả triệu chứng để mình tư vấn thuốc nhé.",
                 isUser = false
             )
         )
@@ -26,14 +24,14 @@ class ChatViewModel : ViewModel() {
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    private val _suggestedProducts = MutableStateFlow<List<ProductModel>>(emptyList())
-    val suggestedProducts: StateFlow<List<ProductModel>> = _suggestedProducts
-
     private val _addToCartEvent = MutableSharedFlow<ProductModel>()
     val addToCartEvent = _addToCartEvent.asSharedFlow()
 
+    private val _pendingSelectProducts =
+        MutableStateFlow<List<ProductModel>>(emptyList())
+
     private val geminiClient = GenerativeModel(
-        modelName = "gemini-flash-latest",
+        modelName = "gemini-2.5-flash",
         apiKey = BuildConfig.GEMINI_API_KEY
     )
 
@@ -46,15 +44,7 @@ class ChatViewModel : ViewModel() {
 
         addUserMessage(userMsg)
 
-        if (handleAddToCartIntent(userMsg)) return
-
-        if (userMsg.length < 5) {
-            addBotMessage(
-                "👋 Bạn có thể mô tả triệu chứng rõ hơn một chút không?\n" +
-                        "Ví dụ: đau đầu, ho, sốt, buồn nôn…"
-            )
-            return
-        }
+        if (handleSelectByNumber(userMsg)) return
 
         val healthKeywords = listOf(
             "đau", "sốt", "ho", "viêm", "nhức", "buồn nôn",
@@ -63,13 +53,37 @@ class ChatViewModel : ViewModel() {
 
         if (healthKeywords.none { userMsg.contains(it, ignoreCase = true) }) {
             addBotMessage(
-                "💊 Mình chuyên tư vấn thuốc nhé.\n" +
-                        "Bạn hãy mô tả triệu chứng sức khỏe để mình hỗ trợ chính xác hơn."
+                "💊 Mình chỉ tư vấn khi bạn mô tả triệu chứng nhé.\n" +
+                        "Ví dụ: ho, sốt, đau đầu, đau bụng…"
             )
             return
         }
 
         callGemini(userMsg, productNames, allProducts)
+    }
+
+    private fun handleSelectByNumber(userMsg: String): Boolean {
+        val list = _pendingSelectProducts.value
+        if (list.isEmpty()) return false
+
+        val index = userMsg.trim().toIntOrNull()
+        if (index == null || index !in 1..list.size) {
+            addBotMessage("❗ Bạn vui lòng nhập số từ 1 đến ${list.size}")
+            return true
+        }
+
+        val product = list[index - 1]
+        addProductToCart(product)
+
+        _pendingSelectProducts.value = emptyList()
+        return true
+    }
+
+    private fun addProductToCart(product: ProductModel) {
+        viewModelScope.launch {
+            _addToCartEvent.emit(product)
+            addBotMessage("Mình đã thêm **${product.name}** vào giỏ hàng cho bạn!")
+        }
     }
 
     private fun callGemini(
@@ -86,26 +100,27 @@ class ChatViewModel : ViewModel() {
                 "Không có thuốc nào trong hệ thống"
 
         val prompt = """
-            Bạn là trợ lý tư vấn dược.
-            
-            Danh sách thuốc hiện có:
-            $productListText
-            
-            YÊU CẦU BẮT BUỘC:
-            - CHỈ chọn thuốc trong danh sách trên
-            - KHÔNG bịa thuốc mới
-            - Trả về đúng format:
-            
-            Những thuốc phù hợp với triệu chứng của bạn là:
-            - TenThuoc1
-            - TenThuoc2
-            
-            Sau đó giải thích ngắn gọn.
-            Cuối cùng hỏi:
-            "Bạn có muốn mình thêm thuốc nào vào giỏ hàng không?"
-            
-            Triệu chứng:
-            "$userMsg"
+        Bạn là trợ lý tư vấn dược.
+        
+        Danh sách thuốc hiện có:
+        $productListText
+        
+        YÊU CẦU BẮT BUỘC:
+        - CHỈ chọn thuốc trong danh sách trên
+        - KHÔNG bịa thuốc
+        - KHÔNG đánh số
+        - Format trả lời:
+        
+        Các thuốc phù hợp:
+        - TenThuoc1: mô tả chi tiết công dụng
+        - TenThuoc2: mô tả chi tiết công dụng
+        - TenThuoc3: mô tả chi tiết công dụng
+        
+        Cuối cùng hỏi:
+        "Bạn muốn thêm thuốc số mấy vào giỏ hàng, mình có thể giúp bạn?"
+        
+        Triệu chứng:
+        "$userMsg"
         """.trimIndent()
 
         viewModelScope.launch {
@@ -114,8 +129,7 @@ class ChatViewModel : ViewModel() {
                 val botReply =
                     response.text ?: "Xin lỗi, mình chưa tìm được thuốc phù hợp."
 
-                addBotMessage(botReply)
-                extractSuggestedProducts(botReply, allProducts)
+                extractProductsFromGemini(botReply, allProducts)
 
             } catch (e: Exception) {
                 handleGeminiError(e)
@@ -125,46 +139,50 @@ class ChatViewModel : ViewModel() {
         }
     }
 
-    private fun extractSuggestedProducts(
+    private fun extractProductsFromGemini(
         botText: String,
         allProducts: List<ProductModel>
     ) {
-        val drugNames = botText.lines()
-            .filter { it.startsWith("- ") }
-            .map { it.removePrefix("- ").trim() }
-
-        _suggestedProducts.value = allProducts.filter { product ->
-            drugNames.any { it.equals(product.name, ignoreCase = true) }
-        }
-    }
-
-    private fun handleAddToCartIntent(userMsg: String): Boolean {
-        val lower = userMsg.lowercase()
-
-        val matchedProduct = _suggestedProducts.value.firstOrNull {
-            lower.contains(it.name.lowercase())
-        }
-
-        matchedProduct?.let {
-            viewModelScope.launch {
-                _addToCartEvent.emit(it)
-                addBotMessage("✅ Mình đã thêm **${it.name}** vào giỏ hàng cho bạn rồi 🛒")
+        val suggestedNames = botText.lines()
+            .mapNotNull { line ->
+                if (line.trim().startsWith("- ")) {
+                    line.substringAfter("- ")
+                        .substringBefore(":")
+                        .trim()
+                } else null
             }
-            return true
+            .distinct()
+
+        val matchedProducts = allProducts.filter { product ->
+            suggestedNames.any { it.equals(product.name, ignoreCase = true) }
         }
 
-        return false
+        if (matchedProducts.isEmpty()) {
+            addBotMessage("😥 Mình chưa tìm được thuốc phù hợp trong hệ thống.")
+            return
+        }
+
+        _pendingSelectProducts.value = matchedProducts
+
+        val numberedText = matchedProducts.mapIndexed { index, product ->
+            """
+        ${index + 1}. ${product.name}
+        👉 ${product.description}
+        """.trimIndent()
+        }.joinToString("\n\n")
+
+        addBotMessage(
+            "Cảm ơn bạn đã mô tả triệu chứng, sau khi xem xét, mình đề xuất các thuốc sau:\n\n$numberedText\n\n" +
+                    "👉 Bạn muốn thêm thuốc số mấy vào giỏ hàng?"
+        )
     }
 
     private fun handleGeminiError(e: Exception) {
         val message =
-            when {
-                e.message?.contains("Quota exceeded", true) == true ->
-                    "⚠️ Hệ thống đang bận, bạn chờ vài giây rồi thử lại nhé ⏳"
-
-                else ->
-                    "⚠️ Có lỗi xảy ra, vui lòng thử lại sau"
-            }
+            if (e.message?.contains("Quota", true) == true)
+                "⚠️ Hệ thống đang bận, bạn thử lại sau nhé ⏳"
+            else
+                "⚠️ Có lỗi xảy ra, vui lòng thử lại sau"
 
         addBotMessage(message)
     }

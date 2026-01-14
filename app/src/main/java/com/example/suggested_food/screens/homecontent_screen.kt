@@ -6,7 +6,6 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
@@ -17,8 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.FilterAlt
-import androidx.compose.material.icons.outlined.Notifications
-import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -85,7 +82,7 @@ fun HomeContent(
                         else
                             "Quý khách",
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF8B0000)
+                        color = Color(0xFF1E88E5)
                     )
                 }
             }
@@ -103,7 +100,7 @@ fun HomeContent(
                 Text("Danh mục", fontWeight = FontWeight.Bold)
                 Text(
                     "Xem tất cả",
-                    color = Color(0xFF8B0000),
+                    color = Color(0xFF1E88E5),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
                         navController.navigate("AllCategoriesScreen")
@@ -114,7 +111,7 @@ fun HomeContent(
 
         item(span = { GridItemSpan(2) }) {
             if (loading) {
-                CircularProgressIndicator(color = Color(0xFF8B0000))
+                CircularProgressIndicator(color = Color(0xFF1E88E5))
             } else {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(categories) { category ->
@@ -158,7 +155,7 @@ fun HomeContent(
 
         if (productLoading) {
             item(span = { GridItemSpan(2) }) {
-                CircularProgressIndicator(color = Color(0xFF8B0000))
+                CircularProgressIndicator(color = Color(0xFF1E88E5))
             }
         } else {
             items(products) { product ->

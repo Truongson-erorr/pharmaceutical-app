@@ -73,7 +73,7 @@ fun ProductDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF8B0000)
+                    containerColor = Color(0xFF1E88E5)
                 )
             )
         },
@@ -116,11 +116,11 @@ fun ProductDetailScreen(
                                 .weight(0.3f)
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
-                            border = BorderStroke(1.dp, Color(0xFF8B0000))
+                            border = BorderStroke(1.dp, Color(0xFF1E88E5))
                         ) {
                             Text(
                                 "Giỏ hàng",
-                                color = Color(0xFF8B0000),
+                                color = Color(0xFF1E88E5),
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -132,7 +132,7 @@ fun ProductDetailScreen(
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF8B0000)
+                                containerColor = Color(0xFF1E88E5)
                             )
                         ) {
                             Text(
@@ -154,7 +154,7 @@ fun ProductDetailScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFF8B0000))
+                    CircularProgressIndicator(color = Color(0xFF1E88E5))
                 }
             }
 
@@ -210,7 +210,7 @@ fun ProductDetailScreen(
                                     .clip(CircleShape)
                                     .background(
                                         if (pagerState.currentPage == index)
-                                            Color(0xFF8B0000)
+                                            Color(0xFF1E88E5)
                                         else Color.LightGray
                                     )
                             )

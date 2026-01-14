@@ -59,7 +59,7 @@ fun MainScreen(
                 modifier = Modifier
                     .fillMaxHeight()
                     .width(LocalConfiguration.current.screenWidthDp.dp * 0.7f),
-                drawerContainerColor = Color(0xFF8B0000)
+                drawerContainerColor = Color(0xFF1E88E5)
             ) {
                 Column(
                     modifier = Modifier
@@ -166,7 +166,7 @@ fun MainScreen(
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = Color(0xFF8B0000)
+                        containerColor = Color(0xFF1E88E5)
                     )
                 )
             },
@@ -206,8 +206,8 @@ fun MainScreen(
                                 }
                             },
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color(0xFF8B0000),
-                                selectedTextColor = Color(0xFF8B0000),
+                                selectedIconColor = Color(0xFF1E88E5),
+                                selectedTextColor = Color(0xFF1E88E5),
                                 unselectedIconColor = Color.Black,
                                 unselectedTextColor = Color.Black,
                                 indicatorColor = Color.Transparent
