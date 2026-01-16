@@ -31,6 +31,7 @@ import com.example.suggested_food.screens.PaymentSuccessScreen
 import com.example.suggested_food.screens.ProductDetailScreen
 import com.example.suggested_food.screens.ProfileContent
 import com.example.suggested_food.screens.SearchScreen
+import com.example.suggested_food.screens.UserChatScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CartViewModel
@@ -167,5 +168,15 @@ fun AppNavigation(
             val orderId = backStackEntry.arguments?.getString("orderId") ?: return@composable
             OrderDetailScreen(orderId = orderId, navController = navController)
         }
+        composable(
+            "UserChatScreen/{userId}",
+            arguments = listOf(navArgument("userId") { type = NavType.StringType })
+        ) {
+            UserChatScreen(
+                navController = navController,
+                userId = it.arguments?.getString("userId")!!
+            )
+        }
+
     }
 }

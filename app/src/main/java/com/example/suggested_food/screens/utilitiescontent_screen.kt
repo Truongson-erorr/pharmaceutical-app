@@ -23,8 +23,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.suggested_food.models.UtilityItem
 import com.example.suggested_food.viewmodels.AuthViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun UtilitiesContent(
@@ -35,21 +37,53 @@ fun UtilitiesContent(
     val context = navController.context
 
     val utilities = listOf(
-            UtilityItem("Chat tư vấn", Icons.Outlined.Chat) {
-                if (isLoggedIn) {
-                    navController.navigate("chat")
-                } else {
-                    Toast.makeText(
-                        context,
-                        "Vui lòng đăng nhập để được AI tư vấn chi tiết",
-                        Toast.LENGTH_SHORT
-                    ).show()
+        UtilityItem(
+            title = "Chat tư vấn với AI",
+            imageUrl = "https://cdn-icons-png.flaticon.com/512/8008/8008072.png"
+        ) {
+            if (isLoggedIn) {
+                navController.navigate("chat")
+            } else {
+                Toast.makeText(
+                    context,
+                    "Vui lòng đăng nhập để được AI tư vấn chi tiết",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        },
+
+        UtilityItem(
+            title = "Chat với bác sĩ",
+            imageUrl = "https://betapto.edu.vn/upload/2025/06/chibi-bac-si-33.webp"
+        ) {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+            if (isLoggedIn && userId != null) {
+                navController.navigate("UserChatScreen/$userId") {
+                    launchSingleTop = true
                 }
-            },
-            UtilityItem("Nhắc uống thuốc", Icons.Outlined.Alarm) {},
-            UtilityItem("Đơn thuốc của tôi", Icons.Outlined.Description) {},
-            UtilityItem("Tính liều dùng", Icons.Outlined.Calculate) {},
-            UtilityItem("Hỗ trợ", Icons.Outlined.SupportAgent) {}
+            } else {
+                Toast.makeText(
+                    context,
+                    "Vui lòng đăng nhập để được AI tư vấn chi tiết",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        },
+
+        UtilityItem(
+            title = "Đơn thuốc của tôi",
+            imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcj3g5fUD8FZ58y8xeT3dCppkllsztCRBnnkfcHysumHcun7wU6lCY-YGZrdWhisEvE2w&usqp=CAU"
+        ) {},
+
+        UtilityItem(
+            title = "Tính liều dùng",
+            icon = Icons.Outlined.Calculate
+        ) {},
+
+        UtilityItem(
+            title = "Hỗ trợ",
+            icon = Icons.Outlined.SupportAgent
+        ) {}
     )
 
     Column(
@@ -80,9 +114,7 @@ fun UtilityCard(item: UtilityItem) {
             .clickable { item.onClick() },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Column(
             modifier = Modifier
@@ -92,12 +124,30 @@ fun UtilityCard(item: UtilityItem) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Icon(
-                imageVector = item.icon,
-                contentDescription = item.title,
-                tint = Color(0xFF1E88E5),
-                modifier = Modifier.size(36.dp)
-            )
+            when {
+                item.imageUrl != null -> {
+                    AsyncImage(
+                        model = item.imageUrl,
+                        contentDescription = item.title,
+                        modifier = Modifier
+                            .size(75.dp)
+                            .background(
+                                Color.White,
+                                RoundedCornerShape(12.dp)
+                            )
+                            .padding(8.dp)
+                    )
+                }
+
+                item.icon != null -> {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = item.title,
+                        tint = Color(0xFF1E88E5),
+                        modifier = Modifier.size(36.dp)
+                    )
+                }
+            }
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(

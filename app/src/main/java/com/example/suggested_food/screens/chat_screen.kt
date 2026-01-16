@@ -160,7 +160,12 @@ fun ChatScreen(
                 modifier = Modifier.weight(1f),
                 placeholder = { Text("Nhập triệu chứng hoặc câu hỏi...") },
                 shape = RoundedCornerShape(24.dp),
-                singleLine = true
+                singleLine = true,
+                colors = TextFieldDefaults.textFieldColors(
+                    containerColor = Color(0xFFF1F5F9),
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
+                )
             )
 
             IconButton(

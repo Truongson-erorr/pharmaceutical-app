@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.suggested_food.models.OrderModel
 import com.example.suggested_food.viewmodels.OrderHistoryViewModel
@@ -219,18 +221,29 @@ fun OrderHistoryCard(
 
 @Composable
 fun StatusChip(status: String) {
-    val (color, text) = when (status) {
+    val (mainColor, text) = when (status) {
         "PENDING" -> Color(0xFFF59E0B) to "Chờ xác nhận"
         "CONFIRMED" -> Color(0xFF2563EB) to "Đã xác nhận"
-        "SHIPPING" -> Color.Red to "Đang giao"
+        "SHIPPING" -> Color(0xFFEF4444) to "Đang giao"
         "DELIVERED" -> Color(0xFF16A34A) to "Đã giao"
-        "PAID" -> Color(0xFFF59E0B) to "Đã xác nhận"
+        "PAID" -> Color(0xFF16A34A) to "Đã xác nhận"
         else -> Color.Gray to status
     }
 
-    Text(
-        text = text,
-        color = color,
-        fontWeight = FontWeight.Bold
-    )
+    Box(
+        modifier = Modifier
+            .background(
+                color = mainColor.copy(alpha = 0.15f),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .padding(horizontal = 10.dp, vertical = 4.dp)
+    ) {
+        Text(
+            text = text,
+            color = mainColor,
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Medium
+        )
+    }
 }
+

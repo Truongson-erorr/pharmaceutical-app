@@ -141,7 +141,7 @@ fun OrderDetailScreen(
                     Text(
                         formatVND(item.price * item.quantity),
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1E88E5)
+                        color = Color.Black
                     )
                 }
             }
@@ -160,7 +160,7 @@ fun OrderDetailScreen(
                         Text(
                             formatVND(order.total),
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF1E88E5)
+                            color = Color.Black
                         )
                     }
                     Spacer(modifier = Modifier.height(8.dp))

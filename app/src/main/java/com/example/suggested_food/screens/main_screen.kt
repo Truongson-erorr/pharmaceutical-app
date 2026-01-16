@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 
 sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
-    object Home : BottomNavItem("home", Icons.Outlined.Home, "Trang chủ")
+    object Home : BottomNavItem("home", Icons.Outlined.HomeWork, "Trang chủ")
     object Utilities : BottomNavItem("utilities", Icons.Outlined.Lightbulb, "Tiện ích")
     object Cart : BottomNavItem("cart", Icons.Outlined.LocalShipping, "Theo dõi đơn")
     object Profile : BottomNavItem("profile", Icons.Outlined.Person, "Tôi")
