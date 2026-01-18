@@ -81,11 +81,11 @@ fun OrderHistoryScreen(
                 selectedTabIndex = selectedTab,
                 edgePadding = 0.dp,
                 containerColor = Color.White,
-                contentColor = Color(0xFF1E88E5),
+                contentColor = Color.Black,
                 indicator = { tabPositions ->
                     TabRowDefaults.Indicator(
                         Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
-                        color = Color(0xFF1E88E5)
+                        color = Color.Black
                     )
                 }
             ) {
@@ -173,7 +173,6 @@ fun OrderHistoryCard(
 
             StatusChip(order.status)
         }
-
         Spacer(modifier = Modifier.height(12.dp))
 
         order.items.forEach { item ->

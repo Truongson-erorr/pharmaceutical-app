@@ -63,7 +63,7 @@ fun AppNavigation(
     categoryViewModel: CategoryViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
     cartViewModel: CartViewModel = viewModel(),
-    orderHistoryViewModel: OrderHistoryViewModel = viewModel()
+    orderHistoryViewModel: OrderHistoryViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
 
