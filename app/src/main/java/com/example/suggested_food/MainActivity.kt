@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.suggested_food.authentication.LoginScreen
 import com.example.suggested_food.authentication.RegisterScreen
+import com.example.suggested_food.screens.AddressScreen
 import com.example.suggested_food.screens.AllCategoriesScreen
 import com.example.suggested_food.screens.CartContent
 import com.example.suggested_food.screens.CategoryProductsScreen
@@ -38,6 +39,7 @@ import com.example.suggested_food.viewmodels.CartViewModel
 import com.example.suggested_food.viewmodels.CategoryViewModel
 import com.example.suggested_food.viewmodels.OrderHistoryViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
+import com.example.suggested_food.viewmodels.UserViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -63,6 +65,7 @@ fun AppNavigation(
     categoryViewModel: CategoryViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
     cartViewModel: CartViewModel = viewModel(),
+    userViewModel: UserViewModel = viewModel(),
     orderHistoryViewModel: OrderHistoryViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
@@ -148,7 +151,7 @@ fun AppNavigation(
             )
         }
         composable("checkout") {
-            CheckoutScreen(navController, cartViewModel)
+            CheckoutScreen(navController, cartViewModel, userViewModel)
         }
         composable("payment_success") {
             PaymentSuccessScreen(navController)
@@ -177,6 +180,8 @@ fun AppNavigation(
                 userId = it.arguments?.getString("userId")!!
             )
         }
-
+        composable("address") {
+            AddressScreen(navController)
+        }
     }
 }

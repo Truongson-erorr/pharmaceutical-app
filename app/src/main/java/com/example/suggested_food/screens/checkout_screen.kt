@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.models.CartItemModel
 import com.example.suggested_food.viewmodels.CartViewModel
+import com.example.suggested_food.viewmodels.UserViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -26,7 +27,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun CheckoutScreen(
     navController: NavController,
-    cartViewModel: CartViewModel
+    cartViewModel: CartViewModel,
+    userViewModel: UserViewModel
 ) {
     val cartItems by cartViewModel.checkoutItems.collectAsState()
 
@@ -41,6 +43,12 @@ fun CheckoutScreen(
     var showNoteSheet by remember { mutableStateOf(false) }
     var isLoading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+
+    val user = userViewModel.user
+
+    LaunchedEffect(Unit) {
+        userViewModel.loadUser()
+    }
 
     Scaffold(
         containerColor = Color.White,
@@ -121,7 +129,12 @@ fun CheckoutScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            item { AddressSection() }
+            item {
+                AddressSection(
+                    user = userViewModel.user,
+                    navController = navController
+                )
+            }
 
             item {
                 Text(

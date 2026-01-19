@@ -65,7 +65,10 @@ fun ProfileContent(
 
         ProfileMenuItem(
             icon = Icons.Outlined.LocationOn,
-            title = "Địa chỉ giao hàng"
+            title = "Địa chỉ giao hàng",
+            onClick = {
+                navController.navigate("address")
+            }
         )
 
         ProfileMenuItem(
