@@ -37,7 +37,7 @@ fun BannerSlider() {
 
     LaunchedEffect(Unit) {
         while (true) {
-            delay(2000)
+            delay(1500)
             val nextPage = (pagerState.currentPage + 1) % banners.size
             pagerState.animateScrollToPage(nextPage)
         }

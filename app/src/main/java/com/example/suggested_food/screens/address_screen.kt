@@ -32,13 +32,13 @@ fun AddressScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFF9FAFB),
+        containerColor = Color(0xFFF5F7FA),
         topBar = {
             SmallTopAppBar(
                 title = {
                     Text(
                         "Địa chỉ giao hàng",
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.SemiBold,
                         color = Color.White
                     )
                 },
@@ -55,6 +55,34 @@ fun AddressScreen(
                     containerColor = Color(0xFF1E88E5)
                 )
             )
+        },
+
+        bottomBar = {
+            Surface(
+                color = Color.Transparent,
+                tonalElevation = 6.dp
+            ) {
+                Button(
+                    onClick = {
+                        userViewModel.updateAddress(address)
+                        navController.popBackStack()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .height(45.dp),
+                    shape = RoundedCornerShape(14.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1E88E5)
+                    )
+                ) {
+                    Text(
+                        "Lưu địa chỉ",
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = MaterialTheme.typography.bodyLarge.fontSize
+                    )
+                }
+            }
         }
     ) { padding ->
 
@@ -62,21 +90,29 @@ fun AddressScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(16.dp)
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 80.dp)
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(16.dp),
-                elevation = CardDefaults.cardElevation(4.dp)
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                ),
+                elevation = CardDefaults.cardElevation(6.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(
+                    modifier = Modifier.padding(20.dp)
+                ) {
 
                     Text(
                         "Địa chỉ nhận hàng",
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = MaterialTheme.typography.titleMedium.fontSize
                     )
-                    Spacer(Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     TextField(
                         value = address,
@@ -85,38 +121,24 @@ fun AddressScreen(
                             .fillMaxWidth()
                             .heightIn(min = 120.dp),
                         placeholder = {
-                            Text("Ví dụ: 123 Nguyễn Trãi, Quận 1, TP.HCM")
+                            Text(
+                                "Ví dụ: 123 Nguyễn Trãi, Quận 1, TP.HCM",
+                                color = Color.Gray
+                            )
                         },
-                        shape = RoundedCornerShape(14.dp),
+                        shape = RoundedCornerShape(16.dp),
                         colors = TextFieldDefaults.textFieldColors(
                             containerColor = Color(0xFFF1F5F9),
                             focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent
+                            unfocusedIndicatorColor = Color.Transparent,
+                            cursorColor = Color(0xFF1E88E5)
                         )
                     )
                 }
             }
-            Spacer(Modifier.height(24.dp))
-
-            Button(
-                onClick = {
-                    userViewModel.updateAddress(address)
-                    navController.popBackStack()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(45.dp),
-                shape = RoundedCornerShape(25.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF1E88E5)
-                )
-            ) {
-                Text(
-                    "Lưu địa chỉ",
-                    fontWeight = FontWeight.Medium
-                )
-            }
         }
     }
 }
+
+
 

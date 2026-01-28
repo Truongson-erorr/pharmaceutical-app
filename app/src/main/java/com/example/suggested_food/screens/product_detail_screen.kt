@@ -13,6 +13,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Add
+import androidx.compose.material.icons.outlined.Remove
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,10 +25,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.models.CartItemModel
+import com.example.suggested_food.models.ProductModel
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CartViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
@@ -45,8 +49,8 @@ fun ProductDetailScreen(
     val scrollState = rememberScrollState()
 
     val context = LocalContext.current
-
     val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
+    var showBottomSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(productId) {
         productViewModel.fetchProductById(productId)
@@ -84,7 +88,12 @@ fun ProductDetailScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(12.dp),
+                            .padding(
+                                start = 12.dp,
+                                end = 12.dp,
+                                top = 8.dp,
+                                bottom = 28.dp
+                            ),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
 
@@ -98,19 +107,7 @@ fun ProductDetailScreen(
                                     ).show()
                                     return@OutlinedButton
                                 }
-
-                                product?.let {
-                                    cartViewModel.addToCart(
-                                        CartItemModel(
-                                            productId = it.id,
-                                            name = it.name,
-                                            image = it.images.firstOrNull() ?: "",
-                                            price = it.price,
-                                            quantity = 1
-                                        )
-                                    )
-                                    Toast.makeText(context, "Đã thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
-                                }
+                                showBottomSheet = true
                             },
                             modifier = Modifier
                                 .weight(0.3f)
@@ -276,6 +273,111 @@ fun ProductDetailScreen(
                 }
             }
         }
+
+        if (showBottomSheet) {
+            ModalBottomSheet(
+                onDismissRequest = { showBottomSheet = false },
+                containerColor = Color.White
+            ) {
+                QuantityBottomSheet(
+                    product = product,
+                    onConfirm = { quantity ->
+                        product?.let {
+                            cartViewModel.addToCart(
+                                CartItemModel(
+                                    productId = it.id,
+                                    name = it.name,
+                                    image = it.images.firstOrNull() ?: "",
+                                    price = it.price,
+                                    quantity = quantity
+                                )
+                            )
+                            Toast.makeText(
+                                context,
+                                "Đã thêm vào giỏ hàng",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                        showBottomSheet = false
+                    }
+                )
+            }
+        }
+
     }
 }
+
+@Composable
+fun QuantityBottomSheet(
+    product: ProductModel?,
+    onConfirm: (Int) -> Unit
+) {
+    var quantity by remember { mutableStateOf(1) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+    ) {
+
+        Text(
+            text = product?.name ?: "",
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp
+        )
+        Spacer(modifier = Modifier.height(6.dp))
+
+        Text(
+            text = "Vui lòng chọn số lượng phù hợp với nhu cầu sử dụng",
+            fontSize = 14.sp,
+            color = Color.Gray
+        )
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            IconButton(
+                onClick = { if (quantity > 1) quantity-- }
+            ) {
+                Icon(Icons.Outlined.Remove, contentDescription = "Giảm số lượng")
+            }
+
+            Text(
+                text = quantity.toString(),
+                fontSize = 20.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(horizontal = 20.dp)
+            )
+
+            IconButton(
+                onClick = { quantity++ }
+            ) {
+                Icon(Icons.Outlined.Add, contentDescription = "Tăng số lượng")
+            }
+        }
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Button(
+            onClick = { onConfirm(quantity) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(40.dp),
+            shape = RoundedCornerShape(14.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF1E88E5),
+                contentColor = Color.White
+            )
+        ) {
+            Text(
+                text = "Thêm vào giỏ hàng",
+                fontWeight = FontWeight.Bold
+            )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
+    }
+}
+
 

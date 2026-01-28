@@ -82,7 +82,7 @@ fun ChatScreen(
         TopAppBar(
             title = {
                 Text(
-                    "Chat tư vấn thuốc",
+                    "AI gợi ý thuốc",
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )

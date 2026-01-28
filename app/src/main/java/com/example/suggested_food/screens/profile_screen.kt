@@ -16,6 +16,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,10 +40,10 @@ fun ProfileContent(
             .background(Color.White)
             .padding(horizontal = 16.dp)
             .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
 
-        Spacer(modifier = Modifier.height(8.dp))
+        Spacer(modifier = Modifier.height(28.dp))
         ProfileHeaderUI(
             userName = displayName,
             email = email
@@ -138,11 +139,14 @@ fun ProfileHeaderUI(
 
 @Composable
 fun ProfileMenuItem(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     title: String,
     isDanger: Boolean = false,
     onClick: () -> Unit = {}
 ) {
+    val iconColor = if (isDanger) Color.Red else Color(0xFF1E88E5)
+    val iconBgColor = iconColor.copy(alpha = 0.12f)
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -158,12 +162,22 @@ fun ProfileMenuItem(
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                icon,
-                contentDescription = title,
-                tint = if (isDanger) Color.Red else Color(0xFF1E88E5)
-            )
 
+            Box(
+                modifier = Modifier
+                    .size(40.dp)
+                    .background(
+                        color = iconBgColor,
+                        shape = RoundedCornerShape(12.dp)
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    icon,
+                    contentDescription = title,
+                    tint = iconColor
+                )
+            }
             Spacer(modifier = Modifier.width(16.dp))
 
             Text(

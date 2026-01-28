@@ -14,11 +14,12 @@ class ChatViewModel : ViewModel() {
     private val _messages = MutableStateFlow(
         listOf(
             ChatMessage(
-                text = "Xin chào 👋\nBạn hãy mô tả triệu chứng để mình tư vấn thuốc nhé.",
+                text = "Xin chào 👋\nMình là AI gợi ý các loại thuốc không kê đơn dựa trên triệu chứng bạn cung cấp.\nThông tin chỉ mang tính tham khảo, bạn nên hỏi thêm dược sĩ hoặc bác sĩ khi cần.",
                 isUser = false
             )
         )
     )
+
     val messages: StateFlow<List<ChatMessage>> = _messages
 
     private val _isLoading = MutableStateFlow(false)
@@ -100,7 +101,7 @@ class ChatViewModel : ViewModel() {
                 "Không có thuốc nào trong hệ thống"
 
         val prompt = """
-        Bạn là trợ lý tư vấn dược.
+        "Bạn là trợ lý AI hỗ trợ tra cứu thông tin và gợi ý sản phẩm chăm sóc sức khỏe không kê đơn."
         
         Danh sách thuốc hiện có:
         $productListText

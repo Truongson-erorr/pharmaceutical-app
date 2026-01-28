@@ -5,6 +5,10 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.HomeWork
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.filled.LocalShipping
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -21,11 +25,39 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 
-sealed class BottomNavItem(val route: String, val icon: ImageVector, val label: String) {
-    object Home : BottomNavItem("home", Icons.Outlined.HomeWork, "Trang chủ")
-    object Utilities : BottomNavItem("utilities", Icons.Outlined.Lightbulb, "Tiện ích")
-    object Cart : BottomNavItem("cart", Icons.Outlined.LocalShipping, "Theo dõi đơn")
-    object Profile : BottomNavItem("profile", Icons.Outlined.Person, "Tôi")
+sealed class BottomNavItem(
+    val route: String,
+    val outlinedIcon: ImageVector,
+    val filledIcon: ImageVector,
+    val label: String
+) {
+    object Home : BottomNavItem(
+        "home",
+        Icons.Outlined.HomeWork,
+        Icons.Filled.HomeWork,
+        "Trang chủ"
+    )
+
+    object Utilities : BottomNavItem(
+        "utilities",
+        Icons.Outlined.Lightbulb,
+        Icons.Filled.Lightbulb,
+        "Tiện ích"
+    )
+
+    object Cart : BottomNavItem(
+        "cart",
+        Icons.Outlined.LocalShipping,
+        Icons.Filled.LocalShipping,
+        "Theo dõi đơn"
+    )
+
+    object Profile : BottomNavItem(
+        "profile",
+        Icons.Outlined.Person,
+        Icons.Filled.Person,
+        "Tôi"
+    )
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -178,13 +210,15 @@ fun MainScreen(
                         NavigationBarItem(
                             icon = {
                                 Icon(
-                                    item.icon,
+                                    imageVector =
+                                    if (selectedBottomItem.route == item.route)
+                                        item.filledIcon
+                                    else
+                                        item.outlinedIcon,
                                     contentDescription = item.label
                                 )
                             },
-                            label = {
-                                Text(text = item.label)
-                            },
+                            label = { Text(item.label) },
                             selected = selectedBottomItem.route == item.route,
                             onClick = {
                                 when (item) {
@@ -200,16 +234,14 @@ fun MainScreen(
                                             selectedBottomItem = item
                                         }
                                     }
-                                    else -> {
-                                        selectedBottomItem = item
-                                    }
+                                    else -> selectedBottomItem = item
                                 }
                             },
                             colors = NavigationBarItemDefaults.colors(
                                 selectedIconColor = Color(0xFF1E88E5),
                                 selectedTextColor = Color(0xFF1E88E5),
-                                unselectedIconColor = Color.Black,
-                                unselectedTextColor = Color.Black,
+                                unselectedIconColor = Color.Gray,
+                                unselectedTextColor = Color.Gray,
                                 indicatorColor = Color.Transparent
                             )
                         )

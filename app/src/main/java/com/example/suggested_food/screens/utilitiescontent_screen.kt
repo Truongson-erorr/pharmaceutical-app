@@ -38,7 +38,7 @@ fun UtilitiesContent(
 
     val utilities = listOf(
         UtilityItem(
-            title = "Chat tư vấn với AI",
+            title = "AI gợi ý thuốc",
             imageUrl = "https://cdn-icons-png.flaticon.com/512/8008/8008072.png"
         ) {
             if (isLoggedIn) {
