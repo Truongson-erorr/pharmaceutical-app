@@ -22,6 +22,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.suggested_food.models.ProductModel
 
@@ -56,6 +57,7 @@ fun ProductGridItem(
 
             Text(
                 text = product.name,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
                 maxLines = 2
             )

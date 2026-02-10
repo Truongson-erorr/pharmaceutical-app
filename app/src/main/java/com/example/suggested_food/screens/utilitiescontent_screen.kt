@@ -39,6 +39,7 @@ fun UtilitiesContent(
     val utilities = listOf(
         UtilityItem(
             title = "AI gợi ý thuốc",
+            description = "Tư vấn thuốc OTC dựa trên triệu chứng bạn cung cấp",
             imageUrl = "https://cdn-icons-png.flaticon.com/512/8008/8008072.png"
         ) {
             if (isLoggedIn) {
@@ -54,6 +55,7 @@ fun UtilitiesContent(
 
         UtilityItem(
             title = "Chat với bác sĩ",
+            description = "Trò chuyện trực tiếp với bác sĩ để được tư vấn",
             imageUrl = "https://betapto.edu.vn/upload/2025/06/chibi-bac-si-33.webp"
         ) {
             val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -71,19 +73,22 @@ fun UtilitiesContent(
         },
 
         UtilityItem(
+            title = "Tra cứu thuốc AI",
+            description = "Tra cứu công dụng, liều dùng và lưu ý an toàn của thuốc",
+            imageUrl = "https://media.istockphoto.com/id/1325977231/vi/vec-to/b%E1%BB%99-d%E1%BB%A5ng-c%E1%BB%A5-s%C6%A1-c%E1%BB%A9u-v%E1%BB%9Bi-thu%E1%BB%91c-bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-vector-h%E1%BB%99p-y-t%E1%BA%BF-v%E1%BA%BD-tay-vali-kh%E1%BA%A9n-c%E1%BA%A5p-d%E1%BB%A5ng-c%E1%BB%A5-b%C3%A1c-s%C4%A9.jpg?s=1024x1024&w=is&k=20&c=HfanywW-4Xts2ibN9dVS3G8zfIyUquNB1tZWRWAw7lo="
+        ) {},
+
+        UtilityItem(
             title = "Đơn thuốc của tôi",
+            description = "Quản lý và theo dõi các đơn thuốc của bạn",
             imageUrl = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQcj3g5fUD8FZ58y8xeT3dCppkllsztCRBnnkfcHysumHcun7wU6lCY-YGZrdWhisEvE2w&usqp=CAU"
         ) {},
 
         UtilityItem(
             title = "Tính liều dùng",
-            icon = Icons.Outlined.Calculate
+            description = "Hỗ trợ tính liều dùng phù hợp theo độ tuổi",
+            imageUrl = "https://png.pngtree.com/png-clipart/20250219/original/pngtree-health-syrup-medicine-bottle-icon-clipart-vector-png-image_20166397.png"
         ) {},
-
-        UtilityItem(
-            title = "Hỗ trợ",
-            icon = Icons.Outlined.SupportAgent
-        ) {}
     )
 
     Column(
@@ -110,7 +115,7 @@ fun UtilityCard(item: UtilityItem) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(140.dp)
+            .height(180.dp)
             .clickable { item.onClick() },
         shape = RoundedCornerShape(16.dp),
         elevation = CardDefaults.cardElevation(4.dp),
@@ -154,6 +159,15 @@ fun UtilityCard(item: UtilityItem) {
                 text = item.title,
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Medium
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = item.description,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray,
+                maxLines = 2
             )
         }
     }
