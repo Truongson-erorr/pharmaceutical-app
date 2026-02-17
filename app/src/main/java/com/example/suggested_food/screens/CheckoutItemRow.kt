@@ -40,7 +40,6 @@ fun CheckoutItemRow(item: CartItemModel) {
                     shape = RoundedCornerShape(12.dp)
                 )
         )
-
         Spacer(modifier = Modifier.width(12.dp))
 
         Column(
@@ -50,7 +49,6 @@ fun CheckoutItemRow(item: CartItemModel) {
                 text = item.name,
                 fontWeight = FontWeight.Medium
             )
-
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
@@ -63,7 +61,7 @@ fun CheckoutItemRow(item: CartItemModel) {
         Text(
             text = formatVND(item.price * item.quantity),
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF1E88E5)
+            color = Color.Black
         )
     }
 }

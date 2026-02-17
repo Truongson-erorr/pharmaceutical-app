@@ -176,7 +176,15 @@ fun MainScreen(
                         selected = selected,
                         onClick = {
                             when (item) {
-                                BottomNavItem.Profile,
+                                BottomNavItem.Profile -> {
+                                    if (!isLoggedIn) {
+                                        navController.navigate("login") {
+                                            launchSingleTop = true
+                                        }
+                                    } else {
+                                        selectedBottomItem = item
+                                    }
+                                }
                                 BottomNavItem.Cart -> {
                                     if (!isLoggedIn) {
                                         Toast.makeText(
@@ -188,7 +196,10 @@ fun MainScreen(
                                         selectedBottomItem = item
                                     }
                                 }
-                                else -> selectedBottomItem = item
+
+                                else -> {
+                                    selectedBottomItem = item
+                                }
                             }
                         },
                         colors = NavigationBarItemDefaults.colors(
