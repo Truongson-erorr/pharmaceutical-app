@@ -33,7 +33,7 @@ fun PaymentSuccessScreen(
                     )
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF00246B)
+                    containerColor = Color(0xFF24006B)
                 )
             )
         }
@@ -89,7 +89,7 @@ fun PaymentSuccessScreen(
                     .height(40.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF00246B)
+                    containerColor = Color(0xFF24006B)
                 )
             ) {
                 Text("Về trang chủ", fontWeight = FontWeight.Bold)

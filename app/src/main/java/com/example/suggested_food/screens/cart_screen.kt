@@ -59,7 +59,7 @@ fun CartContent(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF00246B)
+                    containerColor = Color(0xFF24006B)
                 )
             )
         },
@@ -78,7 +78,7 @@ fun CartContent(
                             Text(
                                 text = formatVND(selectedTotal),
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF00246B)
+                                color = Color(0xFF24006B)
                             )
                         }
 
@@ -89,7 +89,7 @@ fun CartContent(
                             },
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF00246B)
+                                containerColor = Color(0xFF24006B)
                             )
                         ) {
                             Text("Mua hàng")
@@ -113,7 +113,7 @@ fun CartContent(
                     Icon(
                         imageVector = Icons.Outlined.ShoppingCart,
                         contentDescription = "Giỏ hàng trống",
-                        tint = Color(0xFF00246B),
+                        tint = Color(0xFF24006B),
                         modifier = Modifier.size(66.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))

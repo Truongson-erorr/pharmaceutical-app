@@ -82,7 +82,7 @@ fun HomeContent(
                         else
                             "Quý khách",
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF00246B)
+                        color = Color(0xFF24006B)
                     )
                 }
             }
@@ -100,7 +100,7 @@ fun HomeContent(
                 Text("Danh mục", fontWeight = FontWeight.Bold)
                 Text(
                     "Xem tất cả",
-                    color = Color(0xFF00246B),
+                    color = Color(0xFF24006B),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
                         navController.navigate("AllCategoriesScreen")
@@ -111,7 +111,7 @@ fun HomeContent(
 
         item(span = { GridItemSpan(2) }) {
             if (loading) {
-                CircularProgressIndicator(color = Color(0xFF00246B))
+                CircularProgressIndicator(color = Color(0xFF24006B))
             } else {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(categories) { category ->
@@ -155,7 +155,7 @@ fun HomeContent(
 
         if (productLoading) {
             item(span = { GridItemSpan(2) }) {
-                CircularProgressIndicator(color = Color(0xFF00246B))
+                CircularProgressIndicator(color = Color(0xFF24006B))
             }
         } else {
             items(products) { product ->

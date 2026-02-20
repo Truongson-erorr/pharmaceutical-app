@@ -54,7 +54,7 @@ fun CategoryProductsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF00246B)
+                    containerColor = Color(0xFF24006B)
                 )
             )
         }

@@ -110,7 +110,7 @@ fun OrderHistoryScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFF1E88E5))
+                    CircularProgressIndicator(color = Color(0xFF24006B))
                 }
                 return@Column
             }

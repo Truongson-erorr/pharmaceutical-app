@@ -25,6 +25,7 @@ import com.example.suggested_food.screens.CartContent
 import com.example.suggested_food.screens.CategoryProductsScreen
 import com.example.suggested_food.screens.ChatScreen
 import com.example.suggested_food.screens.CheckoutScreen
+import com.example.suggested_food.screens.DrugLookupScreen
 import com.example.suggested_food.screens.MainScreen
 import com.example.suggested_food.screens.OrderDetailScreen
 import com.example.suggested_food.screens.OrderHistoryScreen
@@ -183,5 +184,9 @@ fun AppNavigation(
         composable("address") {
             AddressScreen(navController)
         }
+        composable("drug_lookup") {
+            DrugLookupScreen(navController)
+        }
+
     }
 }

@@ -139,14 +139,14 @@ fun MainScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF00246B)
+                    containerColor = Color(0xFF24006B)
                 )
             )
         },
 
         bottomBar = {
             NavigationBar(
-                containerColor = Color(0xFF00246B),
+                containerColor = Color(0xFF24006B),
                 tonalElevation = 0.dp,
                 modifier = Modifier
                     .height(95.dp)

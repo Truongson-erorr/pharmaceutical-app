@@ -76,7 +76,20 @@ fun UtilitiesContent(
             title = "Tra cứu thuốc AI",
             description = "Tra cứu công dụng, liều dùng và lưu ý an toàn của thuốc",
             imageUrl = "https://media.istockphoto.com/id/1325977231/vi/vec-to/b%E1%BB%99-d%E1%BB%A5ng-c%E1%BB%A5-s%C6%A1-c%E1%BB%A9u-v%E1%BB%9Bi-thu%E1%BB%91c-bi%E1%BB%83u-t%C6%B0%E1%BB%A3ng-vector-h%E1%BB%99p-y-t%E1%BA%BF-v%E1%BA%BD-tay-vali-kh%E1%BA%A9n-c%E1%BA%A5p-d%E1%BB%A5ng-c%E1%BB%A5-b%C3%A1c-s%C4%A9.jpg?s=1024x1024&w=is&k=20&c=HfanywW-4Xts2ibN9dVS3G8zfIyUquNB1tZWRWAw7lo="
-        ) {},
+        ) {
+            if (!isLoggedIn) {
+                Toast.makeText(
+                    context,
+                    "Vui lòng đăng nhập để sử dụng chức năng này",
+                    Toast.LENGTH_SHORT
+                ).show()
+                navController.navigate("LoginScreen") {
+                    launchSingleTop = true
+                }
+            } else {
+                navController.navigate("drug_lookup")
+            }
+        },
 
         UtilityItem(
             title = "Đơn thuốc của tôi",
@@ -172,3 +185,5 @@ fun UtilityCard(item: UtilityItem) {
         }
     }
 }
+
+
