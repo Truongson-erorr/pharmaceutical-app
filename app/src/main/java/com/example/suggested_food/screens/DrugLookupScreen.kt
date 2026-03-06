@@ -85,7 +85,7 @@ fun DrugLookupScreen(
                     value = query,
                     onValueChange = { query = it },
                     placeholder = {
-                        Text("Nhập tên thuốc...", color = Color.LightGray)
+                        Text("Bạn cần tra cứu thông tin gì ^^", color = Color.LightGray)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(25),

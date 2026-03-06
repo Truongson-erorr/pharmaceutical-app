@@ -58,6 +58,7 @@ fun ProductGridItem(
             Text(
                 text = product.name,
                 fontSize = 14.sp,
+                color = Color.Gray,
                 fontWeight = FontWeight.Bold,
                 maxLines = 2
             )
@@ -65,7 +66,7 @@ fun ProductGridItem(
 
             Text(
                 text = formatVND(product.price),
-                color = Color(0xFF24006B),
+                color = Color.Black,
                 fontWeight = FontWeight.Bold
             )
             Spacer(modifier = Modifier.height(4.dp))

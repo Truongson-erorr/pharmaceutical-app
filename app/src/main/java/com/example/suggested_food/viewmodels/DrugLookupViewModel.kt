@@ -29,7 +29,7 @@ class DrugLookupViewModel : ViewModel() {
 
         val prompt = """
             Bạn là trợ lý AI tra cứu thông tin thuốc.
-            
+         
             Hãy trả lời chi tiết về thuốc: "$drugName"
             
             Bao gồm:
