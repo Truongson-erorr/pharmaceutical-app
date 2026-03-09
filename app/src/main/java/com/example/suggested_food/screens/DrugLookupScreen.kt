@@ -17,17 +17,31 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodels.DrugLookupViewModel
+import com.example.suggested_food.viewmodels.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DrugLookupScreen(
     navController: NavController,
-    viewModel: DrugLookupViewModel = viewModel()
+    productViewModel: ProductViewModel = viewModel(),
 ) {
     var query by remember { mutableStateOf("") }
+
+    val viewModel: DrugLookupViewModel = viewModel(
+        factory = object : androidx.lifecycle.ViewModelProvider.Factory {
+            override fun <T : androidx.lifecycle.ViewModel> create(modelClass: Class<T>): T {
+                @Suppress("UNCHECKED_CAST")
+                return DrugLookupViewModel(
+                    application = navController.context.applicationContext as android.app.Application,
+                    productViewModel = productViewModel
+                ) as T
+            }
+        }
+    )
 
     val result by viewModel.result.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
@@ -35,87 +49,91 @@ fun DrugLookupScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = {
-                    Text(
-                        text = "Tra cứu thuốc AI",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                },
+                title = { Text("Tra cứu thuốc AI", fontWeight = FontWeight.Bold, color = Color.White) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Outlined.ArrowBack,
-                            contentDescription = null,
-                            tint = Color.White
-                        )
+                        Icon(Icons.Outlined.ArrowBack, contentDescription = null, tint = Color.White)
                     }
                 },
                 actions = {
-                    Icon(
-                        imageVector = Icons.Outlined.SupportAgent,
-                        contentDescription = null,
-                        tint = Color.White,
-                        modifier = Modifier.padding(end = 16.dp)
-                    )
+                    Icon(Icons.Outlined.SupportAgent, contentDescription = null, tint = Color.White, modifier = Modifier.padding(end = 16.dp))
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF24006B)
-                )
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF24006B))
             )
         },
         containerColor = Color(0xFFF5F7FB)
     ) { innerPadding ->
-
         Box(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(Color.White)
         ) {
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(horizontal = 20.dp, vertical = 24.dp)
                     .verticalScroll(rememberScrollState())
             ) {
-
-                OutlinedTextField(
+                TextField(
                     value = query,
-                    onValueChange = { query = it },
+                    onValueChange = { query  = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(55.dp)
+                        .background(Color(0xFFF3F4F6), RoundedCornerShape(14.dp)),
                     placeholder = {
-                        Text("Bạn cần tra cứu thông tin gì ^^", color = Color.LightGray)
+                        Text(
+                            "Bạn cần tra cứu thông tin gì ^^",
+                            color = Color(0xFF6B7280)
+                        )
                     },
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(25),
-                    trailingIcon = {
-                        IconButton(
-                            onClick = {
-                                viewModel.searchDrug(query)
-                            }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Filled.Search,
-                                contentDescription = "Search",
-                                tint = Color(0xFF24006B)
-                            )
-                        }
+                    singleLine = true,
+                    leadingIcon = {
+                        Icon(
+                            Icons.Default.Search,
+                            contentDescription = null,
+                            tint = Color(0xFF6B7280)
+                        )
                     },
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color(0xFF24006B),
-                        unfocusedBorderColor = Color(0xFFE0E0E0),
-                        cursorColor = Color(0xFF24006B),
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White
-                    ),
-                    singleLine = true
+                    shape = RoundedCornerShape(14.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFF3F4F6),   // light gray
+                        unfocusedContainerColor = Color(0xFFF3F4F6),
+                        disabledContainerColor = Color(0xFFF3F4F6),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent,
+                        cursorColor = Color.Black,
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.Black
+                    )
                 )
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                result?.let {
+                if (result.isNullOrBlank()) {
                     Text(
-                        text = it,
+                        text = """
+                            Chức năng tra cứu thuốc AI giúp bạn tìm hiểu chi tiết các thuốc không kê đơn (OTC) 
+                            có trong hệ thống.
+                
+                            Lưu ý khi đặt câu hỏi:
+                            - Đặt **tên thuốc ở đầu câu**.
+                            - Tiếp theo là thắc mắc về thuốc, ví dụ: tác dụng, liều dùng, chống chỉ định...
+                
+                            Ví dụ:
+                            - "Smecta có tác dụng gì?"
+                            - "Paracetamol uống thế nào khi đau đầu?"
+                            - "Ibuprofen có tác dụng phụ gì?"
+                
+                        """.trimIndent(),
+                        color = Color.DarkGray,
+                        fontSize = 13.sp,
+                        textAlign = TextAlign.Justify
+                    )
+                } else {
+                    Text(
+                        text = result!!,
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Justify,
                         color = Color.DarkGray
@@ -125,15 +143,10 @@ fun DrugLookupScreen(
 
             if (isLoading) {
                 Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(Color.Black.copy(alpha = 0.2f)),
+                    modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(
-                        color = Color(0xFF24006B),
-                        strokeWidth = 4.dp
-                    )
+                    CircularProgressIndicator(color = Color(0xFF24006B), strokeWidth = 4.dp)
                 }
             }
         }

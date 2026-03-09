@@ -185,7 +185,7 @@ fun AppNavigation(
             AddressScreen(navController)
         }
         composable("drug_lookup") {
-            DrugLookupScreen(navController)
+            DrugLookupScreen(navController, productViewModel = productViewModel)
         }
 
     }

@@ -78,4 +78,8 @@ class ProductViewModel : ViewModel() {
             it.name.contains(query, ignoreCase = true)
         }
     }
+
+    fun getProductsByPrefix(prefix: String): List<ProductModel> {
+        return _products.value.filter { it.name.lowercase().startsWith(prefix) }
+    }
 }
