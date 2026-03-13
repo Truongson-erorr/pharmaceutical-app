@@ -49,7 +49,7 @@ class ChatViewModel : ViewModel() {
 
         val healthKeywords = listOf(
             "đau", "sốt", "ho", "viêm", "nhức", "buồn nôn",
-            "chóng mặt", "đau bụng", "tiêu chảy", "cảm", "dị ứng"
+            "chóng mặt", "đau bụng", "tiêu chảy", "cảm", "dị ứng", "mắc ỉa"
         )
 
         if (healthKeywords.none { userMsg.contains(it, ignoreCase = true) }) {
