@@ -24,7 +24,6 @@ fun BannerSlider() {
 
     val banners = remember {
         listOf(
-            "https://vsh.org.vn/pic/News/images/d1(11).jpg",
             "https://bcp.cdnchinhphu.vn/334894974524682240/2025/10/24/long-chau-3-1761313032132863736386.jpg",
             "https://suckhoedoisong.qltns.mediacdn.vn/324455921873985536/2025/5/12/tpcn-1747054390355236451777.jpg",
             "https://develop-cdn.pharmacity.io/digital/original/plain/blog/c06a50e61fa3fa330a3c629eabdce74e1733536834.jpg"
