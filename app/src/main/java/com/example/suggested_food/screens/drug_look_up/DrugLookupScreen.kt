@@ -40,7 +40,7 @@ fun DrugLookupScreen(
                         Icon(Icons.Outlined.ArrowBack, contentDescription = null, tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF24006B))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF08A045))
             )
         },
         containerColor = Color(0xFFF5F7FB)
@@ -62,16 +62,24 @@ fun DrugLookupScreen(
                     onValueChange = { query = it },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(55.dp)
-                        .background(Color(0xFFF3F4F6), RoundedCornerShape(14.dp)),
-                    placeholder = { Text("Nhập tên thuốc...", color = Color(0xFF6B7280)) },
+                        .height(50.dp),
+
+                    placeholder = {
+                        Text("Nhập tên thuốc...", color = Color(0xFF6B7280))
+                    },
                     singleLine = true,
                     trailingIcon = {
-                        IconButton(onClick = { if (query.isNotBlank()) viewModel.searchDrug(query) }) {
-                            Icon(Icons.Default.Search, contentDescription = "Search", tint = Color(0xFF6B7280))
+                        IconButton(onClick = {
+                            if (query.isNotBlank()) viewModel.searchDrug(query)
+                        }) {
+                            Icon(
+                                Icons.Default.Search,
+                                contentDescription = "Search",
+                                tint = Color(0xFF6B7280)
+                            )
                         }
                     },
-                    shape = RoundedCornerShape(14.dp),
+                    shape = RoundedCornerShape(30.dp),
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color(0xFFF3F4F6),
                         unfocusedContainerColor = Color(0xFFF3F4F6),
@@ -82,7 +90,6 @@ fun DrugLookupScreen(
                         unfocusedTextColor = Color.Black
                     )
                 )
-
                 Spacer(modifier = Modifier.height(16.dp))
 
                 if (result.isNullOrBlank()) {
@@ -94,15 +101,14 @@ fun DrugLookupScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                 } else {
-                    // Hiển thị tất cả các thông tin thuốc
                     val sections = result!!.split("## ").filter { it.isNotBlank() }
                     sections.forEach { section ->
                         val lines = section.trim().lines()
                         if (lines.isNotEmpty()) {
                             Text(
-                                text = lines[0],  // header
+                                text = lines[0],
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF24006B),
+                                color = Color(0xFF08A045),
                                 fontSize = 15.sp,
                                 modifier = Modifier.padding(top = 12.dp, bottom = 4.dp)
                             )

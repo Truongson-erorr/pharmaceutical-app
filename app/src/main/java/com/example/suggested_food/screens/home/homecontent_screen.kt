@@ -11,22 +11,22 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.suggested_food.screens.product.ProductGridItem
-import com.example.suggested_food.screens.category.CategoryHorizontalItem
-import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CategoryViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 
@@ -37,16 +37,23 @@ fun HomeContent(
     navController: NavController,
     categoryViewModel: CategoryViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
-    authViewModel: AuthViewModel
 ) {
+
     val categories by categoryViewModel.categories.collectAsState()
     val loading by categoryViewModel.loading.collectAsState()
 
     val products by productViewModel.products.collectAsState()
     val productLoading by productViewModel.loading.collectAsState()
 
-    val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
-    val userName by authViewModel.userName.collectAsState()
+    var searchQuery by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+
+    val suggestions = remember(searchQuery, products) {
+        if (searchQuery.isBlank()) emptyList()
+        else products
+            .filter { it.name.contains(searchQuery, true) }
+            .take(7)
+    }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
@@ -57,31 +64,100 @@ fun HomeContent(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-
         item(span = { GridItemSpan(2) }) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(Icons.Default.Person, null, tint = Color.Gray)
-                Spacer(Modifier.width(12.dp))
 
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        text = greetingByTime(),
-                        fontSize = 15.sp,
-                        color = Color.LightGray,
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.bodySmall
+            Column {
+                TextField(
+                    value = searchQuery,
+                    onValueChange = {
+                        searchQuery = it
+                        expanded = it.isNotBlank()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp),
+                    placeholder = {
+                        Text(
+                            "Nhập tên thuốc...",
+                            color = Color(0xFF6B7280)
+                        )
+                    },
+                    singleLine = true,
+                    trailingIcon = {
+                        Icon(
+                            Icons.Default.Search,
+                            contentDescription = null,
+                            tint = Color(0xFF6B7280)
+                        )
+                    },
+                    shape = RoundedCornerShape(30.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFF3F4F6),
+                        unfocusedContainerColor = Color(0xFFF3F4F6),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        cursorColor = Color.Black,
+                        focusedTextColor = Color.Black,
+                        unfocusedTextColor = Color.Black
                     )
-                    Text(
-                        text = if (isLoggedIn && !userName.isNullOrBlank())
-                            userName!!
-                        else
-                            "Quý khách",
-                        fontWeight = FontWeight.Bold,
-                        color = Color(0xFF24006B)
-                    )
+                )
+
+                if (expanded && suggestions.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Card(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White
+                        ),
+                        elevation = CardDefaults.cardElevation(6.dp)
+                    ) {
+
+                        Column {
+                            suggestions.forEach { product ->
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            expanded = false
+                                            searchQuery = product.name
+                                            navController.navigate(
+                                                "ProductDetail/${product.id}"
+                                            )
+                                        }
+                                        .padding(12.dp),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+
+                                    AsyncImage(
+                                        model = product.images.firstOrNull(),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(40.dp)
+                                            .clip(RoundedCornerShape(8.dp))
+                                    )
+                                    Spacer(modifier = Modifier.width(12.dp))
+
+                                    Column {
+
+                                        Text(
+                                            text = product.name,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Medium,
+                                            maxLines = 1
+                                        )
+
+                                        Text(
+                                            text = "Xem chi tiết",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = Color.Gray
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -96,9 +172,10 @@ fun HomeContent(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text("Danh mục", fontWeight = FontWeight.Bold)
+
                 Text(
                     "Xem tất cả",
-                    color = Color(0xFF24006B),
+                    color = Color(0xFF08A045),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
                         navController.navigate("AllCategoriesScreen")
@@ -108,8 +185,9 @@ fun HomeContent(
         }
 
         item(span = { GridItemSpan(2) }) {
+
             if (loading) {
-                CircularProgressIndicator(color = Color(0xFF24006B))
+                CircularProgressIndicator(color = Color(0xFF08A045))
             } else {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(categories) { category ->
@@ -127,24 +205,20 @@ fun HomeContent(
 
         item(span = { GridItemSpan(2) }) {
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
+
                 Text(
                     text = "Sản phẩm phổ biến",
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                IconButton(onClick = {
-
-                }) {
+                IconButton(onClick = {}) {
                     Icon(
                         imageVector = Icons.Outlined.FilterAlt,
-                        contentDescription = "Lọc",
+                        contentDescription = "Filter",
                         tint = Color.Black
                     )
                 }
@@ -153,7 +227,7 @@ fun HomeContent(
 
         if (productLoading) {
             item(span = { GridItemSpan(2) }) {
-                CircularProgressIndicator(color = Color(0xFF24006B))
+                CircularProgressIndicator(color = Color(0xFF08A045))
             }
         } else {
             items(products) { product ->
@@ -167,6 +241,3 @@ fun HomeContent(
         }
     }
 }
-
-
-

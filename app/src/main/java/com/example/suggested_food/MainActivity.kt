@@ -9,16 +9,23 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.suggested_food.authentication.LoginScreen
 import com.example.suggested_food.authentication.RegisterScreen
+import com.example.suggested_food.screens.AdminHomeScreen
 import com.example.suggested_food.screens.address.AddressScreen
 import com.example.suggested_food.screens.category.AllCategoriesScreen
 import com.example.suggested_food.screens.cart.CartContent
@@ -63,21 +70,38 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigation(
     authViewModel: AuthViewModel = viewModel(),
-    categoryViewModel: CategoryViewModel = viewModel(),
-    productViewModel: ProductViewModel = viewModel(),
     cartViewModel: CartViewModel = viewModel(),
     userViewModel: UserViewModel = viewModel(),
     orderHistoryViewModel: OrderHistoryViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
 
+    val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
+    val role by authViewModel.userRole.collectAsState()
+
+    if (isLoggedIn && role == null) {
+        Box(
+            modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
     LaunchedEffect(Unit) {
         cartViewModel.loadCartFromFirestore()
     }
 
+    val startDestination = when {
+        !isLoggedIn -> "login"
+        role == "admin" -> "admin_home"
+        else -> "MainScreen"
+    }
+
     AnimatedNavHost(
         navController = navController,
-        startDestination = "MainScreen",
+        startDestination = startDestination,
         enterTransition = {
             slideInHorizontally(initialOffsetX = { 1000 }, animationSpec = tween(300))
         },
@@ -186,6 +210,12 @@ fun AppNavigation(
         }
         composable("drug_lookup") {
             DrugLookupScreen(navController)
+        }
+        composable("admin_home") {
+            AdminHomeScreen(
+                navController = navController,
+                authViewModel = authViewModel
+            )
         }
     }
 }

@@ -56,7 +56,7 @@ fun SearchScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF24006B)
+                    containerColor = Color(0xFF08A045)
                 )
             )
         }
@@ -112,7 +112,7 @@ fun SearchScreen(
 
             when {
                 loading -> {
-                    CircularProgressIndicator(color = Color(0xFF24006B))
+                    CircularProgressIndicator(color = Color(0xFF08A045))
                 }
 
                 searchQuery.isNotBlank() && searchResults.isEmpty() -> {

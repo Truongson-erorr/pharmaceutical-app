@@ -19,6 +19,7 @@ fun RegisterScreen(
     var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    val role by remember { mutableStateOf("") }
 
     val loading by authViewModel.loading.collectAsState()
     val error by authViewModel.error.collectAsState()
@@ -64,7 +65,8 @@ fun RegisterScreen(
                 authViewModel.register(
                     email = email.trim(),
                     password = password,
-                    name = name.trim()
+                    name = name.trim(),
+                    role = role.trim()
                 )
             },
             enabled = !loading,

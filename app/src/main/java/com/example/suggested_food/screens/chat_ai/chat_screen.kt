@@ -101,7 +101,7 @@ fun ChatScreen(
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF24006B)
+                containerColor = Color(0xFF08A045)
             )
         )
 
@@ -184,7 +184,7 @@ fun ChatScreen(
                 Icon(
                     Icons.Filled.Send,
                     null,
-                    tint = Color(0xFF24006B)
+                    tint = Color(0xFF08A045)
                 )
             }
         }
@@ -204,7 +204,7 @@ fun ChatBubble(message: ChatMessage) {
             modifier = Modifier
                 .background(
                     if (message.isUser)
-                        Color(0xFF24006B)
+                        Color(0xFF08A045)
                     else
                         Color(0xFFE5E7EB),
                     RoundedCornerShape(16.dp)

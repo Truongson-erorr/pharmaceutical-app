@@ -49,7 +49,7 @@ fun OrderEmptyState(
                 Icon(
                     Icons.Outlined.Description,
                     contentDescription = null,
-                    tint = Color(0xFF24006B),
+                    tint = Color(0xFF08A045),
                     modifier = Modifier.size(48.dp)
                 )
             }

@@ -24,32 +24,40 @@ class AuthViewModel : ViewModel() {
     private val _userName = MutableStateFlow<String?>(null)
     val userName: StateFlow<String?> = _userName
 
+    private val _userRole = MutableStateFlow<String?>(null)
+    val userRole: StateFlow<String?> = _userRole
+
     init {
         auth.currentUser?.uid?.let { uid ->
-            loadUserName(uid)
+            loadUserData(uid)
         }
     }
 
-    fun register(email: String, password: String, name: String) {
+    fun register(email: String, password: String, name: String, role: String) {
+
         _loading.value = true
         _error.value = null
 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { result ->
+
                 val uid = result.user?.uid ?: return@addOnSuccessListener
 
                 val user = UserModel(
                     uid = uid,
                     email = email,
-                    name = name
+                    name = name,
+                    role = role
                 )
 
                 firestore.collection("users")
                     .document(uid)
                     .set(user)
                     .addOnSuccessListener {
-                        _isLoggedIn.value = true
+
                         _userName.value = name
+                        _userRole.value = role
+                        _isLoggedIn.value = true
                         _loading.value = false
                     }
                     .addOnFailureListener {
@@ -64,13 +72,15 @@ class AuthViewModel : ViewModel() {
     }
 
     fun login(email: String, password: String) {
+
         _loading.value = true
         _error.value = null
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { result ->
+                val uid = result.user?.uid ?: return@addOnSuccessListener
+                loadUserData(uid)
                 _isLoggedIn.value = true
-                result.user?.uid?.let { loadUserName(it) }
                 _loading.value = false
             }
             .addOnFailureListener {
@@ -79,23 +89,27 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun logout() {
-        auth.signOut()
-        _isLoggedIn.value = false
-        _userName.value = null
-    }
+    private fun loadUserData(uid: String) {
 
-    fun getCurrentUser() = auth.currentUser
-
-    private fun loadUserName(uid: String) {
         firestore.collection("users")
             .document(uid)
             .get()
             .addOnSuccessListener { doc ->
                 _userName.value = doc.getString("name")
+                _userRole.value = doc.getString("role")
             }
             .addOnFailureListener {
                 _userName.value = null
+                _userRole.value = null
             }
     }
+
+    fun logout() {
+        auth.signOut()
+        _isLoggedIn.value = false
+        _userName.value = null
+        _userRole.value = null
+    }
+
+    fun getCurrentUser() = auth.currentUser
 }

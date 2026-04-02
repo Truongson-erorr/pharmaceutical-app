@@ -105,7 +105,7 @@ fun ProfileHeaderUI(
 
         Surface(
             shape = CircleShape,
-            color = Color(0xFF24006B),
+            color = Color(0xFF08A045),
             modifier = Modifier
                 .size(72.dp)
                 .offset(y = (-12).dp)
@@ -144,7 +144,7 @@ fun ProfileMenuItem(
     isDanger: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    val iconColor = if (isDanger) Color.Red else Color(0xFF24006B)
+    val iconColor = if (isDanger) Color.Red else Color(0xFF08A045)
     val iconBgColor = iconColor.copy(alpha = 0.12f)
 
     Card(

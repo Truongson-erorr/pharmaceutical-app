@@ -74,7 +74,7 @@ fun ProductDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF24006B)
+                    containerColor = Color(0xFF08A045)
                 )
             )
         },
@@ -110,11 +110,11 @@ fun ProductDetailScreen(
                                 .weight(0.3f)
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
-                            border = BorderStroke(1.dp, Color(0xFF24006B))
+                            border = BorderStroke(1.dp, Color(0xFF08A045))
                         ) {
                             Text(
                                 "Giỏ hàng",
-                                color = Color(0xFF24006B),
+                                color = Color(0xFF08A045),
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -126,7 +126,7 @@ fun ProductDetailScreen(
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF24006B)
+                                containerColor = Color(0xFF08A045)
                             )
                         ) {
                             Text(

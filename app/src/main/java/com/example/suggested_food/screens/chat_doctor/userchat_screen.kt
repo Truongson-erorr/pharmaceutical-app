@@ -70,7 +70,7 @@ fun UserChatScreen(
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF24006B)
+                containerColor = Color(0xFF08A045)
             )
         )
 
@@ -125,7 +125,7 @@ fun UserChatScreen(
                 Icon(
                     Icons.Filled.Send,
                     contentDescription = null,
-                    tint = Color(0xFF24006B)
+                    tint = Color(0xFF08A045)
                 )
             }
         }
@@ -146,7 +146,7 @@ fun MessageBubbleDoctor(message: ChatMessageDoctor) {
             modifier = Modifier
                 .background(
                     if (isUser)
-                        Color(0xFF24006B)
+                        Color(0xFF08A045)
                     else
                         Color(0xFFE5E7EB),
                     RoundedCornerShape(16.dp)
