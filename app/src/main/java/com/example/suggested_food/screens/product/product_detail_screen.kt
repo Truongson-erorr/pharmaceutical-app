@@ -54,6 +54,7 @@ fun ProductDetailScreen(
     }
 
     Scaffold(
+        containerColor = Color(0xFFFFF3E0),
         topBar = {
             SmallTopAppBar(
                 title = {
@@ -74,7 +75,7 @@ fun ProductDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF08A045)
+                    containerColor = Color(0xFFFF6600)
                 )
             )
         },
@@ -110,11 +111,11 @@ fun ProductDetailScreen(
                                 .weight(0.3f)
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
-                            border = BorderStroke(1.dp, Color(0xFF08A045))
+                            border = BorderStroke(1.dp, Color(0xFFFF6600))
                         ) {
                             Text(
                                 "Giỏ hàng",
-                                color = Color(0xFF08A045),
+                                color = Color(0xFFFF6600),
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -126,7 +127,7 @@ fun ProductDetailScreen(
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF08A045)
+                                containerColor = Color(0xFFFF6600)
                             )
                         ) {
                             Text(
@@ -147,7 +148,7 @@ fun ProductDetailScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFF24006B))
+                    CircularProgressIndicator(color = Color.Black)
                 }
             }
 
@@ -202,8 +203,7 @@ fun ProductDetailScreen(
                                     .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
                                     .clip(CircleShape)
                                     .background(
-                                        if (pagerState.currentPage == index)
-                                            Color(0xFF24006B)
+                                        if (pagerState.currentPage == index) Color(0xFFFF6600)
                                         else Color.LightGray
                                     )
                             )
@@ -239,7 +239,7 @@ fun ProductDetailScreen(
                             Text(
                                 if (product!!.stock > 0) "Còn hàng" else "Hết hàng",
                                 color = if (product!!.stock > 0)
-                                    Color(0xFF16A34A) else Color.Gray,
+                                    Color(0xFFFF6600) else Color.Gray,
                                 fontWeight = FontWeight.Medium
                             )
                         }

@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -15,9 +16,15 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -37,57 +44,126 @@ fun ProfileContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .padding(horizontal = 16.dp)
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFE0B2)),
+                    startY = 0f,
+                    endY = Float.POSITIVE_INFINITY
+                )
+            )
+            .verticalScroll(rememberScrollState())
     ) {
-
-        Spacer(modifier = Modifier.height(28.dp))
         ProfileHeaderUI(
             userName = displayName,
             email = email
         )
 
-        ProfileMenuItem(
-            icon = Icons.Outlined.MedicalServices,
-            title = "Thuốc của tôi"
-        )
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 14.dp)
+                .shadow(
+                    elevation = 4.dp,
+                    shape = RoundedCornerShape(20.dp),
+                    ambientColor = Color(0x1A000000),
+                    spotColor = Color(0x1A000000)
+                ),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White.copy(alpha = 0.9f)
+            )
+        ) {
+            Column {
+                ProfileMenuItem(
+                    icon = Icons.Filled.MedicalServices,
+                    title = "Hồ sơ sức khỏe",
+                    subtitle = "Quản lý thông tin sức khỏe của bạn"
+                )
 
-        ProfileMenuItem(
-            icon = Icons.Outlined.NotificationsActive,
-            title = "Nhắc uống thuốc"
-        )
+                Divider(
+                    color = Color(0xFFEEEEEE),
+                    thickness = 0.5.dp,
+                    modifier = Modifier.padding(horizontal = 14.dp)
+                )
 
-        ProfileMenuItem(
-            icon = Icons.Outlined.FavoriteBorder,
-            title = "Thuốc yêu thích"
-        )
+                ProfileMenuItem(
+                    icon = Icons.Filled.NotificationsActive,
+                    title = "Nhắc uống thuốc",
+                    subtitle = "Thiết lập lịch nhắc nhở"
+                )
 
-        ProfileMenuItem(
-            icon = Icons.Outlined.LocationOn,
-            title = "Địa chỉ giao hàng",
-            onClick = {
-                navController.navigate("address")
+                Divider(
+                    color = Color(0xFFEEEEEE),
+                    thickness = 0.5.dp,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                ProfileMenuItem(
+                    icon = Icons.Filled.Favorite,
+                    title = "Thuốc yêu thích",
+                    subtitle = "Danh sách thuốc đã lưu"
+                )
+
+                Divider(
+                    color = Color(0xFFEEEEEE),
+                    thickness = 0.5.dp,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                ProfileMenuItem(
+                    icon = Icons.Filled.LocationOn,
+                    title = "Địa chỉ giao hàng",
+                    subtitle = "Quản lý địa chỉ nhận hàng",
+                    onClick = {
+                        navController.navigate("address")
+                    }
+                )
+
+                Divider(
+                    color = Color(0xFFEEEEEE),
+                    thickness = 0.5.dp,
+                    modifier = Modifier.padding(horizontal = 16.dp)
+                )
+
+                ProfileMenuItem(
+                    icon = Icons.Filled.Help,
+                    title = "Hỗ trợ & trợ giúp",
+                    subtitle = "Liên hệ và câu hỏi thường gặp"
+                )
             }
-        )
+        }
+        Spacer(modifier = Modifier.height(16.dp))
 
-        ProfileMenuItem(
-            icon = Icons.Outlined.HelpOutline,
-            title = "Hỗ trợ & trợ giúp"
-        )
-
-        ProfileMenuItem(
-            icon = Icons.Outlined.Logout,
-            title = "Đăng xuất",
-            isDanger = true,
-            onClick = {
-                authViewModel.logout()
-                navController.navigate("login") {
-                    popUpTo("MainScreen") { inclusive = true }
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 20.dp)
+                .shadow(
+                    elevation = 4.dp,
+                    shape = RoundedCornerShape(20.dp),
+                    ambientColor = Color(0x1A000000),
+                    spotColor = Color(0x1A000000)
+                ),
+            shape = RoundedCornerShape(20.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White.copy(alpha = 0.9f)
+            )
+        ) {
+            ProfileMenuItem(
+                icon = Icons.Filled.Logout,
+                title = "Đăng xuất",
+                subtitle = "Thoát khỏi tài khoản",
+                isDanger = true,
+                onClick = {
+                    authViewModel.logout()
+                    navController.navigate("login") {
+                        popUpTo("MainScreen") { inclusive = true }
+                    }
                 }
-            }
-        )
+            )
+        }
+
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }
 
@@ -96,43 +172,74 @@ fun ProfileHeaderUI(
     userName: String,
     email: String
 ) {
-    Row(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+            .height(220.dp)
+            .background(Color.Transparent)
     ) {
-
-        Surface(
-            shape = CircleShape,
-            color = Color(0xFF08A045),
+        Column(
             modifier = Modifier
-                .size(72.dp)
-                .offset(y = (-12).dp)
+                .fillMaxSize()
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
         ) {
-            Box(contentAlignment = Alignment.Center) {
-                Text(
-                    text = userName.firstOrNull()?.uppercase() ?: "U",
-                    color = Color.White,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            Surface(
+                shape = CircleShape,
+                color = Color.White,
+                modifier = Modifier
+                    .size(100.dp)
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = CircleShape,
+                        ambientColor = Color(0x33000000),
+                        spotColor = Color(0x33000000)
+                    )
+            ) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = userName.firstOrNull()?.uppercase() ?: "U",
+                        color = Color(0xFFFF6600),
+                        fontSize = 40.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
-        }
-        Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-        Column {
             Text(
                 text = userName,
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color.Black,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                text = email,
-                fontSize = 14.sp,
-                color = Color.Gray
-            )
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    Icons.Filled.Email,
+                    contentDescription = null,
+                    tint = Color.Gray.copy(alpha = 0.8f),
+                    modifier = Modifier.size(16.dp)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = email,
+                    fontSize = 13.sp,
+                    color = Color.Gray.copy(alpha = 0.9f),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }
@@ -141,57 +248,65 @@ fun ProfileHeaderUI(
 fun ProfileMenuItem(
     icon: ImageVector,
     title: String,
+    subtitle: String = "",
     isDanger: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    val iconColor = if (isDanger) Color.Red else Color(0xFF08A045)
+    val iconColor = if (isDanger) Color.Red else Color(0xFFFF6600)
     val iconBgColor = iconColor.copy(alpha = 0.12f)
+    val titleColor = if (isDanger) Color.Red else Color(0xFF333333)
 
-    Card(
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
+            .clickable { onClick() }
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+                .size(48.dp)
+                .background(
+                    color = iconBgColor,
+                    shape = RoundedCornerShape(14.dp)
+                ),
+            contentAlignment = Alignment.Center
         ) {
-
-            Box(
-                modifier = Modifier
-                    .size(40.dp)
-                    .background(
-                        color = iconBgColor,
-                        shape = RoundedCornerShape(12.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    icon,
-                    contentDescription = title,
-                    tint = iconColor
-                )
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-
-            Text(
-                text = title,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.weight(1f),
-                color = if (isDanger) Color.Red else Color.Black
-            )
-
             Icon(
-                Icons.Outlined.ChevronRight,
-                contentDescription = null,
-                tint = Color.Gray
+                icon,
+                contentDescription = title,
+                tint = iconColor,
+                modifier = Modifier.size(24.dp)
             )
         }
+        Spacer(modifier = Modifier.width(16.dp))
+
+        Column(
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = title,
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = titleColor
+            )
+            if (subtitle.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(2.dp))
+                Text(
+                    text = subtitle,
+                    fontSize = 12.sp,
+                    color = Color.Gray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+
+        Icon(
+            Icons.Default.ChevronRight,
+            contentDescription = null,
+            tint = Color.Gray.copy(alpha = 0.6f),
+            modifier = Modifier.size(20.dp)
+        )
     }
 }

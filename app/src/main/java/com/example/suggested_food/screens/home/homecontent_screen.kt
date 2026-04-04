@@ -20,6 +20,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -59,7 +60,11 @@ fun HomeContent(
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFE0B2)),
+                )
+            )
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
@@ -92,8 +97,8 @@ fun HomeContent(
                     },
                     shape = RoundedCornerShape(30.dp),
                     colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF3F4F6),
-                        unfocusedContainerColor = Color(0xFFF3F4F6),
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         cursorColor = Color.Black,
@@ -175,7 +180,7 @@ fun HomeContent(
 
                 Text(
                     "Xem tất cả",
-                    color = Color(0xFF08A045),
+                    color = Color(0xFFFF6600),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
                         navController.navigate("AllCategoriesScreen")
@@ -187,7 +192,7 @@ fun HomeContent(
         item(span = { GridItemSpan(2) }) {
 
             if (loading) {
-                CircularProgressIndicator(color = Color(0xFF08A045))
+                CircularProgressIndicator(color = Color(0xFFFF6600))
             } else {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(categories) { category ->
@@ -219,7 +224,7 @@ fun HomeContent(
                     Icon(
                         imageVector = Icons.Outlined.FilterAlt,
                         contentDescription = "Filter",
-                        tint = Color.Black
+                        tint = Color(0xFFFF6600)
                     )
                 }
             }
@@ -227,7 +232,7 @@ fun HomeContent(
 
         if (productLoading) {
             item(span = { GridItemSpan(2) }) {
-                CircularProgressIndicator(color = Color(0xFF08A045))
+                CircularProgressIndicator(color = Color(0xFFFF6600))
             }
         } else {
             items(products) { product ->

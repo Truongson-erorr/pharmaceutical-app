@@ -55,10 +55,11 @@ fun CategoryProductsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF08A045)
+                    containerColor = Color(0xFFFF6600)
                 )
             )
-        }
+        },
+        containerColor = Color(0xFFFFF3E0)
     ) { padding ->
 
         if (categoryProducts.isEmpty()) {

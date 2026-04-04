@@ -5,11 +5,12 @@ import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.suggested_food.models.ProductData
+import com.opencsv.CSVParserBuilder
+import com.opencsv.CSVReaderBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import java.io.BufferedReader
 import java.io.InputStreamReader
 
 class DrugLookupViewModel(
@@ -24,36 +25,44 @@ class DrugLookupViewModel(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading
 
-    // Load CSV khi khởi tạo
     private val medicineList: List<ProductData> by lazy { loadMedicineCsv() }
 
     private fun loadMedicineCsv(): List<ProductData> {
         val list = mutableListOf<ProductData>()
         try {
-            val inputStream = getApplication<Application>().assets.open("models_ai/Medicine_Detail_with_Predictions.csv")
-            val reader = BufferedReader(InputStreamReader(inputStream))
-            val header = reader.readLine() // skip header
+            val inputStream = getApplication<Application>().assets.open(
+                "models_ai/Medicine_Detail_with_Predictions.csv"
+            )
 
-            reader.forEachLine { line ->
-                val cols = line.split("\t")
+            val parser = CSVParserBuilder().withSeparator(',').build()
+            val reader = CSVReaderBuilder(InputStreamReader(inputStream))
+                .withCSVParser(parser)
+                .build()
+
+            val rows = reader.readAll()
+            rows.drop(1).forEachIndexed { index, cols ->
                 if (cols.size >= 9) {
                     list.add(
                         ProductData(
-                            name = cols[0].trim().replace("\r", ""),
-                            composition = cols[1].trim().replace("\r", ""),
-                            uses = cols[2].trim().replace("\r", ""),
-                            sideEffects = cols[3].trim().replace("\r", ""),
-                            imageUrl = cols[4].trim().replace("\r", ""),
-                            manufacturer = cols[5].trim().replace("\r", ""),
-                            excellentReview = cols[6].trim().replace("\r", ""),
-                            averageReview = cols[7].trim().replace("\r", ""),
-                            poorReview = cols[8].trim().replace("\r", "")
+                            id = index,
+                            name = cols[0].trim(),
+                            composition = cols[1].trim(),
+                            uses = cols[2].trim(),
+                            sideEffects = cols[3].trim(),
+                            imageUrl = cols[4].trim(),
+                            manufacturer = cols[5].trim(),
+                            excellentReview = cols[6].trim(),
+                            averageReview = cols[7].trim(),
+                            poorReview = cols[8].trim()
                         )
                     )
+                } else {
+                    Log.e(TAG, "❌ Wrong column count at line $index: ${cols.size}")
                 }
             }
             Log.d(TAG, "✅ Loaded ${list.size} medicines from CSV")
-            list.forEach { Log.d(TAG, "Medicine loaded: '${it.name}'") } // log tất cả tên thuốc
+            list.forEach { Log.d(TAG, "Medicine loaded: '${it.name}'") }
+
         } catch (e: Exception) {
             Log.e(TAG, "❌ Error loading CSV: ${e.message}")
         }
@@ -79,6 +88,7 @@ class DrugLookupViewModel(
                 val drug = matched.first()
 
                 val response = buildString {
+                    appendLine(drug.imageUrl) // đường dẫn hình ảnh
                     appendLine("## Tên thuốc")
                     appendLine(drug.name)
                     appendLine()

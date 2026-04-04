@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -14,17 +13,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.suggested_food.admin.screen.home.DashboardScreen
+import com.example.suggested_food.models.AdminMenu
 import com.example.suggested_food.viewmodels.AuthViewModel
 import kotlinx.coroutines.launch
-
-data class AdminMenu(
-    val title: String,
-    val icon: ImageVector
-)
+import com.example.suggested_food.admin.screen.product.ProductScreen
+import com.example.suggested_food.admin.screen.order.OrderScreen
+import com.example.suggested_food.admin.screen.order.CompletedScreen
+import com.example.suggested_food.admin.screen.order.DeliveringScreen
+import com.example.suggested_food.admin.screen.category.CategoryScreen
+import com.example.suggested_food.admin.screen.support.SupportScreen
+import com.example.suggested_food.admin.screen.user.UsersScreen
+import com.example.suggested_food.admin.screen.profile.AdminProfileScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +52,8 @@ fun AdminHomeScreen(
         AdminMenu("Hồ sơ Admin", Icons.Default.AccountCircle)
     )
 
+    val primaryColor = Color(0xFF08A045)
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -61,7 +66,7 @@ fun AdminHomeScreen(
                             .fillMaxWidth()
                             .background(
                                 Brush.verticalGradient(
-                                    colors = listOf(Color(0xFFE53935), Color(0xFFB71C1C))
+                                    colors = listOf(primaryColor, primaryColor)
                                 )
                             )
                             .padding(24.dp)
@@ -96,12 +101,12 @@ fun AdminHomeScreen(
                                 Icon(
                                     item.icon,
                                     contentDescription = null,
-                                    tint = if (isSelected) Color(0xFFE53935) else Color(0xFF757575)
+                                    tint = if (isSelected) primaryColor else Color(0xFF757575)
                                 )
                                 Spacer(Modifier.width(16.dp))
                                 Text(
                                     item.title,
-                                    color = if (isSelected) Color(0xFFE53935) else Color(0xFF757575),
+                                    color = if (isSelected) primaryColor else Color(0xFF757575),
                                     fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Normal
                                 )
                             }
@@ -119,9 +124,9 @@ fun AdminHomeScreen(
                             .padding(20.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(Icons.Default.Logout, null, tint = Color(0xFFB71C1C))
+                        Icon(Icons.Default.Logout, null, tint = Color.Red)
                         Spacer(Modifier.width(12.dp))
-                        Text("Đăng xuất", color = Color(0xFFB71C1C))
+                        Text("Đăng xuất", color = Color.Red, fontWeight = FontWeight.Bold)
                     }
                 }
             }
@@ -135,12 +140,12 @@ fun AdminHomeScreen(
                         Text(
                             selected,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFE53935)
+                            color = primaryColor
                         )
                     },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
-                            Icon(Icons.Default.Menu, null, tint = Color(0xFFE53935))
+                            Icon(Icons.Default.Menu, null, tint = primaryColor)
                         }
                     },
                     colors = TopAppBarDefaults.topAppBarColors(
@@ -155,29 +160,17 @@ fun AdminHomeScreen(
                     .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                Card(
-                    shape = RoundedCornerShape(18.dp),
-                    elevation = CardDefaults.cardElevation(6.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    modifier = Modifier.padding(24.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(32.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Icon(
-                            Icons.Default.AdminPanelSettings,
-                            null,
-                            tint = Color(0xFFE53935),
-                            modifier = Modifier.size(50.dp)
-                        )
-                        Spacer(Modifier.height(12.dp))
-                        Text(
-                            "Nội dung: $selected",
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFFE53935)
-                        )
-                    }
+                when (selected) {
+                    "Dashboard" -> DashboardScreen()
+                    "Sản phẩm" -> ProductScreen()
+                    "Danh mục" -> CategoryScreen()
+                    "Đơn chờ duyệt" -> OrderScreen()
+                    "Đang giao" -> DeliveringScreen()
+                    "Hoàn tất" -> CompletedScreen()
+                    "Người dùng" -> UsersScreen()
+                    "Hỗ trợ trực tuyến" -> SupportScreen()
+                    "Hồ sơ Admin" -> AdminProfileScreen()
+                    else -> DashboardScreen()
                 }
             }
         }

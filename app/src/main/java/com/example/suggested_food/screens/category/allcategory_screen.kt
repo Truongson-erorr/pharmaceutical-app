@@ -1,5 +1,6 @@
 package com.example.suggested_food.screens.category
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -52,10 +53,11 @@ fun AllCategoriesScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF08A045)
+                    containerColor = Color(0xFFFF6600)
                 )
             )
-        }
+        },
+        containerColor = Color(0xFFFFF3E0)
     ) { innerPadding ->
 
         if (loading) {
@@ -65,7 +67,7 @@ fun AllCategoriesScreen(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Color(0xFF08A045))
+                CircularProgressIndicator(color = Color(0xFFFF6600))
             }
         } else {
             LazyVerticalGrid(

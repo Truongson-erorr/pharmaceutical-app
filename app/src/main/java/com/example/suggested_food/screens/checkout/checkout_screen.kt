@@ -44,14 +44,12 @@ fun CheckoutScreen(
     var isLoading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    val user = userViewModel.user
-
     LaunchedEffect(Unit) {
         userViewModel.loadUser()
     }
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = Color(0xFFFFF3E0),
         topBar = {
             SmallTopAppBar(
                 title = { Text("Xác nhận đơn hàng", color = Color.White, fontWeight = FontWeight.Bold) },
@@ -61,7 +59,7 @@ fun CheckoutScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF08A045)
+                    containerColor = Color(0xFFFF6600)
                 )
             )
         },
@@ -83,7 +81,7 @@ fun CheckoutScreen(
                     Text(
                         formatVND(total),
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF08A045)
+                        color = Color(0xFFFF6600)
                     )
                 }
 
@@ -117,13 +115,13 @@ fun CheckoutScreen(
                     },
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF08A045)
+                        containerColor = Color(0xFFFF6600)
                     )
                 ) {
                     Text("Đặt hàng")
                 }
             }
-        }
+        },
     ) { padding ->
 
         LazyColumn(
@@ -210,7 +208,7 @@ fun CheckoutScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF08A045)
+                        containerColor = Color(0xFFFF6600)
                     )
                 ) {
                     Text("Tôi đã thanh toán")
@@ -259,7 +257,7 @@ fun CheckoutScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF08A045)
+                        containerColor = Color(0xFFFF6600)
                     )
                 ) {
                     Text("Xong", color = Color.White)
@@ -286,7 +284,7 @@ fun CheckoutScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator(
-                        color = Color(0xFF08A045)
+                        color = Color(0xFFFF6600)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -314,7 +312,7 @@ fun SummaryRow(
         Text(
             value,
             fontWeight = if (isBold) FontWeight.Bold else FontWeight.Normal,
-            color = if (highlight) Color(0xFF08A045) else Color.Black
+            color = if (highlight) Color(0xFFFF6600) else Color.Black
         )
     }
 }
