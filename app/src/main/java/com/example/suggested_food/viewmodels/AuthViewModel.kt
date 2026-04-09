@@ -42,7 +42,8 @@ class AuthViewModel : ViewModel() {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { result ->
 
-                val uid = result.user?.uid ?: return@addOnSuccessListener
+                val firebaseUser = result.user ?: return@addOnSuccessListener
+                val uid = firebaseUser.uid
 
                 val user = UserModel(
                     uid = uid,
@@ -55,15 +56,20 @@ class AuthViewModel : ViewModel() {
                     .document(uid)
                     .set(user)
                     .addOnSuccessListener {
+                        firebaseUser.sendEmailVerification()
+                            .addOnSuccessListener {
 
-                        _userName.value = name
-                        _userRole.value = role
-                        _isLoggedIn.value = true
-                        _loading.value = false
-                    }
-                    .addOnFailureListener {
-                        _error.value = it.message
-                        _loading.value = false
+                                auth.signOut()
+
+                                _error.value =
+                                    "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản."
+
+                                _loading.value = false
+                            }
+                            .addOnFailureListener {
+                                _error.value = "Không gửi được email xác nhận."
+                                _loading.value = false
+                            }
                     }
             }
             .addOnFailureListener {
@@ -147,6 +153,33 @@ class AuthViewModel : ViewModel() {
             }
             .addOnFailureListener {
                 _error.value = it.message
+                _loading.value = false
+            }
+    }
+
+    fun resetPassword(email: String) {
+
+        if (email.isBlank()) {
+            _error.value = "Vui lòng nhập email."
+            return
+        }
+        _loading.value = true
+        _error.value = null
+
+        auth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                _error.value =
+                    "Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra Gmail."
+                _loading.value = false
+            }
+            .addOnFailureListener { e ->
+
+                if (e.message?.contains("no user record", true) == true) {
+                    _error.value = "Email chưa được đăng ký."
+                } else {
+                    _error.value = e.message
+                }
+
                 _loading.value = false
             }
     }

@@ -23,6 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.example.suggested_food.authentication.ForgotPasswordScreen
 import com.example.suggested_food.authentication.LoginScreen
 import com.example.suggested_food.authentication.RegisterScreen
 import com.example.suggested_food.screens.address.AddressScreen
@@ -213,6 +214,9 @@ fun AppNavigation(
         }
         composable("AISearchScreen") {
             AISearchScreen(navController, productViewModel = productViewModel)
+        }
+        composable("ForgotPasswordScreen") {
+            ForgotPasswordScreen(navController, authViewModel)
         }
     }
 }

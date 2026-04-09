@@ -153,11 +153,27 @@ fun LoginScreen(
                         color = if (password.isNotEmpty()) Color(0xFFFF6600) else Color.LightGray,
                         thickness = 1.5.dp
                     )
-                    Spacer(modifier = Modifier.height(42.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End
+                    ) {
+                        TextButton(
+                            onClick = {
+                                navController.navigate("ForgotPasswordScreen")
+                            }
+                        ) {
+                            Text(
+                                "Quên mật khẩu?",
+                                color = Color(0xFFFF6600),
+                                fontSize = 13.sp
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(32.dp))
 
                     Button(
                         onClick = {
-                            authViewModel.login(email, password)
+                            navController.navigate("ForgotPasswordScreen")
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -246,3 +262,4 @@ fun LoginScreen(
         }
     }
 }
+
