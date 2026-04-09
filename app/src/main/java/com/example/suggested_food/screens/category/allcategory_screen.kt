@@ -14,6 +14,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -57,7 +58,15 @@ fun AllCategoriesScreen(
                 )
             )
         },
-        containerColor = Color(0xFFFFF3E0)
+        modifier = Modifier.background(
+            Brush.verticalGradient(
+                colors = listOf(
+                    Color(0xFFFFF3E0),
+                    Color(0xFFFFE0B2)
+                )
+            )
+        ),
+        containerColor = Color.Transparent,
     ) { innerPadding ->
 
         if (loading) {

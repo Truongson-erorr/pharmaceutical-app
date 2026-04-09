@@ -36,22 +36,7 @@ fun UtilitiesContent(
 
     val utilities = listOf(
         UtilityItem(
-            title = "AI gợi ý thuốc",
-            description = "Tư vấn thuốc OTC dựa trên triệu chứng bạn cung cấp",
-        ) {
-            if (isLoggedIn) {
-                navController.navigate("chat")
-            } else {
-                Toast.makeText(
-                    context,
-                    "Vui lòng đăng nhập để được AI tư vấn chi tiết",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        },
-
-        UtilityItem(
-            title = "Chat với bác sĩ",
+            title = "Tư vấn bác sĩ",
             description = "Trò chuyện trực tiếp với bác sĩ để được tư vấn",
         ) {
             val userId = FirebaseAuth.getInstance().currentUser?.uid
@@ -69,7 +54,22 @@ fun UtilitiesContent(
         },
 
         UtilityItem(
-            title = "Tra cứu thuốc AI",
+            title = "Gợi ý thuốc AI",
+            description = "Tư vấn thuốc OTC dựa trên triệu chứng bạn cung cấp",
+        ) {
+            if (isLoggedIn) {
+                navController.navigate("chat")
+            } else {
+                Toast.makeText(
+                    context,
+                    "Vui lòng đăng nhập để được AI tư vấn chi tiết",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        },
+
+        UtilityItem(
+            title = "Tra cứu thuốc offline",
             description = "Tra cứu công dụng, liều dùng và lưu ý an toàn của thuốc",
         ) {
             if (!isLoggedIn) {
@@ -83,6 +83,24 @@ fun UtilitiesContent(
                 }
             } else {
                 navController.navigate("drug_lookup")
+            }
+        },
+
+        UtilityItem(
+            title = "Tra cứu thuốc AI",
+            description = "Nhập triệu chứng hoặc tên thuốc, nhận gợi ý thông tin và cảnh báo an toàn",
+        ) {
+            if (!isLoggedIn) {
+                Toast.makeText(
+                    context,
+                    "Vui lòng đăng nhập để sử dụng chức năng AI tra cứu",
+                    Toast.LENGTH_SHORT
+                ).show()
+                navController.navigate("LoginScreen") {
+                    launchSingleTop = true
+                }
+            } else {
+                navController.navigate("AISearchScreen")
             }
         }
     )

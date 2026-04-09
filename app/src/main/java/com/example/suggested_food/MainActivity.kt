@@ -25,8 +25,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.suggested_food.authentication.LoginScreen
 import com.example.suggested_food.authentication.RegisterScreen
-import com.example.suggested_food.screens.AdminHomeScreen
 import com.example.suggested_food.screens.address.AddressScreen
+import com.example.suggested_food.screens.ai.AISearchScreen
 import com.example.suggested_food.screens.category.AllCategoriesScreen
 import com.example.suggested_food.screens.cart.CartContent
 import com.example.suggested_food.screens.category.CategoryProductsScreen
@@ -44,7 +44,6 @@ import com.example.suggested_food.screens.chat_doctor.UserChatScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CartViewModel
-import com.example.suggested_food.viewmodels.CategoryViewModel
 import com.example.suggested_food.viewmodels.OrderHistoryViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.example.suggested_food.viewmodels.UserViewModel
@@ -72,6 +71,7 @@ fun AppNavigation(
     authViewModel: AuthViewModel = viewModel(),
     cartViewModel: CartViewModel = viewModel(),
     userViewModel: UserViewModel = viewModel(),
+    productViewModel: ProductViewModel = viewModel(),
     orderHistoryViewModel: OrderHistoryViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
@@ -211,11 +211,8 @@ fun AppNavigation(
         composable("drug_lookup") {
             DrugLookupScreen(navController)
         }
-        composable("admin_home") {
-            AdminHomeScreen(
-                navController = navController,
-                authViewModel = authViewModel
-            )
+        composable("AISearchScreen") {
+            AISearchScreen(navController, productViewModel = productViewModel)
         }
     }
 }

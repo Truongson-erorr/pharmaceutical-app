@@ -16,6 +16,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -76,7 +77,11 @@ fun ChatScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF3E0))
+            .background(
+                Brush.verticalGradient(
+                    colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFE0B2)),
+                )
+            )
     ) {
 
         TopAppBar(
@@ -206,7 +211,7 @@ fun ChatBubble(message: ChatMessage) {
                     if (message.isUser)
                         Color(0xFFFF6600)
                     else
-                        Color(0xFFE5E7EB),
+                        Color.White,
                     RoundedCornerShape(16.dp)
                 )
                 .padding(12.dp)

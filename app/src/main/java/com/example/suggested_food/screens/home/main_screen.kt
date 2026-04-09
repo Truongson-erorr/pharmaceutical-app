@@ -111,17 +111,6 @@ fun MainScreen(
                                 modifier = Modifier.padding(top = 20.dp)
                             ) {
                                 IconButton(
-                                    onClick = { isSearchActive = true }
-                                ) {
-                                    Icon(
-                                        Icons.Outlined.Search,
-                                        contentDescription = "Search",
-                                        tint = Color.White,
-                                        modifier = Modifier.size(24.dp)
-                                    )
-                                }
-
-                                IconButton(
                                     onClick = { navController.navigate("NotificationsScreen") }
                                 ) {
                                     Icon(

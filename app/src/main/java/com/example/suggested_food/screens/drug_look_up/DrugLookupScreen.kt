@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -51,7 +52,11 @@ fun DrugLookupScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .background(Color(0xFFFFF3E0))
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFE0B2)),
+                    )
+                )
         ) {
             Column(
                 modifier = Modifier

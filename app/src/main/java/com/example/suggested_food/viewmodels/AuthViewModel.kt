@@ -3,6 +3,7 @@ package com.example.suggested_food.viewmodels
 import androidx.lifecycle.ViewModel
 import com.example.suggested_food.models.UserModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -109,6 +110,45 @@ class AuthViewModel : ViewModel() {
         _isLoggedIn.value = false
         _userName.value = null
         _userRole.value = null
+    }
+
+    fun firebaseAuthWithGoogle(idToken: String) {
+        _loading.value = true
+        _error.value = null
+
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+
+        auth.signInWithCredential(credential)
+            .addOnSuccessListener { result ->
+
+                val firebaseUser = result.user ?: return@addOnSuccessListener
+                val uid = firebaseUser.uid
+
+                val userRef = firestore.collection("users").document(uid)
+
+                userRef.get().addOnSuccessListener { doc ->
+
+                    if (!doc.exists()) {
+
+                        val user = UserModel(
+                            uid = uid,
+                            email = firebaseUser.email ?: "",
+                            name = firebaseUser.displayName ?: "Google User",
+                            role = "user"
+                        )
+
+                        userRef.set(user)
+                    }
+
+                    loadUserData(uid)
+                    _isLoggedIn.value = true
+                    _loading.value = false
+                }
+            }
+            .addOnFailureListener {
+                _error.value = it.message
+                _loading.value = false
+            }
     }
 
     fun getCurrentUser() = auth.currentUser
