@@ -61,17 +61,17 @@ fun AISearchScreen(
                 actions = {
                     Icon(Icons.Outlined.SupportAgent, contentDescription = null, tint = Color.White)
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFFA500))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF5848CE))
             )
         },
-        containerColor = Color(0xFFFFF3E0)
+        containerColor = Color(0xFFE0D9FF)
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(
-                    Color(0xFFFFF3E0)
+                    Color(0xFFE0D9FF)
                 )
         ) {
             Column(
@@ -92,11 +92,11 @@ fun AISearchScreen(
                         containerColor = Color.White,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = Color(0xFFFFA500),
+                        cursorColor = Color(0xFF5848CE),
                     ),
                     trailingIcon = {
                         IconButton(onClick = { viewModel.searchDrug(query) }) {
-                            Icon(Icons.Filled.Search, contentDescription = "Search", tint = Color(0xFFFFA500))
+                            Icon(Icons.Filled.Search, contentDescription = "Search", tint = Color(0xFF5848CE))
                         }
                     }
                 )
@@ -138,7 +138,7 @@ fun AISearchScreen(
                         .background(Color.Black.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFFFFA500), strokeWidth = 4.dp)
+                    CircularProgressIndicator(color = Color(0xFF5848CE), strokeWidth = 4.dp)
                 }
             }
         }

@@ -66,7 +66,7 @@ fun MainScreen(
                         .fillMaxWidth()
                         .shadow(elevation = 4.dp, shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp)),
                     shape = RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp),
-                    color = Color(0xFFFFA500)
+                    color = Color(0xFF5848CE)
                 ) {
                     Column(
                         modifier = Modifier
@@ -164,7 +164,7 @@ fun MainScreen(
                                     onClick = { navController.navigate("login") },
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = Color.White,
-                                        contentColor = Color(0xFFFFA500)
+                                        contentColor = Color(0xFF5848CE)
                                     ),
                                     shape = RoundedCornerShape(20.dp),
                                     modifier = Modifier.height(32.dp)
@@ -184,7 +184,7 @@ fun MainScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .shadow(elevation = 4.dp),
-                    color = Color(0xFFFFA500)
+                    color = Color(0xFF5848CE)
                 ) {
                     Row(
                         modifier = Modifier
@@ -277,11 +277,11 @@ fun MainScreen(
                             }
                         },
                         colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color(0xFFFFA500),
-                            selectedTextColor = Color(0xFFFFA500),
+                            selectedIconColor = Color(0xFF5848CE),
+                            selectedTextColor = Color(0xFF5848CE),
                             unselectedIconColor = Color.Gray,
                             unselectedTextColor = Color.Gray,
-                            indicatorColor = Color(0xFFFFA500).copy(alpha = 0.1f)
+                            indicatorColor = Color(0xFF5848CE).copy(alpha = 0.1f)
                         )
                     )
                 }

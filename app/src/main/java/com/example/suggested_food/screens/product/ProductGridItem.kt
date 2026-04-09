@@ -39,7 +39,7 @@ fun ProductGridItem(
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(1.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFFFE0B2)
+            containerColor = Color.White
         )
     ) {
         Column(

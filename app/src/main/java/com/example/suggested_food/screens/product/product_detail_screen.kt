@@ -56,7 +56,7 @@ fun ProductDetailScreen(
 
     Scaffold(
         modifier = Modifier.background(
-            Color(0xFFFFF3E0)
+            Color.White
         ),
         containerColor = Color.Transparent,
         topBar = {
@@ -79,7 +79,7 @@ fun ProductDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFFFFA500)
+                    containerColor = Color(0xFF5848CE)
                 )
             )
         },
@@ -115,11 +115,11 @@ fun ProductDetailScreen(
                                 .weight(0.3f)
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
-                            border = BorderStroke(1.dp, Color(0xFFFFA500))
+                            border = BorderStroke(1.dp, Color(0xFF5848CE))
                         ) {
                             Text(
                                 "Giỏ hàng",
-                                color = Color(0xFFFFA500),
+                                color = Color(0xFF5848CE),
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -131,7 +131,7 @@ fun ProductDetailScreen(
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFFFA500)
+                                containerColor = Color(0xFF5848CE)
                             )
                         ) {
                             Text(
@@ -207,7 +207,7 @@ fun ProductDetailScreen(
                                     .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
                                     .clip(CircleShape)
                                     .background(
-                                        if (pagerState.currentPage == index) Color(0xFFFFA500)
+                                        if (pagerState.currentPage == index) Color(0xFF5848CE)
                                         else Color.LightGray
                                     )
                             )

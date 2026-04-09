@@ -108,7 +108,7 @@ fun UtilitiesContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFFFF3E0))
+            .background(Color(0xFFE0D9FF))
             .padding(12.dp)
     ) {
         LazyVerticalStaggeredGrid(
@@ -132,13 +132,13 @@ fun UtilityCard(item: UtilityItem) {
             .shadow(
                 elevation = 6.dp,
                 shape = RoundedCornerShape(20.dp),
-                spotColor = Color(0xFFFFE0B2).copy(alpha = 0.3f),
-                ambientColor = Color(0xFFFFE0B2).copy(alpha = 0.2f)
+                spotColor = Color(0xFFC1B3FF).copy(alpha = 0.3f),
+                ambientColor = Color(0xFFC1B3FF).copy(alpha = 0.2f)
             )
             .clickable { item.onClick() },
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(0.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFFFE0B2)) // vàng nhạt
+        colors = CardDefaults.cardColors(containerColor = Color(0xFFC1B3FF)) // vàng nhạt
     ) {
         Row(
             modifier = Modifier

@@ -89,7 +89,7 @@ fun PaymentSuccessScreen(
                     .height(40.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFFFFA500)
+                    containerColor = Color(0xFF5848CE)
                 )
             ) {
                 Text("Về trang chủ", fontWeight = FontWeight.Bold)

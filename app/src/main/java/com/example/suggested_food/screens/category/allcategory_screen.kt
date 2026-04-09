@@ -54,12 +54,12 @@ fun AllCategoriesScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFFFFA500)
+                    containerColor = Color(0xFF5848CE)
                 )
             )
         },
         modifier = Modifier.background(
-            Color(0xFFFFF3E0)
+            Color(0xFFE0D9FF)
         ),
         containerColor = Color.Transparent,
     ) { innerPadding ->
@@ -71,7 +71,7 @@ fun AllCategoriesScreen(
                     .padding(innerPadding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Color(0xFFFFA500))
+                CircularProgressIndicator(color = Color(0xFF5848CE))
             }
         } else {
             LazyVerticalGrid(

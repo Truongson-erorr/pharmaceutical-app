@@ -44,7 +44,7 @@ fun DrugLookupScreen(
                         Icon(Icons.Outlined.ArrowBack, contentDescription = null, tint = Color.White)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFFA500))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF5848CE))
             )
         },
     ) { innerPadding ->
@@ -53,7 +53,7 @@ fun DrugLookupScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(
-                    Color(0xFFFFF3E0)
+                    Color(0xFFE0D9FF)
                 )
         ) {
             Column(
@@ -147,7 +147,7 @@ fun DrugLookupScreen(
                         .background(Color.Black.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFFFFA500), strokeWidth = 4.dp)
+                    CircularProgressIndicator(color = Color(0xFF5848CE), strokeWidth = 4.dp)
                 }
             }
         }

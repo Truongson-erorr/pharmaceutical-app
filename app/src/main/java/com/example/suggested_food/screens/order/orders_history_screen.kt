@@ -75,7 +75,7 @@ fun OrderHistoryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFFFF3E0))
+                .background(Color.White)
                 .padding(bottom = padding.calculateBottomPadding())
         ) {
 
@@ -87,7 +87,7 @@ fun OrderHistoryScreen(
                 indicator = { tabPositions ->
                     TabRowDefaults.Indicator(
                         Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
-                        color = Color(0xFFFFA500)
+                        color = Color(0xFF5848CE)
                     )
                 }
             ) {
@@ -112,7 +112,7 @@ fun OrderHistoryScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFFFFA500))
+                    CircularProgressIndicator(color = Color(0xFF5848CE))
                 }
                 return@Column
             }

@@ -61,7 +61,7 @@ fun HomeContent(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Color(0xFFFFF3E0)
+                Color(0xFFE0D9FF)
             )
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -177,7 +177,7 @@ fun HomeContent(
 
                 Text(
                     "Xem tất cả",
-                    color = Color(0xFFFFA500),
+                    color = Color(0xFF5848CE),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
                         navController.navigate("AllCategoriesScreen")
@@ -189,7 +189,7 @@ fun HomeContent(
         item(span = { GridItemSpan(2) }) {
 
             if (loading) {
-                CircularProgressIndicator(color = Color(0xFFFFA500))
+                CircularProgressIndicator(color = Color(0xFF5848CE))
             } else {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(categories) { category ->
@@ -221,7 +221,7 @@ fun HomeContent(
                     Icon(
                         imageVector = Icons.Outlined.FilterAlt,
                         contentDescription = "Filter",
-                        tint = Color(0xFFFFA500)
+                        tint = Color(0xFF5848CE)
                     )
                 }
             }
@@ -229,7 +229,7 @@ fun HomeContent(
 
         if (productLoading) {
             item(span = { GridItemSpan(2) }) {
-                CircularProgressIndicator(color = Color(0xFFFFA500))
+                CircularProgressIndicator(color = Color(0xFF5848CE))
             }
         } else {
             items(products) { product ->

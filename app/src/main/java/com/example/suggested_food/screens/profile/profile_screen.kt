@@ -45,7 +45,7 @@ fun ProfileContent(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Color(0xFFFFF3E0)
+                Color(0xFFE0D9FF)
             )
             .verticalScroll(rememberScrollState())
     ) {
@@ -249,7 +249,7 @@ fun ProfileMenuItem(
     isDanger: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    val iconColor = if (isDanger) Color.Red else Color(0xFFFFA500)
+    val iconColor = if (isDanger) Color.Red else Color(0xFF5848CE)
     val iconBgColor = iconColor.copy(alpha = 0.12f)
     val titleColor = if (isDanger) Color.Red else Color(0xFF333333)
 
