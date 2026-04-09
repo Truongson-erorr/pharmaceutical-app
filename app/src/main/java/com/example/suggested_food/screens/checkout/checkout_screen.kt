@@ -51,12 +51,7 @@ fun CheckoutScreen(
 
     Scaffold(
         modifier = Modifier.background(
-            Brush.verticalGradient(
-                colors = listOf(
-                    Color(0xFFFFF3E0),
-                    Color(0xFFFFE0B2)
-                )
-            )
+            Color(0xFFFFF3E0)
         ),
         containerColor = Color.Transparent,
         topBar = {
@@ -68,7 +63,7 @@ fun CheckoutScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFFFF6600)
+                    containerColor = Color(0xFFFFA500)
                 )
             )
         },
@@ -90,7 +85,7 @@ fun CheckoutScreen(
                     Text(
                         formatVND(total),
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFFFF6600)
+                        color = Color(0xFFFFA500)
                     )
                 }
 
@@ -124,7 +119,7 @@ fun CheckoutScreen(
                     },
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFF6600)
+                        containerColor = Color(0xFFFFA500)
                     )
                 ) {
                     Text("Đặt hàng")
@@ -217,7 +212,7 @@ fun CheckoutScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFF6600)
+                        containerColor = Color(0xFFFFA500)
                     )
                 ) {
                     Text("Tôi đã thanh toán")
@@ -266,7 +261,7 @@ fun CheckoutScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFFF6600)
+                        containerColor = Color(0xFFFFA500)
                     )
                 ) {
                     Text("Xong", color = Color.White)
@@ -293,7 +288,7 @@ fun CheckoutScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator(
-                        color = Color(0xFFFF6600)
+                        color = Color(0xFFFFA500)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(

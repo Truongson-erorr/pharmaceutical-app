@@ -72,19 +72,13 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFFFF6600),
-                        Color(0xFFFF8A50)
-                    )
-                )
+                Color(0xFFFFA500)
             )
     ) {
 
         Column(
             modifier = Modifier.fillMaxSize()
         ) {
-
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -117,7 +111,6 @@ fun LoginScreen(
                         .fillMaxSize()
                         .padding(35.dp)
                 ) {
-
                     Text(
                         "Đăng nhập",
                         fontSize = 24.sp,
@@ -135,7 +128,7 @@ fun LoginScreen(
                         textStyle = LocalTextStyle.current.copy(color = Color.Black)
                     )
                     Divider(
-                        color = if (email.isNotEmpty()) Color(0xFFFF6600) else Color.LightGray,
+                        color = if (email.isNotEmpty()) Color(0xFFFFA500) else Color.LightGray,
                         thickness = 1.5.dp
                     )
                     Spacer(modifier = Modifier.height(20.dp))
@@ -150,7 +143,7 @@ fun LoginScreen(
                         textStyle = LocalTextStyle.current.copy(color = Color.Black)
                     )
                     Divider(
-                        color = if (password.isNotEmpty()) Color(0xFFFF6600) else Color.LightGray,
+                        color = if (password.isNotEmpty()) Color(0xFFFFA500) else Color.LightGray,
                         thickness = 1.5.dp
                     )
                     Row(
@@ -164,7 +157,7 @@ fun LoginScreen(
                         ) {
                             Text(
                                 "Quên mật khẩu?",
-                                color = Color(0xFFFF6600),
+                                color = Color(0xFFFFA500),
                                 fontSize = 13.sp
                             )
                         }
@@ -173,7 +166,10 @@ fun LoginScreen(
 
                     Button(
                         onClick = {
-                            navController.navigate("ForgotPasswordScreen")
+                            authViewModel.login(
+                                email.trim(),
+                                password
+                            )
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -181,7 +177,7 @@ fun LoginScreen(
                         enabled = !loading,
                         shape = RoundedCornerShape(25.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFFF6600),
+                            containerColor = Color(0xFFFFA500),
                             contentColor = Color.White
                         )
                     ) {
@@ -254,7 +250,7 @@ fun LoginScreen(
                     ) {
                         Text(
                             "Chưa có tài khoản? Đăng ký",
-                            color = Color(0xFFFF6600)
+                            color = Color(0xFFFFA500)
                         )
                     }
                 }

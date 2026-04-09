@@ -43,9 +43,7 @@ fun UserChatScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Brush.verticalGradient(
-                    colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFE0B2)),
-                )
+                Color(0xFFFFF3E0)
             )
     ) {
 
@@ -75,7 +73,7 @@ fun UserChatScreen(
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFFFF6600)
+                containerColor = Color(0xFFFFA500)
             )
         )
 
@@ -130,7 +128,7 @@ fun UserChatScreen(
                 Icon(
                     Icons.Filled.Send,
                     contentDescription = null,
-                    tint = Color(0xFFFF6600)
+                    tint = Color(0xFFFFA500)
                 )
             }
         }
@@ -151,7 +149,7 @@ fun MessageBubbleDoctor(message: ChatMessageDoctor) {
             modifier = Modifier
                 .background(
                     if (isUser)
-                        Color(0xFFFF6600)
+                        Color(0xFFFFA500)
                     else
                         Color(0xFFE5E7EB),
                     RoundedCornerShape(16.dp)

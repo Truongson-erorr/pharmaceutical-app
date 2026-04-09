@@ -45,11 +45,7 @@ fun ProfileContent(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Brush.verticalGradient(
-                    colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFE0B2)),
-                    startY = 0f,
-                    endY = Float.POSITIVE_INFINITY
-                )
+                Color(0xFFFFF3E0)
             )
             .verticalScroll(rememberScrollState())
     ) {
@@ -187,7 +183,7 @@ fun ProfileHeaderUI(
         ) {
             Surface(
                 shape = CircleShape,
-                color = Color.White,
+                color = Color.LightGray,
                 modifier = Modifier
                     .size(100.dp)
                     .shadow(
@@ -196,16 +192,17 @@ fun ProfileHeaderUI(
                         ambientColor = Color(0x33000000),
                         spotColor = Color(0x33000000)
                     )
+                    .clip(CircleShape)
             ) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = userName.firstOrNull()?.uppercase() ?: "U",
-                        color = Color(0xFFFF6600),
-                        fontSize = 40.sp,
-                        fontWeight = FontWeight.Bold
+                    Icon(
+                        imageVector = Icons.Filled.Person,
+                        contentDescription = "Default Avatar",
+                        tint = Color.White,
+                        modifier = Modifier.size(50.dp)
                     )
                 }
             }
@@ -252,7 +249,7 @@ fun ProfileMenuItem(
     isDanger: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    val iconColor = if (isDanger) Color.Red else Color(0xFFFF6600)
+    val iconColor = if (isDanger) Color.Red else Color(0xFFFFA500)
     val iconBgColor = iconColor.copy(alpha = 0.12f)
     val titleColor = if (isDanger) Color.Red else Color(0xFF333333)
 

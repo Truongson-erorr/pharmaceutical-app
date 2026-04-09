@@ -89,7 +89,7 @@ fun QuantityBottomSheet(
                 .height(40.dp),
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFFF6600),
+                containerColor = Color(0xFFFFA500),
                 contentColor = Color.White
             )
         ) {

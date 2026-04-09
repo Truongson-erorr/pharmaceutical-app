@@ -61,16 +61,13 @@ fun HomeContent(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Brush.verticalGradient(
-                    colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFE0B2)),
-                )
+                Color(0xFFFFF3E0)
             )
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item(span = { GridItemSpan(2) }) {
-
             Column {
                 TextField(
                     value = searchQuery,
@@ -180,7 +177,7 @@ fun HomeContent(
 
                 Text(
                     "Xem tất cả",
-                    color = Color(0xFFFF6600),
+                    color = Color(0xFFFFA500),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.clickable {
                         navController.navigate("AllCategoriesScreen")
@@ -192,7 +189,7 @@ fun HomeContent(
         item(span = { GridItemSpan(2) }) {
 
             if (loading) {
-                CircularProgressIndicator(color = Color(0xFFFF6600))
+                CircularProgressIndicator(color = Color(0xFFFFA500))
             } else {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(categories) { category ->
@@ -224,7 +221,7 @@ fun HomeContent(
                     Icon(
                         imageVector = Icons.Outlined.FilterAlt,
                         contentDescription = "Filter",
-                        tint = Color(0xFFFF6600)
+                        tint = Color(0xFFFFA500)
                     )
                 }
             }
@@ -232,7 +229,7 @@ fun HomeContent(
 
         if (productLoading) {
             item(span = { GridItemSpan(2) }) {
-                CircularProgressIndicator(color = Color(0xFFFF6600))
+                CircularProgressIndicator(color = Color(0xFFFFA500))
             }
         } else {
             items(products) { product ->

@@ -57,7 +57,7 @@ fun OrderDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFFFF6600)
+                    containerColor = Color(0xFFFFA500)
                 )
             )
         },
@@ -71,7 +71,7 @@ fun OrderDetailScreen(
                     .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Color(0xFFFF6600))
+                CircularProgressIndicator(color = Color(0xFFFFA500))
             }
             return@Scaffold
         }

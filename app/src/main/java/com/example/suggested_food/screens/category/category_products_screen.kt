@@ -57,17 +57,12 @@ fun CategoryProductsScreen(
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFFFF6600)
+                    containerColor = Color(0xFFFFA500)
                 )
             )
         },
         modifier = Modifier.background(
-            Brush.verticalGradient(
-                colors = listOf(
-                    Color(0xFFFFF3E0),
-                    Color(0xFFFFE0B2)
-                )
-            )
+            Color(0xFFFFF3E0)
         ),
         containerColor = Color.Transparent,
     ) { padding ->

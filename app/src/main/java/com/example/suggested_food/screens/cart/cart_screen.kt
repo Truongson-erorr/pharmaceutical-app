@@ -49,12 +49,7 @@ fun CartContent(
 
     Scaffold(
         modifier = Modifier.background(
-            Brush.verticalGradient(
-                colors = listOf(
-                    Color(0xFFFFF3E0),
-                    Color(0xFFFFE0B2)
-                )
-            )
+            Color(0xFFFFF3E0)
         ),
         containerColor = Color.Transparent,
         topBar = {
@@ -68,7 +63,7 @@ fun CartContent(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFFFF6600)
+                    containerColor = Color(0xFFFFA500)
                 )
             )
         },
@@ -87,7 +82,7 @@ fun CartContent(
                         Text(
                             text = formatVND(selectedTotal),
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFFFF6600)
+                            color = Color(0xFFFFA500)
                         )
                     }
 
@@ -101,7 +96,7 @@ fun CartContent(
                         enabled = selectedItems.isNotEmpty(),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFFF6600),
+                            containerColor = Color(0xFFFFA500),
                             disabledContainerColor = Color(0xFFFFCC99),
                             contentColor = Color.White,
                             disabledContentColor = Color.White.copy(alpha = 0.7f)
@@ -127,7 +122,7 @@ fun CartContent(
                     Icon(
                         imageVector = Icons.Outlined.ShoppingCart,
                         contentDescription = "Giỏ hàng trống",
-                        tint = Color(0xFFFF6600),
+                        tint = Color(0xFFFFA500),
                         modifier = Modifier.size(66.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))

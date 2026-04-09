@@ -87,7 +87,7 @@ fun OrderHistoryScreen(
                 indicator = { tabPositions ->
                     TabRowDefaults.Indicator(
                         Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
-                        color = Color(0xFFFF6600)
+                        color = Color(0xFFFFA500)
                     )
                 }
             ) {
@@ -112,7 +112,7 @@ fun OrderHistoryScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFFFF6600))
+                    CircularProgressIndicator(color = Color(0xFFFFA500))
                 }
                 return@Column
             }

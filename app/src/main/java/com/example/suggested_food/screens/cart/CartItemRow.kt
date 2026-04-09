@@ -113,7 +113,7 @@ fun CartItemRow(
             ) {
                 Text(
                     text = "Xóa",
-                    color = Color(0xFFFF6600),
+                    color = Color(0xFFFFA500),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                 )

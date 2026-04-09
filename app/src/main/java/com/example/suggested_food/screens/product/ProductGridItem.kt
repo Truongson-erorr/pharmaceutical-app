@@ -37,9 +37,9 @@ fun ProductGridItem(
             .fillMaxWidth()
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(0.dp),
+        elevation = CardDefaults.cardElevation(1.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
+            containerColor = Color(0xFFFFE0B2)
         )
     ) {
         Column(

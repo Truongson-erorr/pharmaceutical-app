@@ -56,12 +56,7 @@ fun ProductDetailScreen(
 
     Scaffold(
         modifier = Modifier.background(
-            Brush.verticalGradient(
-                colors = listOf(
-                    Color(0xFFFFF3E0),
-                    Color(0xFFFFE0B2)
-                )
-            )
+            Color(0xFFFFF3E0)
         ),
         containerColor = Color.Transparent,
         topBar = {
@@ -84,7 +79,7 @@ fun ProductDetailScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFFFF6600)
+                    containerColor = Color(0xFFFFA500)
                 )
             )
         },
@@ -120,11 +115,11 @@ fun ProductDetailScreen(
                                 .weight(0.3f)
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
-                            border = BorderStroke(1.dp, Color(0xFFFF6600))
+                            border = BorderStroke(1.dp, Color(0xFFFFA500))
                         ) {
                             Text(
                                 "Giỏ hàng",
-                                color = Color(0xFFFF6600),
+                                color = Color(0xFFFFA500),
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -136,7 +131,7 @@ fun ProductDetailScreen(
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFFF6600)
+                                containerColor = Color(0xFFFFA500)
                             )
                         ) {
                             Text(
@@ -212,7 +207,7 @@ fun ProductDetailScreen(
                                     .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
                                     .clip(CircleShape)
                                     .background(
-                                        if (pagerState.currentPage == index) Color(0xFFFF6600)
+                                        if (pagerState.currentPage == index) Color(0xFFFFA500)
                                         else Color.LightGray
                                     )
                             )

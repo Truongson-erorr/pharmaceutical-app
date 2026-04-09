@@ -61,19 +61,17 @@ fun AISearchScreen(
                 actions = {
                     Icon(Icons.Outlined.SupportAgent, contentDescription = null, tint = Color.White)
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFF6600))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFFFFA500))
             )
         },
-        containerColor = Color(0xFFF5F7FB)
+        containerColor = Color(0xFFFFF3E0)
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(
-                    Brush.verticalGradient(
-                        colors = listOf(Color(0xFFFFF3E0), Color(0xFFFFE0B2)),
-                    )
+                    Color(0xFFFFF3E0)
                 )
         ) {
             Column(
@@ -94,11 +92,11 @@ fun AISearchScreen(
                         containerColor = Color.White,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = Color(0xFFFF6600),
+                        cursorColor = Color(0xFFFFA500),
                     ),
                     trailingIcon = {
                         IconButton(onClick = { viewModel.searchDrug(query) }) {
-                            Icon(Icons.Filled.Search, contentDescription = "Search", tint = Color(0xFFFF6600))
+                            Icon(Icons.Filled.Search, contentDescription = "Search", tint = Color(0xFFFFA500))
                         }
                     }
                 )
@@ -140,7 +138,7 @@ fun AISearchScreen(
                         .background(Color.Black.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFFFF6600), strokeWidth = 4.dp)
+                    CircularProgressIndicator(color = Color(0xFFFFA500), strokeWidth = 4.dp)
                 }
             }
         }
