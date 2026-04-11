@@ -73,7 +73,10 @@ fun ProfileContent(
                 ProfileMenuItem(
                     icon = Icons.Filled.MedicalServices,
                     title = "Hồ sơ sức khỏe",
-                    subtitle = "Quản lý thông tin sức khỏe của bạn"
+                    subtitle = "Quản lý thông tin sức khỏe của bạn",
+                    onClick = {
+                        navController.navigate("health_profile")
+                    }
                 )
 
                 Divider(

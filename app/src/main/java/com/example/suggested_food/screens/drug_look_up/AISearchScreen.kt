@@ -71,7 +71,7 @@ fun AISearchScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(
-                    Color(0xFFE0D9FF)
+                    Color.White
                 )
         ) {
             Column(
@@ -89,8 +89,8 @@ fun AISearchScreen(
                     shape = RoundedCornerShape(25.dp),
                     singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color.White,
-                        focusedIndicatorColor = Color.Transparent,
+                        containerColor = Color(0xFFF1F5F9),
+                        focusedIndicatorColor = Color(0xFFF1F5F9),
                         unfocusedIndicatorColor = Color.Transparent,
                         cursorColor = Color(0xFF5848CE),
                     ),

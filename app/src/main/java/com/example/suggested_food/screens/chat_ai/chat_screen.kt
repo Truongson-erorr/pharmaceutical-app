@@ -78,7 +78,7 @@ fun ChatScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Color(0xFFE0D9FF)
+                Color.White
             )
     ) {
 
@@ -209,7 +209,7 @@ fun ChatBubble(message: ChatMessage) {
                     if (message.isUser)
                         Color(0xFF5848CE)
                     else
-                        Color.White,
+                        Color(0xFFF1F5F9),
                     RoundedCornerShape(16.dp)
                 )
                 .padding(12.dp)

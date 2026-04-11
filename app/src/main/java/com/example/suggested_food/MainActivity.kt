@@ -40,11 +40,12 @@ import com.example.suggested_food.screens.order.OrderHistoryScreen
 import com.example.suggested_food.screens.checkout.PaymentSuccessScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
 import com.example.suggested_food.screens.profile.ProfileContent
-import com.example.suggested_food.screens.search.SearchScreen
 import com.example.suggested_food.screens.chat_doctor.UserChatScreen
+import com.example.suggested_food.screens.profile.HealthProfileScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CartViewModel
+import com.example.suggested_food.viewmodels.HealthProfileViewModel
 import com.example.suggested_food.viewmodels.OrderHistoryViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.example.suggested_food.viewmodels.UserViewModel
@@ -71,6 +72,7 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation(
     authViewModel: AuthViewModel = viewModel(),
     cartViewModel: CartViewModel = viewModel(),
+    healthProfileViewModel: HealthProfileViewModel = viewModel(),
     userViewModel: UserViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
     orderHistoryViewModel: OrderHistoryViewModel = viewModel(),
@@ -136,9 +138,6 @@ fun AppNavigation(
                 navController = navController,
                 authViewModel = authViewModel
             )
-        }
-        composable("SearchScreen") {
-            SearchScreen(navController = navController)
         }
         composable("CartContent") {
             CartContent(
@@ -217,6 +216,9 @@ fun AppNavigation(
         }
         composable("ForgotPasswordScreen") {
             ForgotPasswordScreen(navController, authViewModel)
+        }
+        composable("health_profile") {
+            HealthProfileScreen(navController, authViewModel)
         }
     }
 }

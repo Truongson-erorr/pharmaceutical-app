@@ -62,7 +62,7 @@ fun CategoryProductsScreen(
             )
         },
         modifier = Modifier.background(
-            Color(0xFFE0D9FF)
+            Color.White
         ),
         containerColor = Color.Transparent,
     ) { padding ->

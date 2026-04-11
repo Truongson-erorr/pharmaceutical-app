@@ -32,7 +32,7 @@ fun AddressScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFE0D9FF),
+        containerColor = Color.White,
         topBar = {
             SmallTopAppBar(
                 title = {

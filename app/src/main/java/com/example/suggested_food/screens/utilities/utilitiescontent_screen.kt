@@ -108,7 +108,7 @@ fun UtilitiesContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFE0D9FF))
+            .background(Color.White)
             .padding(12.dp)
     ) {
         LazyVerticalStaggeredGrid(

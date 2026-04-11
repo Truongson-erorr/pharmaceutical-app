@@ -53,7 +53,7 @@ fun DrugLookupScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(
-                    Color(0xFFE0D9FF)
+                    Color.White
                 )
         ) {
             Column(
@@ -79,8 +79,8 @@ fun DrugLookupScreen(
                     },
                     shape = RoundedCornerShape(30.dp),
                     colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color.White,
-                        unfocusedContainerColor = Color.White,
+                        focusedContainerColor = Color(0xFFF1F5F9),
+                        unfocusedContainerColor = Color(0xFFF1F5F9),
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         cursorColor = Color.Black,

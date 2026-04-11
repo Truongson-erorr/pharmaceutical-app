@@ -61,7 +61,7 @@ fun OrderDetailScreen(
                 )
             )
         },
-        containerColor = Color(0xFFE0D9FF)
+        containerColor = Color.White
     ) { padding ->
 
         if (loading) {
