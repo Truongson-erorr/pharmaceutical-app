@@ -1,5 +1,6 @@
 package com.example.suggested_food.screens.cart
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -43,11 +44,13 @@ fun CartContent(
             }
         }
     }
-
     if (!isLoggedIn) return
 
     Scaffold(
-        containerColor = Color.White,
+        modifier = Modifier.background(
+            Color.White
+        ),
+        containerColor = Color.Transparent,
         topBar = {
             SmallTopAppBar(
                 title = {
@@ -59,41 +62,46 @@ fun CartContent(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF24006B)
+                    containerColor = Color(0xFF5848CE)
                 )
             )
         },
 
         bottomBar = {
-            if (selectedItems.isNotEmpty()) {
-                Surface(shadowElevation = 8.dp) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text("Tổng tiền", color = Color.Gray)
-                            Text(
-                                text = formatVND(selectedTotal),
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF24006B)
-                            )
-                        }
+            Surface(shadowElevation = 8.dp) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color.White)
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Tổng tiền", color = Color.Gray)
+                        Text(
+                            text = formatVND(selectedTotal),
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                    }
 
-                        Button(
-                            onClick = {
+                    Button(
+                        onClick = {
+                            if (selectedItems.isNotEmpty()) {
                                 cartViewModel.setCheckoutItems(selectedItems)
                                 navController.navigate("checkout")
-                            },
-                            shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF24006B)
-                            )
-                        ) {
-                            Text("Mua hàng")
-                        }
+                            }
+                        },
+                        enabled = selectedItems.isNotEmpty(),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFF5848CE),
+                            disabledContainerColor = Color(0xFFE0D9FF),
+                            contentColor = Color.White,
+                            disabledContentColor = Color.White.copy(alpha = 0.7f)
+                        )
+                    ) {
+                        Text("Mua hàng")
                     }
                 }
             }
@@ -113,7 +121,7 @@ fun CartContent(
                     Icon(
                         imageVector = Icons.Outlined.ShoppingCart,
                         contentDescription = "Giỏ hàng trống",
-                        tint = Color(0xFF24006B),
+                        tint = Color(0xFF5848CE),
                         modifier = Modifier.size(66.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))

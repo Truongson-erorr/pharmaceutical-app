@@ -5,5 +5,6 @@ data class UserModel(
     val email: String = "",
     val name: String = "",
     val address: String = "",
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val role: String = "user"
 )

@@ -75,6 +75,7 @@ fun OrderHistoryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Color.White)
                 .padding(bottom = padding.calculateBottomPadding())
         ) {
 
@@ -86,7 +87,7 @@ fun OrderHistoryScreen(
                 indicator = { tabPositions ->
                     TabRowDefaults.Indicator(
                         Modifier.tabIndicatorOffset(tabPositions[selectedTab]),
-                        color = Color.Black
+                        color = Color(0xFF5848CE)
                     )
                 }
             ) {
@@ -111,7 +112,7 @@ fun OrderHistoryScreen(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFF24006B))
+                    CircularProgressIndicator(color = Color(0xFF5848CE))
                 }
                 return@Column
             }
@@ -140,8 +141,8 @@ fun OrderHistoryScreen(
                             navController.navigate("order_detail/${order.id}")
                         }
                         Divider(
-                            thickness = 8.dp,
-                            color = Color(0xFFF3F4F6)
+                            thickness = 4.dp,
+                            color = Color.White
                         )
                     }
                 }
@@ -159,7 +160,7 @@ fun OrderHistoryCard(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-            .background(Color.White)
+            .background(Color.Transparent)
             .padding(16.dp)
     ) {
 

@@ -55,6 +55,8 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.android.gms:play-services-auth:21.0.0")
+    implementation("com.opencsv:opencsv:5.9")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
     implementation ("com.google.accompanist:accompanist-navigation-animation:0.33.2-alpha")
     implementation("androidx.navigation:navigation-compose:2.7.3")

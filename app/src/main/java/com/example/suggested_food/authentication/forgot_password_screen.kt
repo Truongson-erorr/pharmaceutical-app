@@ -11,24 +11,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodels.AuthViewModel
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
-fun RegisterScreen(
+fun ForgotPasswordScreen(
     navController: NavController,
-    authViewModel: AuthViewModel = viewModel()
+    authViewModel: AuthViewModel
 ) {
-    var name by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-
     val loading by authViewModel.loading.collectAsState()
     val error by authViewModel.error.collectAsState()
 
@@ -42,21 +36,21 @@ fun RegisterScreen(
         Column(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
-                    .weight(1f)
+                    .weight(2f)
                     .padding(35.dp),
                 verticalArrangement = Arrangement.Center
             ) {
 
                 Text(
-                    "Đăng ký tài khoản",
-                    fontSize = 33.sp,
+                    "Quên mật khẩu",
+                    fontSize = 34.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White
                 )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
-                    "Tạo tài khoản để bắt đầu sử dụng ứng dụng nhé",
+                    "Nhập email để nhận liên kết đặt lại mật khẩu",
                     fontSize = 14.sp,
                     color = Color.White.copy(alpha = 0.9f)
                 )
@@ -65,7 +59,7 @@ fun RegisterScreen(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .weight(3f),
+                    .weight(2f),
                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
@@ -77,25 +71,11 @@ fun RegisterScreen(
                 ) {
 
                     Text(
-                        "Đăng ký",
+                        "Đặt lại mật khẩu",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(24.dp))
-
-                    Text("Tên người dùng", color = Color.Gray)
-                    BasicTextField(
-                        value = name,
-                        onValueChange = { name = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black)
-                    )
-                    Divider(
-                        color = if (name.isNotEmpty()) Color(0xFF5848CE) else Color.LightGray,
-                        thickness = 1.5.dp
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
 
                     Text("Email", color = Color.Gray)
                     BasicTextField(
@@ -105,35 +85,19 @@ fun RegisterScreen(
                         singleLine = true,
                         textStyle = LocalTextStyle.current.copy(color = Color.Black)
                     )
-                    Divider(
-                        color = if (email.isNotEmpty()) Color(0xFF5848CE) else Color.LightGray,
-                        thickness = 1.5.dp
-                    )
-                    Spacer(modifier = Modifier.height(20.dp))
 
-                    Text("Mật khẩu", color = Color.Gray)
-                    BasicTextField(
-                        value = password,
-                        onValueChange = { password = it },
-                        visualTransformation = PasswordVisualTransformation(),
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black)
-                    )
                     Divider(
-                        color = if (password.isNotEmpty()) Color(0xFF5848CE) else Color.LightGray,
+                        color = if (email.isNotEmpty())
+                            Color(0xFF5848CE)
+                        else
+                            Color.LightGray,
                         thickness = 1.5.dp
                     )
-                    Spacer(modifier = Modifier.height(42.dp))
+                    Spacer(modifier = Modifier.height(60.dp))
 
                     Button(
                         onClick = {
-                            authViewModel.register(
-                                email.trim(),
-                                password,
-                                name.trim(),
-                                "user"
-                            )
+                            authViewModel.resetPassword(email.trim())
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -153,7 +117,10 @@ fun RegisterScreen(
                                 strokeWidth = 2.dp
                             )
                         } else {
-                            Text("Tạo tài khoản", fontWeight = FontWeight.Bold)
+                            Text(
+                                "Gửi email đặt lại mật khẩu",
+                                fontWeight = FontWeight.Bold
+                            )
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -162,18 +129,21 @@ fun RegisterScreen(
                         Text(
                             text = error ?: "",
                             color = Color.Red,
-                            fontSize = 13.sp
+                            fontSize = 13.sp,
+                            textAlign = TextAlign.Center
                         )
                     }
+                    Spacer(modifier = Modifier.height(5.dp))
 
                     TextButton(
-                        onClick = { navController.navigate("login") },
+                        onClick = {
+                            navController.popBackStack()
+                        },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(
-                            "Đã có tài khoản? Đăng nhập",
-                            color = Color(0xFF5848CE),
-                            textAlign = TextAlign.Center
+                            "Quay lại",
+                            color = Color(0xFF5848CE)
                         )
                     }
                 }

@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,9 @@ fun UserChatScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF9FAFB))
+            .background(
+                Color.White
+            )
     ) {
 
         TopAppBar(
@@ -70,7 +73,7 @@ fun UserChatScreen(
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF24006B)
+                containerColor = Color(0xFF5848CE)
             )
         )
 
@@ -100,7 +103,7 @@ fun UserChatScreen(
                 shape = RoundedCornerShape(24.dp),
                 singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFF1F5F9),
+                    containerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 )
@@ -125,7 +128,7 @@ fun UserChatScreen(
                 Icon(
                     Icons.Filled.Send,
                     contentDescription = null,
-                    tint = Color(0xFF24006B)
+                    tint = Color(0xFF5848CE)
                 )
             }
         }
@@ -146,7 +149,7 @@ fun MessageBubbleDoctor(message: ChatMessageDoctor) {
             modifier = Modifier
                 .background(
                     if (isUser)
-                        Color(0xFF24006B)
+                        Color(0xFF5848CE)
                     else
                         Color(0xFFE5E7EB),
                     RoundedCornerShape(16.dp)

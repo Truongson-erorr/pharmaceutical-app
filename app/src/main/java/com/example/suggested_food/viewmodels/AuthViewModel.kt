@@ -3,6 +3,7 @@ package com.example.suggested_food.viewmodels
 import androidx.lifecycle.ViewModel
 import com.example.suggested_food.models.UserModel
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -24,37 +25,51 @@ class AuthViewModel : ViewModel() {
     private val _userName = MutableStateFlow<String?>(null)
     val userName: StateFlow<String?> = _userName
 
+    private val _userRole = MutableStateFlow<String?>(null)
+    val userRole: StateFlow<String?> = _userRole
+
     init {
         auth.currentUser?.uid?.let { uid ->
-            loadUserName(uid)
+            loadUserData(uid)
         }
     }
 
-    fun register(email: String, password: String, name: String) {
+    fun register(email: String, password: String, name: String, role: String) {
+
         _loading.value = true
         _error.value = null
 
         auth.createUserWithEmailAndPassword(email, password)
             .addOnSuccessListener { result ->
-                val uid = result.user?.uid ?: return@addOnSuccessListener
+
+                val firebaseUser = result.user ?: return@addOnSuccessListener
+                val uid = firebaseUser.uid
 
                 val user = UserModel(
                     uid = uid,
                     email = email,
-                    name = name
+                    name = name,
+                    role = role
                 )
 
                 firestore.collection("users")
                     .document(uid)
                     .set(user)
                     .addOnSuccessListener {
-                        _isLoggedIn.value = true
-                        _userName.value = name
-                        _loading.value = false
-                    }
-                    .addOnFailureListener {
-                        _error.value = it.message
-                        _loading.value = false
+                        firebaseUser.sendEmailVerification()
+                            .addOnSuccessListener {
+
+                                auth.signOut()
+
+                                _error.value =
+                                    "Đăng ký thành công! Vui lòng kiểm tra email để xác nhận tài khoản."
+
+                                _loading.value = false
+                            }
+                            .addOnFailureListener {
+                                _error.value = "Không gửi được email xác nhận."
+                                _loading.value = false
+                            }
                     }
             }
             .addOnFailureListener {
@@ -64,13 +79,15 @@ class AuthViewModel : ViewModel() {
     }
 
     fun login(email: String, password: String) {
+
         _loading.value = true
         _error.value = null
 
         auth.signInWithEmailAndPassword(email, password)
             .addOnSuccessListener { result ->
+                val uid = result.user?.uid ?: return@addOnSuccessListener
+                loadUserData(uid)
                 _isLoggedIn.value = true
-                result.user?.uid?.let { loadUserName(it) }
                 _loading.value = false
             }
             .addOnFailureListener {
@@ -79,23 +96,93 @@ class AuthViewModel : ViewModel() {
             }
     }
 
-    fun logout() {
-        auth.signOut()
-        _isLoggedIn.value = false
-        _userName.value = null
-    }
+    private fun loadUserData(uid: String) {
 
-    fun getCurrentUser() = auth.currentUser
-
-    private fun loadUserName(uid: String) {
         firestore.collection("users")
             .document(uid)
             .get()
             .addOnSuccessListener { doc ->
                 _userName.value = doc.getString("name")
+                _userRole.value = doc.getString("role")
             }
             .addOnFailureListener {
                 _userName.value = null
+                _userRole.value = null
             }
     }
+
+    fun logout() {
+        auth.signOut()
+        _isLoggedIn.value = false
+        _userName.value = null
+        _userRole.value = null
+    }
+
+    fun firebaseAuthWithGoogle(idToken: String) {
+        _loading.value = true
+        _error.value = null
+
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+
+        auth.signInWithCredential(credential)
+            .addOnSuccessListener { result ->
+
+                val firebaseUser = result.user ?: return@addOnSuccessListener
+                val uid = firebaseUser.uid
+
+                val userRef = firestore.collection("users").document(uid)
+
+                userRef.get().addOnSuccessListener { doc ->
+
+                    if (!doc.exists()) {
+
+                        val user = UserModel(
+                            uid = uid,
+                            email = firebaseUser.email ?: "",
+                            name = firebaseUser.displayName ?: "Google User",
+                            role = "user"
+                        )
+
+                        userRef.set(user)
+                    }
+
+                    loadUserData(uid)
+                    _isLoggedIn.value = true
+                    _loading.value = false
+                }
+            }
+            .addOnFailureListener {
+                _error.value = it.message
+                _loading.value = false
+            }
+    }
+
+    fun resetPassword(email: String) {
+
+        if (email.isBlank()) {
+            _error.value = "Vui lòng nhập email."
+            return
+        }
+        _loading.value = true
+        _error.value = null
+
+        auth.sendPasswordResetEmail(email)
+            .addOnSuccessListener {
+                _error.value =
+                    "Đã gửi email đặt lại mật khẩu. Vui lòng kiểm tra Gmail."
+                _loading.value = false
+            }
+            .addOnFailureListener { e ->
+
+                if (e.message?.contains("no user record", true) == true) {
+                    _error.value = "Email chưa được đăng ký."
+                } else {
+                    _error.value = e.message
+                }
+
+                _loading.value = false
+            }
+    }
+
+    fun getCurrentUser() = auth.currentUser
 }

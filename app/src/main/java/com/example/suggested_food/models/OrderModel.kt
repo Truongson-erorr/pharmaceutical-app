@@ -12,11 +12,4 @@ data class OrderModel(
     val items: List<OrderItem> = emptyList()
 )
 
-data class OrderItem(
-    val productId: String = "",
-    val name: String = "",
-    val image: String = "",
-    val price: Double = 0.0,
-    val quantity: Int = 0
-)
 

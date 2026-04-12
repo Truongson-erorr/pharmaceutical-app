@@ -32,7 +32,7 @@ fun AddressScreen(
     }
 
     Scaffold(
-        containerColor = Color(0xFFF5F7FA),
+        containerColor = Color.White,
         topBar = {
             SmallTopAppBar(
                 title = {
@@ -52,7 +52,7 @@ fun AddressScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF24006B)
+                    containerColor = Color(0xFF5848CE)
                 )
             )
         },
@@ -73,7 +73,7 @@ fun AddressScreen(
                         .height(45.dp),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF24006B)
+                        containerColor = Color(0xFF5848CE)
                     )
                 ) {
                     Text(
@@ -131,7 +131,7 @@ fun AddressScreen(
                             containerColor = Color(0xFFF1F5F9),
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
-                            cursorColor = Color(0xFF24006B)
+                            cursorColor = Color(0xFF5848CE)
                         )
                     )
                 }

@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -44,14 +45,15 @@ fun CheckoutScreen(
     var isLoading by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    val user = userViewModel.user
-
     LaunchedEffect(Unit) {
         userViewModel.loadUser()
     }
 
     Scaffold(
-        containerColor = Color.White,
+        modifier = Modifier.background(
+            Color.White
+        ),
+        containerColor = Color.Transparent,
         topBar = {
             SmallTopAppBar(
                 title = { Text("Xác nhận đơn hàng", color = Color.White, fontWeight = FontWeight.Bold) },
@@ -61,7 +63,7 @@ fun CheckoutScreen(
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF24006B)
+                    containerColor = Color(0xFF5848CE)
                 )
             )
         },
@@ -83,7 +85,7 @@ fun CheckoutScreen(
                     Text(
                         formatVND(total),
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF24006B)
+                        color = Color(0xFF5848CE)
                     )
                 }
 
@@ -117,13 +119,13 @@ fun CheckoutScreen(
                     },
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF24006B)
+                        containerColor = Color(0xFF5848CE)
                     )
                 ) {
                     Text("Đặt hàng")
                 }
             }
-        }
+        },
     ) { padding ->
 
         LazyColumn(
@@ -210,7 +212,7 @@ fun CheckoutScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF24006B)
+                        containerColor = Color(0xFF5848CE)
                     )
                 ) {
                     Text("Tôi đã thanh toán")
@@ -259,7 +261,7 @@ fun CheckoutScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF24006B)
+                        containerColor = Color(0xFF5848CE)
                     )
                 ) {
                     Text("Xong", color = Color.White)
@@ -286,7 +288,7 @@ fun CheckoutScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator(
-                        color = Color(0xFF24006B)
+                        color = Color(0xFF5848CE)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -314,7 +316,7 @@ fun SummaryRow(
         Text(
             value,
             fontWeight = if (isBold) FontWeight.Bold else FontWeight.Normal,
-            color = if (highlight) Color(0xFF24006B) else Color.Black
+            color = if (highlight) Color(0xFF5848CE) else Color.Black
         )
     }
 }

@@ -108,12 +108,12 @@ fun CartItemRow(
 
             Surface(
                 onClick = { showDialog = true },
-                color = Color(0xFFE3F2FD),
+                color = Color.Transparent,
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
                     text = "Xóa",
-                    color = Color(0xFF24006B),
+                    color = Color(0xFF5848CE),
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                 )
