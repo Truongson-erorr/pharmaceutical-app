@@ -5,9 +5,12 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,6 +21,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -41,7 +47,8 @@ import com.example.suggested_food.screens.checkout.PaymentSuccessScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
 import com.example.suggested_food.screens.profile.ProfileContent
 import com.example.suggested_food.screens.chat_doctor.UserChatScreen
-import com.example.suggested_food.screens.profile.HealthProfileScreen
+import com.example.suggested_food.screens.health.HealthProfileScreen
+import com.example.suggested_food.screens.search.SearchScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CartViewModel
@@ -219,6 +226,9 @@ fun AppNavigation(
         }
         composable("health_profile") {
             HealthProfileScreen(navController, authViewModel)
+        }
+        composable("SearchScreen") {
+            SearchScreen(navController, productViewModel = productViewModel)
         }
     }
 }

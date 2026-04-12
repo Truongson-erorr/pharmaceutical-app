@@ -9,14 +9,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.SupportAgent
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -50,6 +51,7 @@ fun ChatScreen(
     val isLoading by chatViewModel.isLoading.collectAsState()
     val cartViewModel: CartViewModel = viewModel()
 
+    var showHistorySheet by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         chatViewModel.addToCartEvent.collect { product ->
             cartViewModel.addToCart(
@@ -96,12 +98,15 @@ fun ChatScreen(
                 }
             },
             actions = {
-                Icon(
-                    Icons.Outlined.SupportAgent,
-                    null,
-                    tint = Color.White,
-                    modifier = Modifier.padding(end = 16.dp)
-                )
+                IconButton(
+                    onClick = { showHistorySheet = true }
+                ) {
+                    Icon(
+                        Icons.Default.MoreVert,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                }
             },
             colors = TopAppBarDefaults.topAppBarColors(
                 containerColor = Color(0xFF5848CE)
@@ -165,7 +170,7 @@ fun ChatScreen(
                 shape = RoundedCornerShape(24.dp),
                 singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFF1F5F9),
+                    containerColor = Color.White,
                     focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 )
@@ -189,6 +194,40 @@ fun ChatScreen(
                     null,
                     tint = Color(0xFF5848CE)
                 )
+            }
+        }
+
+        if (showHistorySheet) {
+            ModalBottomSheet(
+                onDismissRequest = {
+                    showHistorySheet = false
+                },
+                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+            ) {
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp)
+                ) {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.History,
+                            contentDescription = "History",
+                            tint = Color(0xFF7C3AED),
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        Text(
+                            "Lịch sử gợi ý thuốc",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.example.suggested_food.screens.profile
+package com.example.suggested_food.screens.health
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -172,7 +172,6 @@ fun HealthProfileScreen(
         }
 
         if (isSaving) {
-
             LaunchedEffect(Unit) {
                 delay(2000)
 
@@ -217,95 +216,6 @@ fun HealthProfileScreen(
                         )
                     }
                 }
-            }
-        }
-    }
-}
-
-@Composable
-fun ModernCard(
-    title: String,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Card(
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(6.dp)
-    ) {
-        Column(Modifier.padding(20.dp)) {
-
-            Text(
-                title,
-                fontWeight = FontWeight.SemiBold,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(Modifier.height(12.dp))
-            content()
-        }
-    }
-}
-
-@Composable
-fun ModernTextField(
-    value: String,
-    onChange: (String) -> Unit,
-    label: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onChange,
-        label = { Text(label) },
-        leadingIcon = {
-            Icon(icon, contentDescription = null)
-        },
-        modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(14.dp)
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun DropdownField(
-    label: String,
-    options: List<String>,
-    selected: String,
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    onSelected: (String) -> Unit
-) {
-
-    var expanded by remember { mutableStateOf(false) }
-
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
-    ) {
-
-        OutlinedTextField(
-            value = selected,
-            onValueChange = {},
-            readOnly = true,
-            label = { Text(label) },
-            leadingIcon = {
-                Icon(icon, contentDescription = null)
-            },
-            modifier = Modifier
-                .menuAnchor()
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(14.dp)
-        )
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            options.forEach {
-                DropdownMenuItem(
-                    text = { Text(it) },
-                    onClick = {
-                        onSelected(it)
-                        expanded = false
-                    }
-                )
             }
         }
     }
