@@ -11,10 +11,9 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.FilterAlt
+import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,157 +37,60 @@ fun HomeContent(
     categoryViewModel: CategoryViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
 ) {
-
     val categories by categoryViewModel.categories.collectAsState()
     val loading by categoryViewModel.loading.collectAsState()
 
     val products by productViewModel.products.collectAsState()
     val productLoading by productViewModel.loading.collectAsState()
 
-    var searchQuery by remember { mutableStateOf("") }
-    var expanded by remember { mutableStateOf(false) }
-
-    val suggestions = remember(searchQuery, products) {
-        if (searchQuery.isBlank()) emptyList()
-        else products
-            .filter { it.name.contains(searchQuery, true) }
-            .take(7)
-    }
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Color.White
+                Color(0xFFF5F5F5)
             )
             .padding(16.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item(span = { GridItemSpan(2) }) {
-            Column {
-                TextField(
-                    value = searchQuery,
-                    onValueChange = {
-                        searchQuery = it
-                        expanded = it.isNotBlank()
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(50.dp),
-                    placeholder = {
-                        Text(
-                            "Nhập tên thuốc...",
-                            color = Color(0xFF6B7280)
-                        )
-                    },
-                    singleLine = true,
-                    trailingIcon = {
-                        Icon(
-                            Icons.Default.Search,
-                            contentDescription = null,
-                            tint = Color(0xFF6B7280)
-                        )
-                    },
-                    shape = RoundedCornerShape(30.dp),
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF1F5F9),
-                        unfocusedContainerColor = Color(0xFFF1F5F9),
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = Color.Black,
-                        focusedTextColor = Color.Black,
-                        unfocusedTextColor = Color.Black
-                    )
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Danh mục",
+                    fontWeight = FontWeight.Bold
                 )
 
-                if (expanded && suggestions.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(6.dp))
-
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.White
-                        ),
-                        elevation = CardDefaults.cardElevation(6.dp)
-                    ) {
-
-                        Column {
-                            suggestions.forEach { product ->
-                                Row(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .clickable {
-                                            expanded = false
-                                            searchQuery = product.name
-                                            navController.navigate(
-                                                "ProductDetail/${product.id}"
-                                            )
-                                        }
-                                        .padding(12.dp),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-
-                                    AsyncImage(
-                                        model = product.images.firstOrNull(),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .size(40.dp)
-                                            .clip(RoundedCornerShape(8.dp))
-                                    )
-                                    Spacer(modifier = Modifier.width(12.dp))
-
-                                    Column {
-
-                                        Text(
-                                            text = product.name,
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.Medium,
-                                            maxLines = 1
-                                        )
-
-                                        Text(
-                                            text = "Xem chi tiết",
-                                            style = MaterialTheme.typography.labelSmall,
-                                            color = Color.Gray
-                                        )
-                                    }
-                                }
-                            }
-                        }
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable {
+                        navController.navigate("AllCategoriesScreen")
                     }
+                ) {
+                    Text(
+                        "Xem tất cả",
+                        color = Color(0xFF007BFF),
+                        fontWeight = FontWeight.Bold
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+
+                    Icon(
+                        imageVector = Icons.Outlined.KeyboardArrowRight,
+                        contentDescription = null,
+                        tint = Color(0xFF007BFF),
+                        modifier = Modifier.size(20.dp)
+                    )
                 }
             }
         }
 
         item(span = { GridItemSpan(2) }) {
-            BannerSlider()
-        }
-
-        item(span = { GridItemSpan(2) }) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Text("Danh mục", fontWeight = FontWeight.Bold)
-
-                Text(
-                    "Xem tất cả",
-                    color = Color(0xFF5848CE),
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.clickable {
-                        navController.navigate("AllCategoriesScreen")
-                    }
-                )
-            }
-        }
-
-        item(span = { GridItemSpan(2) }) {
-
             if (loading) {
-                CircularProgressIndicator(color = Color(0xFF5848CE))
+                CircularProgressIndicator(color = Color(0xFF007BFF))
             } else {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(categories) { category ->
@@ -207,7 +109,8 @@ fun HomeContent(
         item(span = { GridItemSpan(2) }) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
                 Text(
@@ -216,11 +119,24 @@ fun HomeContent(
                     style = MaterialTheme.typography.titleMedium
                 )
 
-                IconButton(onClick = {}) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable {
+                        navController.navigate("")
+                    }
+                ) {
+                    Text(
+                        text = "Xem tất cả",
+                        color = Color(0xFF007BFF),
+                        fontWeight = FontWeight.Medium
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
+
                     Icon(
-                        imageVector = Icons.Outlined.FilterAlt,
-                        contentDescription = "Filter",
-                        tint = Color(0xFF5848CE)
+                        imageVector = Icons.Outlined.KeyboardArrowRight,
+                        contentDescription = null,
+                        tint = Color(0xFF007BFF),
+                        modifier = Modifier.size(18.dp)
                     )
                 }
             }
@@ -228,7 +144,7 @@ fun HomeContent(
 
         if (productLoading) {
             item(span = { GridItemSpan(2) }) {
-                CircularProgressIndicator(color = Color(0xFF5848CE))
+                CircularProgressIndicator(color = Color(0xFF007BFF))
             }
         } else {
             items(products) { product ->

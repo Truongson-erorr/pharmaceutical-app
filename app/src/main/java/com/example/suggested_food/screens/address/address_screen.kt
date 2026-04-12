@@ -1,17 +1,25 @@
 package com.example.suggested_food.screens.address
 
+import android.content.Intent
+import android.net.Uri
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.UserViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -22,6 +30,7 @@ fun AddressScreen(
 ) {
     val user = userViewModel.user
     var address by remember { mutableStateOf("") }
+    val context = LocalContext.current
 
     LaunchedEffect(Unit) {
         userViewModel.loadUser()
@@ -93,26 +102,22 @@ fun AddressScreen(
                 .padding(horizontal = 16.dp)
                 .padding(bottom = 80.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.White
-                ),
+                colors = CardDefaults.cardColors(containerColor = Color.White),
                 elevation = CardDefaults.cardElevation(6.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(20.dp)
-                ) {
+                Column(Modifier.padding(20.dp)) {
 
                     Text(
                         "Địa chỉ nhận hàng",
                         fontWeight = FontWeight.SemiBold,
-                        fontSize = MaterialTheme.typography.titleMedium.fontSize
+                        style = MaterialTheme.typography.titleMedium
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(Modifier.height(12.dp))
 
                     TextField(
                         value = address,
@@ -121,10 +126,7 @@ fun AddressScreen(
                             .fillMaxWidth()
                             .heightIn(min = 120.dp),
                         placeholder = {
-                            Text(
-                                "Ví dụ: 123 Nguyễn Trãi, Quận 1, TP.HCM",
-                                color = Color.Gray
-                            )
+                            Text("Ví dụ: 123 Nguyễn Trãi, Quận 1, TP.HCM")
                         },
                         shape = RoundedCornerShape(16.dp),
                         colors = TextFieldDefaults.textFieldColors(
@@ -134,6 +136,60 @@ fun AddressScreen(
                             cursorColor = Color(0xFF5848CE)
                         )
                     )
+                }
+            }
+            Spacer(Modifier.height(16.dp))
+
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .clickable {
+
+                        val uri =
+                            Uri.parse("https://www.google.com/maps/search/?api=1&query=$address")
+
+                        val intent = Intent(Intent.ACTION_VIEW, uri)
+                        intent.setPackage("com.google.android.apps.maps")
+                        context.startActivity(intent)
+                    },
+                shape = RoundedCornerShape(20.dp),
+                elevation = CardDefaults.cardElevation(6.dp)
+            ) {
+
+                Box {
+                    AsyncImage(
+                        model = "https://vatvostudio.vn/wp-content/uploads/2022/09/Google-Maps-Traffic2.jpg",
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+
+                    Box(
+                        Modifier
+                            .fillMaxSize()
+                            .background(Color.Black.copy(alpha = 0.3f))
+                    )
+
+                    Column(
+                        modifier = Modifier.align(Alignment.Center),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            "📍 Chọn trên Google Maps",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+                        Spacer(Modifier.height(4.dp))
+
+                        Text(
+                            "Nhấn để mở bản đồ",
+                            color = Color.White.copy(alpha = 0.85f),
+                            style = MaterialTheme.typography.bodySmall
+                        )
+                    }
                 }
             }
         }

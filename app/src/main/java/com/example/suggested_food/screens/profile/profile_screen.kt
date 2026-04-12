@@ -45,7 +45,7 @@ fun ProfileContent(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Color(0xFFE0D9FF)
+                Color.White
             )
             .verticalScroll(rememberScrollState())
     ) {
@@ -95,12 +95,6 @@ fun ProfileContent(
                     color = Color(0xFFEEEEEE),
                     thickness = 0.5.dp,
                     modifier = Modifier.padding(horizontal = 16.dp)
-                )
-
-                ProfileMenuItem(
-                    icon = Icons.Filled.Favorite,
-                    title = "Thuốc yêu thích",
-                    subtitle = "Danh sách thuốc đã lưu"
                 )
 
                 Divider(
@@ -252,7 +246,7 @@ fun ProfileMenuItem(
     isDanger: Boolean = false,
     onClick: () -> Unit = {}
 ) {
-    val iconColor = if (isDanger) Color.Red else Color(0xFF5848CE)
+    val iconColor = if (isDanger) Color.Red else Color(0xFF007BFF)
     val iconBgColor = iconColor.copy(alpha = 0.12f)
     val titleColor = if (isDanger) Color.Red else Color(0xFF333333)
 

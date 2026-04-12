@@ -4,18 +4,17 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
-import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
-import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -35,160 +34,186 @@ fun UtilitiesContent(
     val context = navController.context
 
     val utilities = listOf(
+
         UtilityItem(
-            title = "Tư vấn bác sĩ",
-            description = "Trò chuyện trực tiếp với bác sĩ để được tư vấn",
+            "Tư vấn bác sĩ",
+            "Kết nối và trò chuyện trực tiếp với bác sĩ để nhận tư vấn sức khỏe cá nhân hóa theo tình trạng của bạn"
         ) {
             val userId = FirebaseAuth.getInstance().currentUser?.uid
             if (isLoggedIn && userId != null) {
-                navController.navigate("UserChatScreen/$userId") {
-                    launchSingleTop = true
-                }
+                navController.navigate("UserChatScreen/$userId")
             } else {
-                Toast.makeText(
-                    context,
-                    "Vui lòng đăng nhập để được AI tư vấn chi tiết",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context,"Vui lòng đăng nhập",Toast.LENGTH_SHORT).show()
             }
         },
 
         UtilityItem(
-            title = "Gợi ý thuốc AI",
-            description = "Tư vấn thuốc OTC dựa trên triệu chứng bạn cung cấp",
+            "Gợi ý thuốc theo triệu chứng",
+            "Mô hình AI được huấn luyện từ dữ liệu y tế phân tích triệu chứng người dùng và đề xuất thuốc OTC phù hợp"
         ) {
-            if (isLoggedIn) {
-                navController.navigate("chat")
-            } else {
-                Toast.makeText(
-                    context,
-                    "Vui lòng đăng nhập để được AI tư vấn chi tiết",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+            if (isLoggedIn)
+                navController.navigate("SymptomRecommendationScreen")
+            else
+                Toast.makeText(context,"Vui lòng đăng nhập",Toast.LENGTH_SHORT).show()
         },
 
         UtilityItem(
-            title = "Tra cứu thuốc offline",
-            description = "Tra cứu công dụng, liều dùng và lưu ý an toàn của thuốc",
+            "Tra cứu thuốc offline",
+            "Tra cứu thông tin thuốc từ cơ sở dữ liệu lớn lưu trữ nội bộ: công dụng, liều dùng, chống chỉ định và cảnh báo an toàn"
         ) {
             if (!isLoggedIn) {
-                Toast.makeText(
-                    context,
-                    "Vui lòng đăng nhập để sử dụng chức năng này",
-                    Toast.LENGTH_SHORT
-                ).show()
-                navController.navigate("LoginScreen") {
-                    launchSingleTop = true
-                }
+                Toast.makeText(context,"Vui lòng đăng nhập",Toast.LENGTH_SHORT).show()
+                navController.navigate("LoginScreen")
             } else {
                 navController.navigate("drug_lookup")
             }
         },
 
         UtilityItem(
-            title = "Tra cứu thuốc AI",
-            description = "Nhập triệu chứng hoặc tên thuốc, nhận gợi ý thông tin và cảnh báo an toàn",
+            "Tra cứu thuốc AI",
+            "Sử dụng AI Gemini phân tích tên thuốc hoặc triệu chứng để cung cấp thông tin và giải thích dễ hiểu"
         ) {
             if (!isLoggedIn) {
-                Toast.makeText(
-                    context,
-                    "Vui lòng đăng nhập để sử dụng chức năng AI tra cứu",
-                    Toast.LENGTH_SHORT
-                ).show()
-                navController.navigate("LoginScreen") {
-                    launchSingleTop = true
-                }
+                Toast.makeText(context,"Vui lòng đăng nhập",Toast.LENGTH_SHORT).show()
+                navController.navigate("LoginScreen")
             } else {
                 navController.navigate("AISearchScreen")
             }
+        },
+
+        UtilityItem(
+            "Gợi ý thuốc AI",
+            "Chat AI sử dụng Gemini API để tư vấn nhanh thuốc không kê đơn dựa trên mô tả triệu chứng của bạn"
+        ) {
+            if (isLoggedIn)
+                navController.navigate("chat")
+            else
+                Toast.makeText(context,"Vui lòng đăng nhập",Toast.LENGTH_SHORT).show()
         }
     )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
-            .padding(12.dp)
+            .background(Color(0xFFF6F8FB))
+            .padding(horizontal = 16.dp)
     ) {
+        Spacer(modifier = Modifier.height(16.dp))
         LazyVerticalStaggeredGrid(
             columns = StaggeredGridCells.Fixed(1),
             verticalItemSpacing = 16.dp,
             modifier = Modifier.fillMaxSize()
         ) {
-            items(utilities) { item ->
-                UtilityCard(item)
+            itemsIndexed(utilities) { index, item ->
+                UtilityCard(item, index)
             }
         }
     }
 }
 
 @Composable
-fun UtilityCard(item: UtilityItem) {
+fun UtilityCard(item: UtilityItem, index: Int) {
+
+    val gradients = listOf(
+        listOf(Color(0xFF3B82F6), Color(0xFF06B6D4)),
+        listOf(Color(0xFF7C3AED), Color(0xFFEC4899)),
+        listOf(Color(0xFF10B981), Color(0xFF34D399)),
+        listOf(Color(0xFF6366F1), Color(0xFFA78BFA)),
+        listOf(Color(0xFF0891B2), Color(0xFF22D3EE))
+    )
+    val gradient = gradients[index % gradients.size]
+
+    val icon = when {
+        item.title.contains("bác sĩ") -> Icons.Default.LocalHospital
+        item.title.contains("offline") -> Icons.Default.Medication
+        item.title.contains("AI") -> Icons.Default.SmartToy
+        else -> Icons.Default.HealthAndSafety
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(160.dp)
-            .shadow(
-                elevation = 6.dp,
-                shape = RoundedCornerShape(20.dp),
-                spotColor = Color(0xFFC1B3FF).copy(alpha = 0.3f),
-                ambientColor = Color(0xFFC1B3FF).copy(alpha = 0.2f)
-            )
+            .height(150.dp)
+            .shadow(8.dp, RoundedCornerShape(24.dp))
             .clickable { item.onClick() },
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(0.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFC1B3FF)) // vàng nhạt
+        shape = RoundedCornerShape(24.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
     ) {
-        Row(
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = item.title,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    color = Color(0xFF1F2937),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                .background(
+                    Brush.linearGradient(gradient)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                .fillMaxSize()
+                .padding(18.dp)
+        ) {
 
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color.White.copy(alpha = 0.3f),
-                    modifier = Modifier.padding(bottom = 6.dp)
+                    shape = CircleShape,
+                    color = Color.White.copy(alpha = 0.25f),
+                    modifier = Modifier.size(54.dp)
                 ) {
-                    Text(
-                        text = if (item.title.contains("AI")) "🤖 AI Assistant" else "👨‍⚕️ Medical",
-                        fontSize = 10.sp,
-                        color = Color(0xFF1F2937),
-                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp),
-                        fontWeight = FontWeight.Medium
+                    Icon(
+                        icon,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.padding(14.dp)
                     )
                 }
+                Spacer(modifier = Modifier.width(16.dp))
 
-                Text(
-                    text = item.description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF1F2937).copy(alpha = 0.9f),
-                    maxLines = 2,
-                    overflow = TextOverflow.Ellipsis
+                Column(
+                    modifier = Modifier.weight(1f)
+                ) {
+
+                    Text(
+                        item.title,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Text(
+                        item.description,
+                        fontSize = 13.sp,
+                        color = Color.White.copy(alpha = 0.95f),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Surface(
+                        shape = RoundedCornerShape(50),
+                        color = Color.White.copy(alpha = 0.25f)
+                    ) {
+                        Text(
+                            text = if (item.title.contains("AI"))
+                                "🤖 AI Assistant"
+                            else
+                                "🏥 Healthcare",
+                            fontSize = 11.sp,
+                            color = Color.White,
+                            modifier = Modifier.padding(
+                                horizontal = 10.dp,
+                                vertical = 4.dp
+                            )
+                        )
+                    }
+                }
+
+                Icon(
+                    Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(28.dp)
                 )
             }
-
-            Icon(
-                imageVector = androidx.compose.material.icons.Icons.Default.ChevronRight,
-                contentDescription = "Xem chi tiết",
-                tint = Color(0xFF1F2937).copy(alpha = 0.7f),
-                modifier = Modifier.size(24.dp)
-            )
         }
     }
 }
