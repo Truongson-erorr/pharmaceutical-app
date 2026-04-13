@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -41,27 +42,27 @@ fun AddressScreen(
     }
 
     Scaffold(
-        containerColor = Color.White,
+        containerColor = Color(0xFFF5F5F5),
         topBar = {
             SmallTopAppBar(
                 title = {
                     Text(
                         "Địa chỉ giao hàng",
                         fontWeight = FontWeight.SemiBold,
-                        color = Color.White
+                        color = Color.Black
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            Icons.Default.ArrowBack,
+                            Icons.Default.ArrowBackIos,
                             contentDescription = null,
-                            tint = Color.White
+                            tint = Color.Black
                         )
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF5848CE)
+                    containerColor = Color.White
                 )
             )
         },
@@ -82,7 +83,7 @@ fun AddressScreen(
                         .height(45.dp),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF5848CE)
+                        containerColor = Color(0xFF007BFF)
                     )
                 ) {
                     Text(
@@ -133,7 +134,7 @@ fun AddressScreen(
                             containerColor = Color(0xFFF1F5F9),
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
-                            cursorColor = Color(0xFF5848CE)
+                            cursorColor = Color(0xFF007BFF)
                         )
                     )
                 }

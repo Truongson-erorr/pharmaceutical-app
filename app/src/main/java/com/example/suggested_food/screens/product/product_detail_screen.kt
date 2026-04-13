@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -56,7 +57,7 @@ fun ProductDetailScreen(
 
     Scaffold(
         modifier = Modifier.background(
-            Color.White
+            Color(0xFFF5F5F5)
         ),
         containerColor = Color.Transparent,
         topBar = {
@@ -64,7 +65,7 @@ fun ProductDetailScreen(
                 title = {
                     Text(
                         text = product?.name ?: "Chi tiết sản phẩm",
-                        color = Color.White,
+                        color = Color.Black,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1
                     )
@@ -72,14 +73,14 @@ fun ProductDetailScreen(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            Icons.Default.ArrowBack,
+                            Icons.Default.ArrowBackIos,
                             contentDescription = null,
-                            tint = Color.White
+                            tint = Color.Black
                         )
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF5848CE)
+                    containerColor = Color.White
                 )
             )
         },
@@ -115,11 +116,11 @@ fun ProductDetailScreen(
                                 .weight(0.3f)
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
-                            border = BorderStroke(1.dp, Color(0xFF5848CE))
+                            border = BorderStroke(1.dp, Color(0xFF007BFF))
                         ) {
                             Text(
                                 "Giỏ hàng",
-                                color = Color(0xFF5848CE),
+                                color = Color(0xFF007BFF),
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -131,7 +132,7 @@ fun ProductDetailScreen(
                                 .height(48.dp),
                             shape = RoundedCornerShape(14.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF5848CE)
+                                containerColor = Color(0xFF007BFF)
                             )
                         ) {
                             Text(
@@ -207,7 +208,7 @@ fun ProductDetailScreen(
                                     .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
                                     .clip(CircleShape)
                                     .background(
-                                        if (pagerState.currentPage == index) Color(0xFF5848CE)
+                                        if (pagerState.currentPage == index) Color(0xFF007BFF)
                                         else Color.LightGray
                                     )
                             )

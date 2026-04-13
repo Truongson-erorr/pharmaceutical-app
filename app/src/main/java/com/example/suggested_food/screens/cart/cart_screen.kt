@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.outlined.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -48,21 +49,21 @@ fun CartContent(
 
     Scaffold(
         modifier = Modifier.background(
-            Color.White
+            Color(0xFFF5F5F5)
         ),
         containerColor = Color.Transparent,
         topBar = {
             SmallTopAppBar(
                 title = {
-                    Text("Giỏ hàng", fontWeight = FontWeight.Bold, color = Color.White)
+                    Text("Giỏ hàng", fontWeight = FontWeight.Bold, color = Color.Black)
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, null, tint = Color.White)
+                        Icon(Icons.Default.ArrowBackIos, null, tint = Color.Black)
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF5848CE)
+                    containerColor = Color.White
                 )
             )
         },
@@ -95,7 +96,7 @@ fun CartContent(
                         enabled = selectedItems.isNotEmpty(),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF5848CE),
+                            containerColor = Color(0xFF007BFF),
                             disabledContainerColor = Color(0xFFE0D9FF),
                             contentColor = Color.White,
                             disabledContentColor = Color.White.copy(alpha = 0.7f)
@@ -121,7 +122,7 @@ fun CartContent(
                     Icon(
                         imageVector = Icons.Outlined.ShoppingCart,
                         contentDescription = "Giỏ hàng trống",
-                        tint = Color(0xFF5848CE),
+                        tint = Color(0xFF007BFF),
                         modifier = Modifier.size(66.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
