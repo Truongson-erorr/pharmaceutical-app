@@ -1,13 +1,12 @@
 package com.example.suggested_food.screens.home
 
 import android.os.Build
+import android.widget.Space
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
@@ -15,6 +14,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -37,13 +37,10 @@ sealed class BottomNavItem(
         BottomNavItem("home", Icons.Outlined.Home, Icons.Filled.Home, "Trang chủ")
 
     object Utilities :
-        BottomNavItem("utilities", Icons.Outlined.Lightbulb, Icons.Filled.Lightbulb, "Tiện ích")
+        BottomNavItem("utilities", Icons.Outlined.AutoAwesome, Icons.Filled.Lightbulb, "Tiện ích")
 
     object Cart :
         BottomNavItem("cart", Icons.Outlined.ShoppingBag, Icons.Filled.ShoppingBag, "Đơn hàng")
-
-    object Profile :
-        BottomNavItem("profile", Icons.Outlined.Person, Icons.Filled.Person, "Tài khoản")
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -52,12 +49,10 @@ fun MainScreen(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
-
     val bottomItems = listOf(
         BottomNavItem.Home,
         BottomNavItem.Utilities,
         BottomNavItem.Cart,
-        BottomNavItem.Profile
     )
 
     var selectedBottomItem by remember {
@@ -70,14 +65,27 @@ fun MainScreen(
         topBar = {
             if (selectedBottomItem == BottomNavItem.Home) {
 
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = Color(0xFFF5F5F5)
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    Color(0xFF007BFF),
+                                    Color(0xFF00C2FF)
+                                )
+                            )
+                        )
                 ) {
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 20.dp),
+                            .padding(
+                                start = 16.dp,
+                                end = 16.dp,
+                                top = 40.dp,
+                                bottom = 20.dp
+                            ),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -86,32 +94,25 @@ fun MainScreen(
                                 text = "Hello, Son",
                                 style = MaterialTheme.typography.headlineLarge.copy(
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 36.sp
+                                    fontSize = 34.sp,
+                                    color = Color.White
                                 )
                             )
                             Text(
                                 text = "Welcome back 👋",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Gray
+                                color = Color.White.copy(alpha = 0.85f)
                             )
                         }
 
                         Row(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            IconButton(onClick = { navController.navigate("SearchScreen") }) {
-                                Icon(
-                                    Icons.Default.Search,
-                                    contentDescription = "Search",
-                                    tint = Color.DarkGray,
-                                )
-                            }
-
                             IconButton(onClick = { navController.navigate("NotificationsScreen") }) {
                                 Icon(
                                     Icons.Outlined.Notifications,
                                     contentDescription = "Notifications",
-                                    tint = Color.DarkGray
+                                    tint = Color.White
                                 )
                             }
 
@@ -125,7 +126,17 @@ fun MainScreen(
                                 Icon(
                                     Icons.Outlined.ShoppingCart,
                                     contentDescription = "Cart",
-                                    tint = Color.DarkGray
+                                    tint = Color.White
+                                )
+                            }
+
+                            IconButton(onClick = {
+                                navController.navigate("ProfileContent")
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = "Profile",
+                                    tint = Color.White
                                 )
                             }
                         }
@@ -135,7 +146,6 @@ fun MainScreen(
         },
 
         bottomBar = {
-
             NavigationBar(
                 containerColor = Color.White,
                 tonalElevation = 8.dp
@@ -168,15 +178,7 @@ fun MainScreen(
                         selected = selected,
 
                         onClick = {
-
                             when (item) {
-
-                                BottomNavItem.Profile -> {
-                                    if (!isLoggedIn) {
-                                        navController.navigate("login")
-                                    } else selectedBottomItem = item
-                                }
-
                                 BottomNavItem.Cart -> {
                                     if (!isLoggedIn) {
                                         Toast.makeText(
@@ -203,7 +205,6 @@ fun MainScreen(
                 }
             }
         },
-
         containerColor = Color(0xFFF5F5F5)
 
     ) { innerPadding ->
@@ -221,33 +222,7 @@ fun MainScreen(
                     UtilitiesContent(navController, authViewModel)
                 BottomNavItem.Cart ->
                     OrderHistoryScreen(navController)
-                BottomNavItem.Profile ->
-                    ProfileContent(navController, authViewModel)
             }
         }
-    }
-}
-
-@Composable
-fun CircularIconButton(
-    icon: ImageVector,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .size(42.dp)
-            .background(
-                color = Color(0xFFEFF6FF),
-                shape = CircleShape
-            )
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = Color(0xFF007BFF),
-            modifier = Modifier.size(20.dp)
-        )
     }
 }
