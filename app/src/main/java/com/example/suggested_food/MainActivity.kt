@@ -79,7 +79,6 @@ class MainActivity : ComponentActivity() {
 fun AppNavigation(
     authViewModel: AuthViewModel = viewModel(),
     cartViewModel: CartViewModel = viewModel(),
-    healthProfileViewModel: HealthProfileViewModel = viewModel(),
     userViewModel: UserViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
     orderHistoryViewModel: OrderHistoryViewModel = viewModel(),
@@ -229,6 +228,9 @@ fun AppNavigation(
         }
         composable("SearchScreen") {
             SearchScreen(navController, productViewModel = productViewModel)
+        }
+        composable("ProfileContent") {
+            ProfileContent(navController, authViewModel)
         }
     }
 }

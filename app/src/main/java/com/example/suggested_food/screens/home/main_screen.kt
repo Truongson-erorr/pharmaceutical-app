@@ -4,10 +4,8 @@ import android.os.Build
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
@@ -15,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -23,9 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.suggested_food.screens.order.OrderHistoryScreen
-import com.example.suggested_food.screens.profile.ProfileContent
-import com.example.suggested_food.screens.utilities.UtilitiesContent
 import com.example.suggested_food.viewmodels.AuthViewModel
+import kotlinx.coroutines.launch
 
 sealed class BottomNavItem(
     val route: String,
@@ -36,14 +34,8 @@ sealed class BottomNavItem(
     object Home :
         BottomNavItem("home", Icons.Outlined.Home, Icons.Filled.Home, "Trang chủ")
 
-    object Utilities :
-        BottomNavItem("utilities", Icons.Outlined.Lightbulb, Icons.Filled.Lightbulb, "Tiện ích")
-
     object Cart :
         BottomNavItem("cart", Icons.Outlined.ShoppingBag, Icons.Filled.ShoppingBag, "Đơn hàng")
-
-    object Profile :
-        BottomNavItem("profile", Icons.Outlined.Person, Icons.Filled.Person, "Tài khoản")
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -52,202 +44,333 @@ fun MainScreen(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
-
     val bottomItems = listOf(
         BottomNavItem.Home,
-        BottomNavItem.Utilities,
-        BottomNavItem.Cart,
-        BottomNavItem.Profile
+        BottomNavItem.Cart
     )
-
     var selectedBottomItem by remember {
         mutableStateOf<BottomNavItem>(BottomNavItem.Home)
     }
+
     val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
     val context = LocalContext.current
 
-    Scaffold(
-        topBar = {
-            if (selectedBottomItem == BottomNavItem.Home) {
+    val drawerState = rememberDrawerState(DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    color = Color(0xFFF5F5F5)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 16.dp, vertical = 20.dp),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column {
-                            Text(
-                                text = "Hello, Son",
-                                style = MaterialTheme.typography.headlineLarge.copy(
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 36.sp
+    val userName by authViewModel.userName.collectAsState()
+    val user = authViewModel.getCurrentUser()
+
+    val displayName = userName ?: "Người dùng"
+    val email = user?.email ?: "Chưa có email"
+
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+
+            ModalDrawerSheet(
+                modifier = Modifier.fillMaxWidth(0.7f)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(
+                                    Color(0xFF007BFF),
+                                    Color(0xFF00C2FF)
                                 )
                             )
+                        )
+                        .padding(top = 50.dp, bottom = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+
+                    Surface(
+                        shape = CircleShape,
+                        color = Color.White,
+                        modifier = Modifier.size(72.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Person,
+                            contentDescription = null,
+                            tint = Color(0xFF007BFF),
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Text(
+                        text = displayName,
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+
+                    Text(
+                        text = email,
+                        color = Color.White.copy(alpha = 0.85f),
+                        fontSize = 13.sp
+                    )
+                }
+                Spacer(modifier = Modifier.height(16.dp))
+
+                @Composable
+                fun DrawerItem(
+                    title: String,
+                    onClick: () -> Unit
+                ) {
+                    NavigationDrawerItem(
+                        selected = false,
+                        onClick = onClick,
+                        label = {
                             Text(
-                                text = "Welcome back 👋",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = Color.Gray
+                                title,
+                                color = Color.DarkGray,
+                                fontWeight = FontWeight.SemiBold
                             )
                         }
+                    )
+                }
 
+                DrawerItem("Hồ sơ sức khỏe") {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("ProfileContent")
+                }
+
+                DrawerItem("Kiểm tra tương tác thuốc") {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("DrugInteractionScreen")
+                }
+
+                DrawerItem("Lịch sử dùng thuốc") {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("MedicineHistoryScreen")
+                }
+
+                DrawerItem("Nhắc uống thuốc") {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("ReminderScreen")
+                }
+
+                DrawerItem("Đơn thuốc của tôi") {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("PrescriptionScreen")
+                }
+
+                DrawerItem("Chỉ số sức khỏe") {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("HealthIndexScreen")
+                }
+
+                DrawerItem("Triệu chứng hôm nay") {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("SymptomCheckScreen")
+                }
+
+                DrawerItem("Địa chỉ giao hàng") {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("AddressScreen")
+                }
+
+                DrawerItem("Hỗ trợ & FAQ") {
+                    scope.launch { drawerState.close() }
+                    navController.navigate("SupportScreen")
+                }
+                Spacer(modifier = Modifier.weight(1f))
+
+                DrawerItem(
+                    "Đăng xuất"
+                ) {
+                    scope.launch { drawerState.close() }
+                    authViewModel.logout()
+
+                    Toast.makeText(
+                        context,
+                        "Đã đăng xuất",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+        }
+    ) {
+        Scaffold(
+            topBar = {
+                if (selectedBottomItem == BottomNavItem.Home) {
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                Brush.horizontalGradient(
+                                    listOf(
+                                        Color(0xFF007BFF),
+                                        Color(0xFF00C2FF)
+                                    )
+                                )
+                            )
+                    ) {
                         Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    start = 16.dp,
+                                    end = 16.dp,
+                                    top = 40.dp,
+                                    bottom = 20.dp
+                                ),
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
-                            IconButton(onClick = { navController.navigate("SearchScreen") }) {
-                                Icon(
-                                    Icons.Default.Search,
-                                    contentDescription = "Search",
-                                    tint = Color.DarkGray,
+
+                            Column {
+                                Text(
+                                    "Hello, Son",
+                                    fontSize = 34.sp,
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+
+                                Text(
+                                    "Welcome back 👋",
+                                    color = Color.White.copy(alpha = 0.85f)
                                 )
                             }
 
-                            IconButton(onClick = { navController.navigate("NotificationsScreen") }) {
-                                Icon(
-                                    Icons.Outlined.Notifications,
-                                    contentDescription = "Notifications",
-                                    tint = Color.DarkGray
-                                )
-                            }
-
-                            IconButton(onClick = {
-                                if (!isLoggedIn) {
-                                    Toast.makeText(context, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show()
-                                } else {
-                                    navController.navigate("CartContent")
+                            Row {
+                                IconButton(
+                                    onClick = {
+                                        navController.navigate("NotificationsScreen")
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Outlined.Notifications,
+                                        null,
+                                        tint = Color.White
+                                    )
                                 }
-                            }) {
-                                Icon(
-                                    Icons.Outlined.ShoppingCart,
-                                    contentDescription = "Cart",
-                                    tint = Color.DarkGray
-                                )
+
+                                IconButton(
+                                    onClick = {
+                                        if (!isLoggedIn) {
+                                            Toast.makeText(
+                                                context,
+                                                "Vui lòng đăng nhập",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        } else {
+                                            navController.navigate("CartContent")
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Outlined.ShoppingCart,
+                                        null,
+                                        tint = Color.White
+                                    )
+                                }
+
+                                IconButton(
+                                    onClick = {
+                                        scope.launch {
+                                            drawerState.open()
+                                        }
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Default.Menu,
+                                        contentDescription = "Menu",
+                                        tint = Color.White
+                                    )
+                                }
                             }
                         }
                     }
                 }
-            }
-        },
+            },
 
-        bottomBar = {
+            bottomBar = {
+                NavigationBar(
+                    containerColor = Color.White,
+                    tonalElevation = 8.dp
+                ) {
 
-            NavigationBar(
-                containerColor = Color.White,
-                tonalElevation = 8.dp
-            ) {
-                bottomItems.forEach { item ->
+                    bottomItems.forEach { item ->
 
-                    val selected =
-                        selectedBottomItem.route == item.route
+                        val selected =
+                            selectedBottomItem.route == item.route
 
-                    NavigationBarItem(
-                        icon = {
-                            Icon(
-                                imageVector =
-                                if (selected) item.filledIcon
-                                else item.outlinedIcon,
-                                contentDescription = item.label
-                            )
-                        },
+                        NavigationBarItem(
+                            icon = {
+                                Icon(
+                                    if (selected)
+                                        item.filledIcon
+                                    else
+                                        item.outlinedIcon,
+                                    contentDescription = item.label
+                                )
+                            },
 
-                        label = {
-                            Text(
-                                item.label,
-                                fontSize = 12.sp,
-                                fontWeight =
-                                if (selected)
-                                    FontWeight.Medium
-                                else FontWeight.Normal
-                            )
-                        },
-                        selected = selected,
+                            label = {
+                                Text(
+                                    item.label,
+                                    fontSize = 12.sp,
+                                    fontWeight =
+                                    if (selected)
+                                        FontWeight.Medium
+                                    else FontWeight.Normal
+                                )
+                            },
 
-                        onClick = {
+                            selected = selected,
 
-                            when (item) {
+                            onClick = {
+                                when (item) {
+                                    BottomNavItem.Cart -> {
+                                        if (!isLoggedIn) {
+                                            Toast.makeText(
+                                                context,
+                                                "Vui lòng đăng nhập",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        } else {
+                                            selectedBottomItem = item
+                                        }
+                                    }
 
-                                BottomNavItem.Profile -> {
-                                    if (!isLoggedIn) {
-                                        navController.navigate("login")
-                                    } else selectedBottomItem = item
+                                    else -> selectedBottomItem = item
                                 }
+                            },
 
-                                BottomNavItem.Cart -> {
-                                    if (!isLoggedIn) {
-                                        Toast.makeText(
-                                            context,
-                                            "Vui lòng đăng nhập",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    } else selectedBottomItem = item
-                                }
-
-                                else -> selectedBottomItem = item
-                            }
-                        },
-
-                        colors = NavigationBarItemDefaults.colors(
-                            selectedIconColor = Color(0xFF007BFF),
-                            selectedTextColor = Color(0xFF007BFF),
-                            unselectedIconColor = Color.Gray,
-                            unselectedTextColor = Color.Gray,
-                            indicatorColor =
-                            Color(0xFF007BFF).copy(alpha = 0.1f)
+                            colors = NavigationBarItemDefaults.colors(
+                                selectedIconColor = Color(0xFF007BFF),
+                                selectedTextColor = Color(0xFF007BFF),
+                                unselectedIconColor = Color.Gray,
+                                unselectedTextColor = Color.Gray,
+                                indicatorColor =
+                                Color(0xFF007BFF).copy(alpha = 0.1f)
+                            )
                         )
-                    )
+                    }
+                }
+            },
+            containerColor = Color(0xFFF5F5F5)
+        ) { innerPadding ->
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+            ) {
+                when (selectedBottomItem) {
+                    BottomNavItem.Home ->
+                        HomeContent(navController)
+
+                    BottomNavItem.Cart ->
+                        OrderHistoryScreen(navController)
                 }
             }
-        },
-
-        containerColor = Color(0xFFF5F5F5)
-
-    ) { innerPadding ->
-
-        Box(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
-        ) {
-            when (selectedBottomItem) {
-                BottomNavItem.Home ->
-                    HomeContent(navController)
-                BottomNavItem.Utilities ->
-                    UtilitiesContent(navController, authViewModel)
-                BottomNavItem.Cart ->
-                    OrderHistoryScreen(navController)
-                BottomNavItem.Profile ->
-                    ProfileContent(navController, authViewModel)
-            }
         }
-    }
-}
-
-@Composable
-fun CircularIconButton(
-    icon: ImageVector,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = Modifier
-            .size(42.dp)
-            .background(
-                color = Color(0xFFEFF6FF),
-                shape = CircleShape
-            )
-            .clickable { onClick() },
-        contentAlignment = Alignment.Center
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = Color(0xFF007BFF),
-            modifier = Modifier.size(20.dp)
-        )
     }
 }

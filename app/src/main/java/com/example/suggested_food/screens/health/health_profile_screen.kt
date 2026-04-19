@@ -60,24 +60,24 @@ fun HealthProfileScreen(
     Box {
 
         Scaffold(
-            containerColor = Color(0xFFF6F7FB),
+            containerColor = Color(0xFFF5F5F5),
 
             topBar = {
                 SmallTopAppBar(
                     title = {
                         Text(
                             "Hồ sơ sức khỏe",
-                            color = Color.White,
+                            color = Color.Black,
                             fontWeight = FontWeight.SemiBold
                         )
                     },
                     navigationIcon = {
                         IconButton({ navController.popBackStack() }) {
-                            Icon(Icons.Default.ArrowBack, null, tint = Color.White)
+                            Icon(Icons.Default.ArrowBackIos, null, tint = Color.Black)
                         }
                     },
                     colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = Color(0xFF5848CE)
+                        containerColor = Color.White
                     )
                 )
             },

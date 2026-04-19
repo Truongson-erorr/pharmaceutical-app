@@ -11,7 +11,13 @@ import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.ShoppingBag
+import androidx.compose.material.icons.filled.SmartToy
 import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material3.*
@@ -20,12 +26,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.screens.product.ProductGridItem
+import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CategoryViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 
@@ -36,6 +45,7 @@ fun HomeContent(
     navController: NavController,
     categoryViewModel: CategoryViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
+    authViewModel: AuthViewModel = viewModel()
 ) {
     val categories by categoryViewModel.categories.collectAsState()
     val loading by categoryViewModel.loading.collectAsState()
@@ -54,6 +64,44 @@ fun HomeContent(
         verticalArrangement = Arrangement.spacedBy(12.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        item(span = { GridItemSpan(2) }) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .clickable {
+                        navController.navigate("SearchScreen")
+                    },
+                shape = RoundedCornerShape(14.dp),
+                color = Color.White
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "Nhập tên thuốc...",
+                        color = Color(0xFF6B7280),
+                        modifier = Modifier.weight(1f)
+                    )
+                    Icon(
+                        imageVector = Icons.Default.Search,
+                        contentDescription = null,
+                        tint = Color(0xFF6B7280)
+                    )
+                }
+            }
+        }
+
+        item(span = { GridItemSpan(2) }) {
+            FeatureSection(
+                navController = navController,
+                authViewModel = authViewModel
+            )
+        }
+
         item(span = { GridItemSpan(2) }) {
             Row(
                 modifier = Modifier.fillMaxWidth(),

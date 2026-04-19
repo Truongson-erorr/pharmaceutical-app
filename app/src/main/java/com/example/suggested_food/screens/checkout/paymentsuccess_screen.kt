@@ -22,18 +22,18 @@ fun PaymentSuccessScreen(
     navController: NavController
 ) {
     Scaffold(
-        containerColor = Color.White,
+        containerColor = Color(0xFFF5F5F5),
         topBar = {
             SmallTopAppBar(
                 title = {
                     Text(
                         "Hoàn tất đơn hàng",
-                        color = Color.White,
+                        color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFFFFA500)
+                    containerColor = Color.White
                 )
             )
         }

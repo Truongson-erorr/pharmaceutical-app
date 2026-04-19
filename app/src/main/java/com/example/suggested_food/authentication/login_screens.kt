@@ -72,7 +72,7 @@ fun LoginScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Color(0xFF5848CE)
+                Color(0xFF007BFF)
             )
     ) {
         Column(
@@ -127,7 +127,7 @@ fun LoginScreen(
                         textStyle = LocalTextStyle.current.copy(color = Color.Black)
                     )
                     Divider(
-                        color = if (email.isNotEmpty()) Color(0xFF5848CE) else Color.LightGray,
+                        color = if (email.isNotEmpty()) Color(0xFF007BFF) else Color.LightGray,
                         thickness = 1.5.dp
                     )
                     Spacer(modifier = Modifier.height(20.dp))
@@ -142,7 +142,7 @@ fun LoginScreen(
                         textStyle = LocalTextStyle.current.copy(color = Color.Black)
                     )
                     Divider(
-                        color = if (password.isNotEmpty()) Color(0xFF5848CE) else Color.LightGray,
+                        color = if (password.isNotEmpty()) Color(0xFF007BFF) else Color.LightGray,
                         thickness = 1.5.dp
                     )
                     Row(
@@ -156,7 +156,7 @@ fun LoginScreen(
                         ) {
                             Text(
                                 "Quên mật khẩu?",
-                                color = Color(0xFF5848CE),
+                                color = Color(0xFF007BFF),
                                 fontSize = 13.sp
                             )
                         }
@@ -176,7 +176,7 @@ fun LoginScreen(
                         enabled = !loading,
                         shape = RoundedCornerShape(25.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF5848CE),
+                            containerColor = Color(0xFF007BFF),
                             contentColor = Color.White
                         )
                     ) {
@@ -249,7 +249,7 @@ fun LoginScreen(
                     ) {
                         Text(
                             "Chưa có tài khoản? Đăng ký",
-                            color = Color(0xFF5848CE)
+                            color = Color(0xFF007BFF)
                         )
                     }
                 }

@@ -9,6 +9,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIos
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,26 +42,26 @@ fun AllCategoriesScreen(
                 title = {
                     Text(
                         text = "Tất cả danh mục",
-                        color = Color.White,
+                        color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.Default.ArrowBackIos,
                             contentDescription = "Quay lại",
-                            tint = Color.White
+                            tint = Color.Black
                         )
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color(0xFF5848CE)
+                    containerColor = Color.White
                 )
             )
         },
         modifier = Modifier.background(
-            Color.White
+            Color(0xFFF5F5F5)
         ),
         containerColor = Color.Transparent,
     ) { innerPadding ->
