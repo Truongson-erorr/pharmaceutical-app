@@ -55,6 +55,7 @@ android {
 }
 
 dependencies {
+    implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
     implementation ("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.opencsv:opencsv:5.9")
     implementation ("com.google.android.gms:play-services-location:21.0.1")
