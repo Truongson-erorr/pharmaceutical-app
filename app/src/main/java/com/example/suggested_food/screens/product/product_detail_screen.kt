@@ -4,6 +4,8 @@ import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -100,27 +102,38 @@ fun ProductDetailScreen(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
 
-                        OutlinedButton(
-                            onClick = {
-                                if (!isLoggedIn) {
-                                    Toast.makeText(
-                                        context,
-                                        "Vui lòng đăng nhập để thêm vào giỏ hàng",
-                                        Toast.LENGTH_SHORT
-                                    ).show()
-                                    return@OutlinedButton
-                                }
-                                showBottomSheet = true
-                            },
+                        Box(
                             modifier = Modifier
                                 .weight(0.3f)
-                                .height(48.dp),
-                            shape = RoundedCornerShape(14.dp),
-                            border = BorderStroke(1.dp, Color(0xFF007BFF))
+                                .height(48.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .background(Color.Transparent)
+                                .border(
+                                    width = 1.5.dp,
+                                    brush = Brush.horizontalGradient(
+                                        listOf(
+                                            Color(0xFF7C3AED),
+                                            Color(0xFFEC4899)
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(14.dp)
+                                )
+                                .clickable {
+                                    if (!isLoggedIn) {
+                                        Toast.makeText(
+                                            context,
+                                            "Vui lòng đăng nhập để thêm vào giỏ hàng",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        return@clickable
+                                    }
+                                    showBottomSheet = true
+                                },
+                            contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                "Giỏ hàng",
-                                color = Color(0xFF007BFF),
+                                text = "Giỏ hàng",
+                                color = Color(0xFFEC4899),
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -129,14 +142,25 @@ fun ProductDetailScreen(
                             onClick = { },
                             modifier = Modifier
                                 .weight(0.7f)
-                                .height(48.dp),
+                                .height(48.dp)
+                                .background(
+                                    brush = Brush.horizontalGradient(
+                                        listOf(
+                                            Color(0xFF7C3AED),
+                                            Color(0xFFEC4899)
+                                        )
+                                    ),
+                                    shape = RoundedCornerShape(14.dp)
+                                ),
                             shape = RoundedCornerShape(14.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF007BFF)
-                            )
+                                containerColor = Color.Transparent
+                            ),
+                            contentPadding = PaddingValues()
                         ) {
                             Text(
-                                "Mua ngay",
+                                text = "Mua ngay",
+                                color = Color.White,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -207,7 +231,7 @@ fun ProductDetailScreen(
                                     .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
                                     .clip(CircleShape)
                                     .background(
-                                        if (pagerState.currentPage == index) Color(0xFF007BFF)
+                                        if (pagerState.currentPage == index) Color(0xFFEC4899)
                                         else Color.LightGray
                                     )
                             )

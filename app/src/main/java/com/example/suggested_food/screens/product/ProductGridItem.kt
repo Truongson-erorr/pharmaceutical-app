@@ -4,14 +4,18 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
@@ -88,9 +92,10 @@ fun ProductGridItem(
             Spacer(modifier = Modifier.height(6.dp))
 
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-
                 val isInStock = product.stock > 0
 
                 val stockBg =
@@ -118,22 +123,23 @@ fun ProductGridItem(
                         fontWeight = FontWeight.SemiBold
                     )
                 }
-            }
-
-            if (product.onSale) {
-                Spacer(modifier = Modifier.height(6.dp))
 
                 Box(
                     modifier = Modifier
+                        .size(45.dp)
                         .clip(RoundedCornerShape(50))
-                        .background(Color(0xFFFFE4E6))
-                        .padding(horizontal = 10.dp, vertical = 3.dp)
+                        .background(
+                            Brush.horizontalGradient(
+                                listOf(Color(0xFF7C3AED), Color(0xFFEC4899)),
+                            )
+                        )
+                        .clickable { onClick() },
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "🔥 Đang giảm giá",
-                        color = Color(0xFFDC2626),
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = "Add",
+                        tint = Color.White
                     )
                 }
             }

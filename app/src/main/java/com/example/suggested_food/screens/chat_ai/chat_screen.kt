@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.SupportAgent
 import androidx.compose.material3.*
@@ -80,21 +81,20 @@ fun ChatScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Color.White
+                Color(0xFFF5F5F5)
             )
     ) {
-
         TopAppBar(
             title = {
                 Text(
                     "AI gợi ý thuốc",
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color.Black
                 )
             },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(Icons.Outlined.ArrowBack, null, tint = Color.White)
+                    Icon(Icons.Outlined.ArrowBackIosNew, null, tint = Color.Black)
                 }
             },
             actions = {
@@ -104,12 +104,12 @@ fun ChatScreen(
                     Icon(
                         Icons.Default.MoreVert,
                         contentDescription = null,
-                        tint = Color.White
+                        tint = Color.Black
                     )
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF5848CE)
+                containerColor = Color.White
             )
         )
 
@@ -192,7 +192,7 @@ fun ChatScreen(
                 Icon(
                     Icons.Filled.Send,
                     null,
-                    tint = Color(0xFF5848CE)
+                    tint = Color(0xFFEC4899)
                 )
             }
         }
@@ -215,7 +215,7 @@ fun ChatScreen(
                         Icon(
                             imageVector = Icons.Outlined.History,
                             contentDescription = "History",
-                            tint = Color(0xFF7C3AED),
+                            tint = Color(0xFFEC4899),
                             modifier = Modifier.size(24.dp)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -245,9 +245,9 @@ fun ChatBubble(message: ChatMessage) {
             modifier = Modifier
                 .background(
                     if (message.isUser)
-                        Color(0xFF5848CE)
+                        Color(0xFFEC4899)
                     else
-                        Color(0xFFF1F5F9),
+                        Color.White,
                     RoundedCornerShape(16.dp)
                 )
                 .padding(12.dp)

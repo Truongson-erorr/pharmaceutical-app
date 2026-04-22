@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,13 +39,13 @@ fun DrugLookupScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Tra cứu thuốc", fontWeight = FontWeight.Bold, color = Color.White) },
+                title = { Text("Tra cứu thuốc", fontWeight = FontWeight.Bold, color = Color.Black) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Outlined.ArrowBack, contentDescription = null, tint = Color.White)
+                        Icon(Icons.Outlined.ArrowBackIosNew, contentDescription = null, tint = Color.Black)
                     }
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF5848CE))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
             )
         },
     ) { innerPadding ->
@@ -53,7 +54,7 @@ fun DrugLookupScreen(
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(
-                    Color.White
+                    Color(0xFFF5F5F5)
                 )
         ) {
             Column(
@@ -79,8 +80,8 @@ fun DrugLookupScreen(
                     },
                     shape = RoundedCornerShape(30.dp),
                     colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF1F5F9),
-                        unfocusedContainerColor = Color(0xFFF1F5F9),
+                        focusedContainerColor = Color.White,
+                        unfocusedContainerColor = Color.White,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         cursorColor = Color.Black,
@@ -147,7 +148,7 @@ fun DrugLookupScreen(
                         .background(Color.Black.copy(alpha = 0.2f)),
                     contentAlignment = Alignment.Center
                 ) {
-                    CircularProgressIndicator(color = Color(0xFF5848CE), strokeWidth = 4.dp)
+                    CircularProgressIndicator(color = Color(0xFFEC4899), strokeWidth = 4.dp)
                 }
             }
         }

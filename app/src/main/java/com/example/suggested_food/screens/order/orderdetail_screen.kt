@@ -71,7 +71,7 @@ fun OrderDetailScreen(
                     .padding(padding),
                 contentAlignment = Alignment.Center
             ) {
-                CircularProgressIndicator(color = Color(0xFF5848CE))
+                CircularProgressIndicator(color = Color(0xFFEC4899))
             }
             return@Scaffold
         }
@@ -97,7 +97,7 @@ fun OrderDetailScreen(
         ) {
 
             item {
-                Spacer(modifier = Modifier.height(90.dp))
+                Spacer(modifier = Modifier.height(110.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween

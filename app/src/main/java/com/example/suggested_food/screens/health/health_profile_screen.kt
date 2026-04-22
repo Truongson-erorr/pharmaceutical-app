@@ -205,7 +205,7 @@ fun HealthProfileScreen(
                     ) {
 
                         CircularProgressIndicator(
-                            color = Color(0xFF5848CE)
+                            color = Color(0xFFEC4899)
                         )
 
                         Spacer(Modifier.height(16.dp))
