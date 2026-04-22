@@ -30,7 +30,9 @@ fun ForgotPasswordScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Color(0xFF007BFF)
+                Brush.horizontalGradient(
+                    listOf(Color(0xFF7C3AED), Color(0xFFEC4899)),
+                )
             )
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -88,7 +90,7 @@ fun ForgotPasswordScreen(
 
                     Divider(
                         color = if (email.isNotEmpty())
-                            Color(0xFF007BFF)
+                            Color(0xFFEC4899)
                         else
                             Color.LightGray,
                         thickness = 1.5.dp
@@ -105,7 +107,7 @@ fun ForgotPasswordScreen(
                         enabled = !loading,
                         shape = RoundedCornerShape(25.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF007BFF),
+                            containerColor = Color(0xFFEC4899),
                             contentColor = Color.White
                         )
                     ) {
@@ -143,7 +145,7 @@ fun ForgotPasswordScreen(
                     ) {
                         Text(
                             "Quay lại",
-                            color = Color(0xFF007BFF)
+                            color = Color(0xFFEC4899)
                         )
                     }
                 }

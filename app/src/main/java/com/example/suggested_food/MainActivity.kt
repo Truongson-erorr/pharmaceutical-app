@@ -2,6 +2,7 @@ package com.example.suggested_food
 
 import android.os.Build
 import android.os.Bundle
+import android.view.textservice.SuggestionsInfo
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
@@ -49,6 +50,7 @@ import com.example.suggested_food.screens.profile.ProfileContent
 import com.example.suggested_food.screens.chat_doctor.UserChatScreen
 import com.example.suggested_food.screens.health.HealthProfileScreen
 import com.example.suggested_food.screens.search.SearchScreen
+import com.example.suggested_food.screens.suggest.SuggestScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.CartViewModel
@@ -231,6 +233,9 @@ fun AppNavigation(
         }
         composable("ProfileContent") {
             ProfileContent(navController, authViewModel)
+        }
+        composable("SuggestScreen") {
+            SuggestScreen(navController)
         }
     }
 }

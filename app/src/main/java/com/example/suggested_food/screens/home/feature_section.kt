@@ -50,8 +50,8 @@ fun FeatureSection(
         ),
         FeatureItem(
             "Gợi ý thuốc",
-            Icons.Default.SmartToy,
-            "SymptomRecommendationScreen",
+            Icons.Default.MedicalServices,
+            "SuggestScreen",
             Color(0xFF10B981)
         ),
         FeatureItem(
@@ -84,26 +84,18 @@ fun FeatureSection(
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(features) { feature ->
-
             Card(
                 modifier = Modifier
                     .size(110.dp)
                     .clickable {
+
                         if (!isLoggedIn) {
                             Toast.makeText(context, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show()
                             navController.navigate("LoginScreen")
                             return@clickable
                         }
 
-                        when (feature.title) {
-                            "Tư vấn bác sĩ" -> {
-                                val userId = FirebaseAuth.getInstance().currentUser?.uid
-                                if (userId != null) {
-                                    navController.navigate("UserChatScreen/$userId")
-                                }
-                            }
-                            else -> navController.navigate(feature.route)
-                        }
+                        navigateFeature(feature, navController)
                     },
                 shape = RoundedCornerShape(16.dp),
                 colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -129,7 +121,6 @@ fun FeatureSection(
                                     CircleShape
                                 )
                         )
-
                         Icon(
                             imageVector = feature.icon,
                             contentDescription = null,
@@ -147,6 +138,36 @@ fun FeatureSection(
                     )
                 }
             }
+        }
+    }
+}
+
+fun navigateFeature(
+    feature: FeatureItem,
+    navController: NavController
+) {
+    when (feature.route) {
+        "UserChatScreen" -> {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+            if (userId != null) {
+                navController.navigate("UserChatScreen/$userId")
+            }
+        }
+
+        "SuggestScreen" -> {
+            navController.navigate("SuggestScreen")
+        }
+
+        "drug_lookup" -> {
+            navController.navigate("drug_lookup")
+        }
+
+        "AISearchScreen" -> {
+            navController.navigate("AISearchScreen")
+        }
+
+        "chat" -> {
+            navController.navigate("chat")
         }
     }
 }

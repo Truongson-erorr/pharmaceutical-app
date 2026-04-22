@@ -2,13 +2,7 @@ package com.example.suggested_food.screens.product
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,79 +26,117 @@ fun ProductGridItem(
     product: ProductModel,
     onClick: () -> Unit
 ) {
-    Card(
+
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() },
-        shape = RoundedCornerShape(12.dp),
-        elevation = CardDefaults.cardElevation(1.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        )
+            .clickable { onClick() }
     ) {
-        Column(
-            modifier = Modifier.padding(8.dp)
+
+        Card(
+            shape = RoundedCornerShape(14.dp),
+            elevation = CardDefaults.cardElevation(2.dp)
         ) {
-            AsyncImage(
-                model = product.images.firstOrNull(),
-                contentDescription = product.name,
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(120.dp)
-                    .clip(RoundedCornerShape(10.dp))
-            )
-            Spacer(modifier = Modifier.height(8.dp))
+            Box {
+                AsyncImage(
+                    model = product.images.firstOrNull(),
+                    contentDescription = product.name,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(150.dp)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(8.dp)
+                        .clip(RoundedCornerShape(50))
+                        .background(Color.Black.copy(alpha = 0.65f))
+                        .padding(horizontal = 8.dp, vertical = 3.dp)
+                ) {
+                    Text(
+                        text = "⭐ ${product.rating}",
+                        color = Color.White,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Column(
+            modifier = Modifier.padding(horizontal = 4.dp)
+        ) {
 
             Text(
                 text = product.name,
                 fontSize = 14.sp,
-                color = Color.Gray,
-                fontWeight = FontWeight.Bold,
-                maxLines = 2
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 2,
+                color = Color.Black
             )
             Spacer(modifier = Modifier.height(4.dp))
 
             Text(
                 text = formatVND(product.price),
-                color = Color.Black,
-                fontWeight = FontWeight.Bold
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF111827)
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Text(
-                    text = "⭐ ${product.rating}",
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.bodySmall
-                )
-                Spacer(modifier = Modifier.width(8.dp))
 
-                val stockText = if (product.stock > 0) "Còn hàng" else "Hết hàng"
-                val stockColor = if (product.stock > 0) Color(0xFF16A34A) else Color.Gray
+                val isInStock = product.stock > 0
 
-                Text(
-                    text = stockText,
-                    color = stockColor,
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Medium
-                )
+                val stockBg =
+                    if (isInStock) Color(0xFFDCFCE7)
+                    else Color(0xFFE5E7EB)
+
+                val stockTextColor =
+                    if (isInStock) Color(0xFF15803D)
+                    else Color.Gray
+
+                val stockText =
+                    if (isInStock) "Còn hàng"
+                    else "Hết hàng"
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(stockBg)
+                        .padding(horizontal = 10.dp, vertical = 3.dp)
+                ) {
+                    Text(
+                        text = stockText,
+                        color = stockTextColor,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
 
             if (product.onSale) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = "Đang giảm giá",
-                    color = Color.Red,
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Medium
-                )
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(50))
+                        .background(Color(0xFFFFE4E6))
+                        .padding(horizontal = 10.dp, vertical = 3.dp)
+                ) {
+                    Text(
+                        text = "🔥 Đang giảm giá",
+                        color = Color(0xFFDC2626),
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                }
             }
         }
-
     }
 }
-

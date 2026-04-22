@@ -204,7 +204,6 @@ fun ChatScreen(
                 },
                 shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
             ) {
-
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()

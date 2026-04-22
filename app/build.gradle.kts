@@ -15,7 +15,16 @@ android {
         applicationId = "com.example.suggested_food"
         minSdk = 24
         targetSdk = 35
-        
+
+        ndk {
+            abiFilters += listOf(
+                "armeabi-v7a",
+                "arm64-v8a",
+                "x86",
+                "x86_64"
+            )
+        }
+
         val localProperties = Properties()
         val localFile = rootProject.file("local.properties")
         if (localFile.exists()) {
@@ -41,20 +50,31 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
+
     buildFeatures {
         compose = true
         buildConfig = true
     }
+
+    packaging {
+        jniLibs {
+            pickFirsts += listOf("**/*.so")
+        }
+    }
 }
 
 dependencies {
+    implementation("org.pytorch:pytorch_android:2.1.0")
+    implementation("org.pytorch:pytorch_android_torchvision:2.1.0")
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")
     implementation ("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.opencsv:opencsv:5.9")

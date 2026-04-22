@@ -169,7 +169,6 @@ fun ProductDetailScreen(
             }
 
             else -> {
-
                 val images = product!!.images
                 val pagerState = rememberPagerState(
                     pageCount = { images.size }
