@@ -26,8 +26,9 @@ fun ModernCard(
         colors = CardDefaults.cardColors(containerColor = Color.White),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
-        Column(Modifier.padding(20.dp)) {
-
+        Column(
+            Modifier.padding(20.dp)
+        ) {
             Text(
                 title,
                 fontWeight = FontWeight.SemiBold,

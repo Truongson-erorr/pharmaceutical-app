@@ -170,7 +170,7 @@ fun HomeContent(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.clickable {
-                        navController.navigate("")
+                        navController.navigate("AllProductScreen")
                     }
                 ) {
                     Text(
@@ -195,7 +195,7 @@ fun HomeContent(
                 CircularProgressIndicator(color = Color(0xFFEC4899))
             }
         } else {
-            items(products) { product ->
+            items(products.take(6)) { product ->
                 ProductGridItem(
                     product = product,
                     onClick = {

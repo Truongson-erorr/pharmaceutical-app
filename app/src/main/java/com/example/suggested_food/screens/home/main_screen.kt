@@ -144,7 +144,7 @@ fun MainScreen(
                     Icons.Default.Person
                 ) {
                     scope.launch { drawerState.close() }
-                    navController.navigate("ProfileContent")
+                    navController.navigate("health_profile")
                 }
 
                 DrawerItem(
@@ -156,27 +156,11 @@ fun MainScreen(
                 }
 
                 DrawerItem(
-                    "Lịch sử dùng thuốc",
-                    Icons.Default.History
-                ) {
-                    scope.launch { drawerState.close() }
-                    navController.navigate("MedicineHistoryScreen")
-                }
-
-                DrawerItem(
                     "Nhắc uống thuốc",
                     Icons.Default.Alarm
                 ) {
                     scope.launch { drawerState.close() }
                     navController.navigate("ReminderScreen")
-                }
-
-                DrawerItem(
-                    "Đơn thuốc của tôi",
-                    Icons.Default.Description
-                ) {
-                    scope.launch { drawerState.close() }
-                    navController.navigate("PrescriptionScreen")
                 }
 
                 DrawerItem(
@@ -188,19 +172,11 @@ fun MainScreen(
                 }
 
                 DrawerItem(
-                    "Triệu chứng hôm nay",
-                    Icons.Default.MonitorHeart
-                ) {
-                    scope.launch { drawerState.close() }
-                    navController.navigate("SymptomCheckScreen")
-                }
-
-                DrawerItem(
                     "Địa chỉ giao hàng",
                     Icons.Default.LocationOn
                 ) {
                     scope.launch { drawerState.close() }
-                    navController.navigate("AddressScreen")
+                    navController.navigate("address")
                 }
 
                 DrawerItem(

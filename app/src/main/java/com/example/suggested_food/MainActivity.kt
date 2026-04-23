@@ -49,6 +49,7 @@ import com.example.suggested_food.screens.product.ProductDetailScreen
 import com.example.suggested_food.screens.profile.ProfileContent
 import com.example.suggested_food.screens.chat_doctor.UserChatScreen
 import com.example.suggested_food.screens.health.HealthProfileScreen
+import com.example.suggested_food.screens.product.AllProductScreen
 import com.example.suggested_food.screens.search.SearchScreen
 import com.example.suggested_food.screens.suggest.SuggestScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
@@ -236,6 +237,9 @@ fun AppNavigation(
         }
         composable("SuggestScreen") {
             SuggestScreen(navController)
+        }
+        composable("AllProductScreen") {
+            AllProductScreen(navController)
         }
     }
 }
