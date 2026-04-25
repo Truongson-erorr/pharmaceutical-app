@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -50,7 +51,7 @@ fun PaymentSuccessScreen(
 
             Box(
                 modifier = Modifier
-                    .size(110.dp)
+                    .size(170.dp)
                     .background(Color(0xFFE8F5E9), CircleShape),
                 contentAlignment = Alignment.Center
             ) {
@@ -86,13 +87,27 @@ fun PaymentSuccessScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(40.dp),
+                    .height(40.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFF7C3AED),
+                                Color(0xFFEC4899)
+                            )
+                        ),
+                        shape = RoundedCornerShape(14.dp)
+                    ),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF5848CE)
-                )
+                    containerColor = Color.Transparent,
+                    contentColor = Color.White
+                ),
+                contentPadding = PaddingValues()
             ) {
-                Text("Về trang chủ", fontWeight = FontWeight.Bold)
+                Text(
+                    text = "Về trang chủ",
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }

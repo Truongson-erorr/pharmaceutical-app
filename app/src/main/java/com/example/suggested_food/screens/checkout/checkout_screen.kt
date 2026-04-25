@@ -86,7 +86,7 @@ fun CheckoutScreen(
                     Text(
                         formatVND(total),
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF007BFF)
+                        color = Color.Black
                     )
                 }
 
@@ -120,7 +120,7 @@ fun CheckoutScreen(
                     },
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF007BFF)
+                        containerColor = Color.Black
                     )
                 ) {
                     Text("Đặt hàng")
@@ -211,12 +211,30 @@ fun CheckoutScreen(
                             popUpTo("checkout") { inclusive = true }
                         }
                     },
-                    modifier = Modifier.fillMaxWidth(),
+
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp)
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                listOf(
+                                    Color(0xFF7C3AED),
+                                    Color(0xFFEC4899)
+                                )
+                            ),
+                            shape = RoundedCornerShape(14.dp)
+                        ),
+                    shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF007BFF)
-                    )
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    contentPadding = PaddingValues()
                 ) {
-                    Text("Tôi đã thanh toán")
+                    Text(
+                        text = "Tôi đã thanh toán",
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
@@ -262,7 +280,7 @@ fun CheckoutScreen(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF007BFF)
+                        containerColor = Color.Black
                     )
                 ) {
                     Text("Xong", color = Color.White)
@@ -289,7 +307,7 @@ fun CheckoutScreen(
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     CircularProgressIndicator(
-                        color = Color(0xFF007BFF)
+                        color = Color(0xFFEC4899)
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
@@ -317,7 +335,7 @@ fun SummaryRow(
         Text(
             value,
             fontWeight = if (isBold) FontWeight.Bold else FontWeight.Normal,
-            color = if (highlight) Color(0xFF007BFF) else Color.Black
+            color = if (highlight) Color.Black else Color.Black
         )
     }
 }

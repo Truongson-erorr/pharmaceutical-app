@@ -50,8 +50,8 @@ fun FeatureSection(
         ),
         FeatureItem(
             "Gợi ý thuốc",
-            Icons.Default.SmartToy,
-            "SymptomRecommendationScreen",
+            Icons.Default.MedicalServices,
+            "SuggestScreen",
             Color(0xFF10B981)
         ),
         FeatureItem(
@@ -74,79 +74,121 @@ fun FeatureSection(
         )
     )
 
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        userScrollEnabled = false,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(360.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
+    Column(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        items(features) { feature ->
+        Text(
+            text = "Tiện ích",
+            fontSize = 18.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            modifier = Modifier.padding(
+                start = 4.dp,
+                bottom = 12.dp
+            )
+        )
 
-            Card(
-                modifier = Modifier
-                    .size(110.dp)
-                    .clickable {
-                        if (!isLoggedIn) {
-                            Toast.makeText(context, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show()
-                            navController.navigate("LoginScreen")
-                            return@clickable
-                        }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            userScrollEnabled = false,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(360.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
 
-                        when (feature.title) {
-                            "Tư vấn bác sĩ" -> {
-                                val userId = FirebaseAuth.getInstance().currentUser?.uid
-                                if (userId != null) {
-                                    navController.navigate("UserChatScreen/$userId")
-                                }
+            items(features) { feature ->
+                Card(
+                    modifier = Modifier
+                        .size(110.dp)
+                        .clickable {
+                            if (!isLoggedIn) {
+                                Toast.makeText(
+                                    context,
+                                    "Vui lòng đăng nhập",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+
+                                navController.navigate("LoginScreen")
+                                return@clickable
                             }
-                            else -> navController.navigate(feature.route)
-                        }
-                    },
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                elevation = CardDefaults.cardElevation(0.dp)
-            ) {
 
-                Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                            navigateFeature(feature, navController)
+                        },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    ),
+                    elevation = CardDefaults.cardElevation(0.dp)
                 ) {
-
-                    Box(
-                        modifier = Modifier
-                            .size(52.dp),
-                        contentAlignment = Alignment.Center
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Box(
-                            modifier = Modifier
-                                .size(52.dp)
-                                .background(
-                                    feature.color.copy(alpha = 0.12f),
-                                    CircleShape
-                                )
-                        )
+                            modifier = Modifier.size(52.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
 
-                        Icon(
-                            imageVector = feature.icon,
-                            contentDescription = null,
-                            tint = feature.color,
-                            modifier = Modifier.size(32.dp)
+                            Box(
+                                modifier = Modifier
+                                    .size(52.dp)
+                                    .background(
+                                        feature.color.copy(alpha = 0.12f),
+                                        CircleShape
+                                    )
+                            )
+
+                            Icon(
+                                imageVector = feature.icon,
+                                contentDescription = null,
+                                tint = feature.color,
+                                modifier = Modifier.size(32.dp)
+                            )
+                        }
+                        Spacer(Modifier.height(8.dp))
+
+                        Text(
+                            text = feature.title,
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = Color(0xFF0F172A)
                         )
                     }
-                    Spacer(Modifier.height(8.dp))
-
-                    Text(
-                        text = feature.title,
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Medium,
-                        color = Color(0xFF0F172A)
-                    )
                 }
             }
+        }
+    }
+}
+
+fun navigateFeature(
+    feature: FeatureItem,
+    navController: NavController
+) {
+    when (feature.route) {
+        "UserChatScreen" -> {
+            val userId = FirebaseAuth.getInstance().currentUser?.uid
+            if (userId != null) {
+                navController.navigate("UserChatScreen/$userId")
+            }
+        }
+
+        "SuggestScreen" -> {
+            navController.navigate("SuggestScreen")
+        }
+
+        "drug_lookup" -> {
+            navController.navigate("drug_lookup")
+        }
+
+        "AISearchScreen" -> {
+            navController.navigate("AISearchScreen")
+        }
+
+        "chat" -> {
+            navController.navigate("chat")
         }
     }
 }

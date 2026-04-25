@@ -76,10 +76,7 @@ fun MainScreen(
                         .fillMaxWidth()
                         .background(
                             Brush.horizontalGradient(
-                                listOf(
-                                    Color(0xFF007BFF),
-                                    Color(0xFF00C2FF)
-                                )
+                                listOf(Color(0xFF7C3AED), Color(0xFFEC4899)),
                             )
                         )
                         .padding(top = 50.dp, bottom = 24.dp),
@@ -94,7 +91,7 @@ fun MainScreen(
                         Icon(
                             Icons.Default.Person,
                             contentDescription = null,
-                            tint = Color(0xFF007BFF),
+                            tint = Color(0xFFEC4899),
                             modifier = Modifier.padding(16.dp)
                         )
                     }
@@ -119,14 +116,22 @@ fun MainScreen(
                 @Composable
                 fun DrawerItem(
                     title: String,
+                    icon: ImageVector,
                     onClick: () -> Unit
                 ) {
                     NavigationDrawerItem(
                         selected = false,
                         onClick = onClick,
+                        icon = {
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = title,
+                                tint = Color.Gray
+                            )
+                        },
                         label = {
                             Text(
-                                title,
+                                text = title,
                                 color = Color.DarkGray,
                                 fontWeight = FontWeight.SemiBold
                             )
@@ -134,54 +139,58 @@ fun MainScreen(
                     )
                 }
 
-                DrawerItem("Hồ sơ sức khỏe") {
+                DrawerItem(
+                    "Hồ sơ sức khỏe",
+                    Icons.Default.Person
+                ) {
                     scope.launch { drawerState.close() }
-                    navController.navigate("ProfileContent")
+                    navController.navigate("health_profile")
                 }
 
-                DrawerItem("Kiểm tra tương tác thuốc") {
+                DrawerItem(
+                    "Kiểm tra tương tác thuốc",
+                    Icons.Default.Medication
+                ) {
                     scope.launch { drawerState.close() }
                     navController.navigate("DrugInteractionScreen")
                 }
 
-                DrawerItem("Lịch sử dùng thuốc") {
-                    scope.launch { drawerState.close() }
-                    navController.navigate("MedicineHistoryScreen")
-                }
-
-                DrawerItem("Nhắc uống thuốc") {
+                DrawerItem(
+                    "Nhắc uống thuốc",
+                    Icons.Default.Alarm
+                ) {
                     scope.launch { drawerState.close() }
                     navController.navigate("ReminderScreen")
                 }
 
-                DrawerItem("Đơn thuốc của tôi") {
-                    scope.launch { drawerState.close() }
-                    navController.navigate("PrescriptionScreen")
-                }
-
-                DrawerItem("Chỉ số sức khỏe") {
+                DrawerItem(
+                    "Chỉ số sức khỏe",
+                    Icons.Default.Favorite
+                ) {
                     scope.launch { drawerState.close() }
                     navController.navigate("HealthIndexScreen")
                 }
 
-                DrawerItem("Triệu chứng hôm nay") {
+                DrawerItem(
+                    "Địa chỉ giao hàng",
+                    Icons.Default.LocationOn
+                ) {
                     scope.launch { drawerState.close() }
-                    navController.navigate("SymptomCheckScreen")
+                    navController.navigate("address")
                 }
 
-                DrawerItem("Địa chỉ giao hàng") {
-                    scope.launch { drawerState.close() }
-                    navController.navigate("AddressScreen")
-                }
-
-                DrawerItem("Hỗ trợ & FAQ") {
+                DrawerItem(
+                    "Hỗ trợ & FAQ",
+                    Icons.Default.Help
+                ) {
                     scope.launch { drawerState.close() }
                     navController.navigate("SupportScreen")
                 }
                 Spacer(modifier = Modifier.weight(1f))
 
                 DrawerItem(
-                    "Đăng xuất"
+                    "Đăng xuất",
+                    Icons.Default.Logout
                 ) {
                     scope.launch { drawerState.close() }
                     authViewModel.logout()
@@ -205,10 +214,7 @@ fun MainScreen(
                             .fillMaxWidth()
                             .background(
                                 Brush.horizontalGradient(
-                                    listOf(
-                                        Color(0xFF007BFF),
-                                        Color(0xFF00C2FF)
-                                    )
+                                    listOf(Color(0xFF7C3AED), Color(0xFFEC4899)),
                                 )
                             )
                     ) {
@@ -345,12 +351,12 @@ fun MainScreen(
                             },
 
                             colors = NavigationBarItemDefaults.colors(
-                                selectedIconColor = Color(0xFF007BFF),
-                                selectedTextColor = Color(0xFF007BFF),
+                                selectedIconColor = Color(0xFFEC4899),
+                                selectedTextColor = Color(0xFFEC4899),
                                 unselectedIconColor = Color.Gray,
                                 unselectedTextColor = Color.Gray,
                                 indicatorColor =
-                                Color(0xFF007BFF).copy(alpha = 0.1f)
+                                Color(0xFFEC4899).copy(alpha = 0.1f)
                             )
                         )
                     }
@@ -366,7 +372,6 @@ fun MainScreen(
                 when (selectedBottomItem) {
                     BottomNavItem.Home ->
                         HomeContent(navController)
-
                     BottomNavItem.Cart ->
                         OrderHistoryScreen(navController)
                 }

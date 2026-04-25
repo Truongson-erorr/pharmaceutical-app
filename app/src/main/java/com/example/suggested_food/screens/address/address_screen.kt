@@ -36,7 +36,6 @@ fun AddressScreen(
     LaunchedEffect(Unit) {
         userViewModel.loadUser()
     }
-
     LaunchedEffect(user) {
         address = user?.address ?: ""
     }
@@ -83,7 +82,7 @@ fun AddressScreen(
                         .height(45.dp),
                     shape = RoundedCornerShape(14.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF007BFF)
+                        containerColor = Color(0xFFEC4899)
                     )
                 ) {
                     Text(
@@ -134,7 +133,7 @@ fun AddressScreen(
                             containerColor = Color(0xFFF1F5F9),
                             focusedIndicatorColor = Color.Transparent,
                             unfocusedIndicatorColor = Color.Transparent,
-                            cursorColor = Color(0xFF007BFF)
+                            cursorColor = Color(0xFFEC4899)
                         )
                     )
                 }

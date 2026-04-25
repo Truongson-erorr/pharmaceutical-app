@@ -14,6 +14,7 @@ navigationComposeAndroid = "2.9.0"
 firebaseFirestoreKtx = "25.1.4"
 common = "0.10.0"
 foundationAndroid = "1.7.2"
+playServicesAnalyticsImpl = "18.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +37,7 @@ androidx-navigation-compose-android = { group = "androidx.navigation", name = "n
 firebase-firestore-ktx = { group = "com.google.firebase", name = "firebase-firestore-ktx", version.ref = "firebaseFirestoreKtx" }
 common = { group = "com.google.ai.client.generativeai", name = "common", version.ref = "common" }
 androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
+play-services-analytics-impl = { group = "com.google.android.gms", name = "play-services-analytics-impl", version.ref = "playServicesAnalyticsImpl" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

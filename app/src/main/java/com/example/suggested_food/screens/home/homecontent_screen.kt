@@ -121,7 +121,7 @@ fun HomeContent(
                 ) {
                     Text(
                         "Xem tất cả",
-                        color = Color(0xFF007BFF),
+                        color = Color(0xFFEC4899),
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.width(4.dp))
@@ -129,7 +129,7 @@ fun HomeContent(
                     Icon(
                         imageVector = Icons.Outlined.KeyboardArrowRight,
                         contentDescription = null,
-                        tint = Color(0xFF007BFF),
+                        tint = Color(0xFFEC4899),
                         modifier = Modifier.size(20.dp)
                     )
                 }
@@ -138,7 +138,7 @@ fun HomeContent(
 
         item(span = { GridItemSpan(2) }) {
             if (loading) {
-                CircularProgressIndicator(color = Color(0xFF007BFF))
+                CircularProgressIndicator(color = Color(0xFFEC4899))
             } else {
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     items(categories) { category ->
@@ -170,20 +170,20 @@ fun HomeContent(
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.clickable {
-                        navController.navigate("")
+                        navController.navigate("AllProductScreen")
                     }
                 ) {
                     Text(
                         text = "Xem tất cả",
-                        color = Color(0xFF007BFF),
-                        fontWeight = FontWeight.Medium
+                        color = Color(0xFFEC4899),
+                        fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.width(4.dp))
 
                     Icon(
                         imageVector = Icons.Outlined.KeyboardArrowRight,
                         contentDescription = null,
-                        tint = Color(0xFF007BFF),
+                        tint = Color(0xFFEC4899),
                         modifier = Modifier.size(18.dp)
                     )
                 }
@@ -192,10 +192,10 @@ fun HomeContent(
 
         if (productLoading) {
             item(span = { GridItemSpan(2) }) {
-                CircularProgressIndicator(color = Color(0xFF007BFF))
+                CircularProgressIndicator(color = Color(0xFFEC4899))
             }
         } else {
-            items(products) { product ->
+            items(products.take(6)) { product ->
                 ProductGridItem(
                     product = product,
                     onClick = {

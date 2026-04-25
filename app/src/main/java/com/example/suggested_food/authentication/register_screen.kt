@@ -36,7 +36,9 @@ fun RegisterScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Color(0xFF007BFF)
+                Brush.horizontalGradient(
+                    listOf(Color(0xFF7C3AED), Color(0xFFEC4899)),
+                )
             )
     ) {
         Column(modifier = Modifier.fillMaxSize()) {
@@ -92,7 +94,7 @@ fun RegisterScreen(
                         textStyle = LocalTextStyle.current.copy(color = Color.Black)
                     )
                     Divider(
-                        color = if (name.isNotEmpty()) Color(0xFF007BFF) else Color.LightGray,
+                        color = if (name.isNotEmpty()) Color(0xFFEC4899) else Color.LightGray,
                         thickness = 1.5.dp
                     )
                     Spacer(modifier = Modifier.height(20.dp))
@@ -106,7 +108,7 @@ fun RegisterScreen(
                         textStyle = LocalTextStyle.current.copy(color = Color.Black)
                     )
                     Divider(
-                        color = if (email.isNotEmpty()) Color(0xFF007BFF) else Color.LightGray,
+                        color = if (email.isNotEmpty()) Color(0xFFEC4899) else Color.LightGray,
                         thickness = 1.5.dp
                     )
                     Spacer(modifier = Modifier.height(20.dp))
@@ -121,7 +123,7 @@ fun RegisterScreen(
                         textStyle = LocalTextStyle.current.copy(color = Color.Black)
                     )
                     Divider(
-                        color = if (password.isNotEmpty()) Color(0xFF007BFF) else Color.LightGray,
+                        color = if (password.isNotEmpty()) Color(0xFFEC4899) else Color.LightGray,
                         thickness = 1.5.dp
                     )
                     Spacer(modifier = Modifier.height(42.dp))
@@ -141,7 +143,7 @@ fun RegisterScreen(
                         enabled = !loading,
                         shape = RoundedCornerShape(25.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF007BFF),
+                            containerColor = Color(0xFFEC4899),
                             contentColor = Color.White
                         )
                     ) {
@@ -172,7 +174,7 @@ fun RegisterScreen(
                     ) {
                         Text(
                             "Đã có tài khoản? Đăng nhập",
-                            color = Color(0xFF007BFF),
+                            color = Color(0xFFEC4899),
                             textAlign = TextAlign.Center
                         )
                     }

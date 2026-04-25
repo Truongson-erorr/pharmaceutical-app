@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -94,15 +95,36 @@ fun CartContent(
                             }
                         },
                         enabled = selectedItems.isNotEmpty(),
+                        modifier = Modifier
+                            .background(
+                                brush = if (selectedItems.isNotEmpty())
+                                    Brush.horizontalGradient(
+                                        listOf(
+                                            Color(0xFF7C3AED),
+                                            Color(0xFFEC4899)
+                                        )
+                                    )
+                                else
+                                    Brush.horizontalGradient(
+                                        listOf(
+                                            Color(0xFFE0D9FF),
+                                            Color(0xFFE0D9FF)
+                                        )
+                                    ),
+                                shape = RoundedCornerShape(12.dp)
+                            ),
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF007BFF),
-                            disabledContainerColor = Color(0xFFE0D9FF),
+                            containerColor = Color.Transparent,
                             contentColor = Color.White,
+                            disabledContainerColor = Color.Transparent,
                             disabledContentColor = Color.White.copy(alpha = 0.7f)
                         )
                     ) {
-                        Text("Mua hàng")
+                        Text(
+                            text = "Mua hàng",
+                            fontWeight = FontWeight.Bold
+                        )
                     }
                 }
             }
@@ -122,7 +144,7 @@ fun CartContent(
                     Icon(
                         imageVector = Icons.Outlined.ShoppingCart,
                         contentDescription = "Giỏ hàng trống",
-                        tint = Color(0xFF007BFF),
+                        tint = Color(0xFFEC4899),
                         modifier = Modifier.size(66.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))

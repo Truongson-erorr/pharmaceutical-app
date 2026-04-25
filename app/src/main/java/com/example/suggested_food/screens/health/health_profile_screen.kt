@@ -1,5 +1,7 @@
 package com.example.suggested_food.screens.health
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -22,6 +24,7 @@ import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.HealthProfileViewModel
 import kotlinx.coroutines.delay
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HealthProfileScreen(
@@ -95,7 +98,7 @@ fun HealthProfileScreen(
                             .height(50.dp),
                         shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF5848CE)
+                            containerColor = Color(0xFFEC4899)
                         )
                     ) {
                         Text("Lưu hồ sơ", fontWeight = FontWeight.SemiBold)
@@ -113,11 +116,10 @@ fun HealthProfileScreen(
             ) {
                 ModernCard("Thông tin cơ bản") {
 
-                    ModernTextField(
-                        birthDate,
-                        { birthDate = it },
-                        "Ngày sinh",
-                        Icons.Default.Cake
+                    DatePickerField(
+                        value = birthDate,
+                        onDateSelected = { birthDate = it },
+                        label = "Ngày sinh"
                     )
                     Spacer(Modifier.height(12.dp))
 
@@ -125,16 +127,13 @@ fun HealthProfileScreen(
                         "Giới tính",
                         listOf("Nam", "Nữ", "Khác"),
                         gender,
-                        Icons.Default.Person
                     ) { gender = it }
-
                     Spacer(Modifier.height(12.dp))
 
                     DropdownField(
                         "Nhóm máu",
                         listOf("A", "B", "AB", "O"),
                         bloodType,
-                        Icons.Default.Bloodtype
                     ) { bloodType = it }
                 }
                 Spacer(Modifier.height(16.dp))
@@ -184,7 +183,6 @@ fun HealthProfileScreen(
                         medicalHistory
                     )
                 )
-
                 isSaving = false
                 navController.popBackStack()
             }
@@ -205,9 +203,8 @@ fun HealthProfileScreen(
                     ) {
 
                         CircularProgressIndicator(
-                            color = Color(0xFF5848CE)
+                            color = Color(0xFFEC4899)
                         )
-
                         Spacer(Modifier.height(16.dp))
 
                         Text(

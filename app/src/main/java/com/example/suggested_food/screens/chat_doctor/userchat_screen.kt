@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Send
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.SupervisorAccount
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -43,7 +44,7 @@ fun UserChatScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Color.White
+                Color(0xFFF5F5F5)
             )
     ) {
 
@@ -52,15 +53,15 @@ fun UserChatScreen(
                 Text(
                     text = "Chat với bác sĩ",
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color.Black
                 )
             },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
                     Icon(
-                        Icons.Outlined.ArrowBack,
+                        Icons.Outlined.ArrowBackIosNew,
                         contentDescription = null,
-                        tint = Color.White
+                        tint = Color.Black
                     )
                 }
             },
@@ -68,12 +69,12 @@ fun UserChatScreen(
                 Icon(
                     Icons.Outlined.SupervisorAccount,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = Color.Black,
                     modifier = Modifier.padding(end = 16.dp)
                 )
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color(0xFF5848CE)
+                containerColor = Color.White
             )
         )
 
@@ -128,7 +129,7 @@ fun UserChatScreen(
                 Icon(
                     Icons.Filled.Send,
                     contentDescription = null,
-                    tint = Color(0xFF5848CE)
+                    tint = Color(0xFFEC4899)
                 )
             }
         }
@@ -149,7 +150,7 @@ fun MessageBubbleDoctor(message: ChatMessageDoctor) {
             modifier = Modifier
                 .background(
                     if (isUser)
-                        Color(0xFF5848CE)
+                        Color(0xFFEC4899)
                     else
                         Color(0xFFE5E7EB),
                     RoundedCornerShape(16.dp)
@@ -162,7 +163,6 @@ fun MessageBubbleDoctor(message: ChatMessageDoctor) {
                 color = if (isUser) Color.White else Color.Black
             )
         }
-
         Spacer(modifier = Modifier.height(2.dp))
 
         Text(

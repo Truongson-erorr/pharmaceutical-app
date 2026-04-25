@@ -1,7 +1,9 @@
 package com.example.suggested_food.screens.product
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -86,12 +89,22 @@ fun QuantityBottomSheet(
             onClick = { onConfirm(quantity) },
             modifier = Modifier
                 .fillMaxWidth()
-                .height(40.dp),
+                .height(40.dp)
+                .background(
+                    brush = Brush.horizontalGradient(
+                        listOf(
+                            Color(0xFF7C3AED),
+                            Color(0xFFEC4899)
+                        )
+                    ),
+                    shape = RoundedCornerShape(14.dp)
+                ),
             shape = RoundedCornerShape(14.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF007BFF),
+                containerColor = Color.Transparent,
                 contentColor = Color.White
-            )
+            ),
+            contentPadding = PaddingValues()
         ) {
             Text(
                 text = "Thêm vào giỏ hàng",

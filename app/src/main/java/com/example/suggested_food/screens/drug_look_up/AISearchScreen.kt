@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.SupportAgent
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -50,28 +51,28 @@ fun AISearchScreen(
             TopAppBar(
                 title = {
                     Text("Tra cứu thuốc AI",
-                        color = Color.White,
+                        color = Color.Black,
                         fontWeight = FontWeight.Bold
                     ) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Outlined.ArrowBack, contentDescription = null, tint = Color.White)
+                        Icon(Icons.Outlined.ArrowBackIosNew, contentDescription = null, tint = Color.Black)
                     }
                 },
                 actions = {
-                    Icon(Icons.Outlined.SupportAgent, contentDescription = null, tint = Color.White)
+                    Icon(Icons.Outlined.SupportAgent, contentDescription = null, tint = Color.Black)
                 },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color(0xFF5848CE))
+                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
             )
         },
-        containerColor = Color(0xFFE0D9FF)
+        containerColor = Color.White
     ) { innerPadding ->
         Box(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
                 .background(
-                    Color.White
+                    Color(0xFFF5F5F5)
                 )
         ) {
             Column(
@@ -89,14 +90,14 @@ fun AISearchScreen(
                     shape = RoundedCornerShape(25.dp),
                     singleLine = true,
                     colors = TextFieldDefaults.textFieldColors(
-                        containerColor = Color(0xFFF1F5F9),
-                        focusedIndicatorColor = Color(0xFFF1F5F9),
+                        containerColor = Color.White,
+                        focusedIndicatorColor = Color.White,
                         unfocusedIndicatorColor = Color.Transparent,
-                        cursorColor = Color(0xFF5848CE),
+                        cursorColor = Color(0xFFEC4899),
                     ),
                     trailingIcon = {
                         IconButton(onClick = { viewModel.searchDrug(query) }) {
-                            Icon(Icons.Filled.Search, contentDescription = "Search", tint = Color(0xFF5848CE))
+                            Icon(Icons.Filled.Search, contentDescription = "Search", tint = Color(0xFFEC4899))
                         }
                     }
                 )
