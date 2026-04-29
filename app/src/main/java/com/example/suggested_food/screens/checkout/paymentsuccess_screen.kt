@@ -27,11 +27,16 @@ fun PaymentSuccessScreen(
         topBar = {
             SmallTopAppBar(
                 title = {
-                    Text(
-                        "Hoàn tất đơn hàng",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Hoàn tất đơn hàng",
+                            color = Color.Black,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = Color.White
@@ -89,12 +94,7 @@ fun PaymentSuccessScreen(
                     .fillMaxWidth()
                     .height(40.dp)
                     .background(
-                        brush = Brush.horizontalGradient(
-                            listOf(
-                                Color(0xFF7C3AED),
-                                Color(0xFFEC4899)
-                            )
-                        ),
+                        color = Color.Black,
                         shape = RoundedCornerShape(14.dp)
                     ),
                 shape = RoundedCornerShape(14.dp),

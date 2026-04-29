@@ -7,5 +7,8 @@ data class HealthProfile(
     val bloodType: String = "",
     val medicalHistory: List<String> = emptyList(),
     val drugAllergies: List<String> = emptyList(),
-    val currentMedications: List<String> = emptyList()
+    val currentMedications: List<String> = emptyList(),
+    val bmi: Float = 0f,
+    val height: Float = 0f,
+    val weight: Float = 0f
 )
