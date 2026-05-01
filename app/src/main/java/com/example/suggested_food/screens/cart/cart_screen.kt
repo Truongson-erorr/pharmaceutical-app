@@ -97,20 +97,10 @@ fun CartContent(
                         enabled = selectedItems.isNotEmpty(),
                         modifier = Modifier
                             .background(
-                                brush = if (selectedItems.isNotEmpty())
-                                    Brush.horizontalGradient(
-                                        listOf(
-                                            Color(0xFF7C3AED),
-                                            Color(0xFFEC4899)
-                                        )
-                                    )
+                                color = if (selectedItems.isNotEmpty())
+                                    Color.Black
                                 else
-                                    Brush.horizontalGradient(
-                                        listOf(
-                                            Color(0xFFE0D9FF),
-                                            Color(0xFFE0D9FF)
-                                        )
-                                    ),
+                                    Color(0xFFD4D4D4),
                                 shape = RoundedCornerShape(12.dp)
                             ),
                         shape = RoundedCornerShape(12.dp),
@@ -144,7 +134,7 @@ fun CartContent(
                     Icon(
                         imageVector = Icons.Outlined.ShoppingCart,
                         contentDescription = "Giỏ hàng trống",
-                        tint = Color(0xFFEC4899),
+                        tint = Color.Black,
                         modifier = Modifier.size(66.dp)
                     )
                     Spacer(modifier = Modifier.height(12.dp))

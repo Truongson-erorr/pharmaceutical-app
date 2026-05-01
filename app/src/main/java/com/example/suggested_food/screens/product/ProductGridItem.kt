@@ -30,7 +30,6 @@ fun ProductGridItem(
     product: ProductModel,
     onClick: () -> Unit
 ) {
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -78,7 +77,7 @@ fun ProductGridItem(
                 text = product.name,
                 fontSize = 14.sp,
                 fontWeight = FontWeight.SemiBold,
-                maxLines = 2,
+                maxLines = 1,
                 color = Color.Black
             )
             Spacer(modifier = Modifier.height(4.dp))

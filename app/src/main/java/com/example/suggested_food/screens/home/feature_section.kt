@@ -33,6 +33,11 @@ data class FeatureItem(
     val color: Color
 )
 
+data class FeatureGroup(
+    val title: String,
+    val items: List<FeatureItem>
+)
+
 @Composable
 fun FeatureSection(
     navController: NavController,
@@ -41,95 +46,112 @@ fun FeatureSection(
     val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
     val context = navController.context
 
-    val features = listOf(
-        FeatureItem(
-            "Tư vấn bác sĩ",
-            Icons.Default.Person,
-            "UserChatScreen",
-            Color(0xFF007BFF)
+    val featureGroups = listOf(
+
+        FeatureGroup(
+            "Tra cứu",
+            listOf(
+                FeatureItem(
+                    "Tra cứu offline",
+                    Icons.Default.Search,
+                    "drug_lookup",
+                    Color(0xFFF59E0B)
+                ),
+                FeatureItem(
+                    "Tra cứu AI",
+                    Icons.Default.SmartToy,
+                    "AISearchScreen",
+                    Color(0xFF6366F1)
+                )
+            )
         ),
-        FeatureItem(
+
+        FeatureGroup(
             "Gợi ý thuốc",
-            Icons.Default.MedicalServices,
-            "SuggestScreen",
-            Color(0xFF10B981)
+            listOf(
+                FeatureItem(
+                    "Gợi ý thuốc",
+                    Icons.Default.MedicalServices,
+                    "SuggestScreen",
+                    Color(0xFF10B981)
+                ),
+                FeatureItem(
+                    "Gợi ý AI",
+                    Icons.Default.AutoAwesome,
+                    "chat",
+                    Color(0xFFEF4444)
+                )
+            )
         ),
-        FeatureItem(
-            "Tra cứu offline",
-            Icons.Default.Search,
-            "drug_lookup",
-            Color(0xFFF59E0B)
+
+        FeatureGroup(
+            "Tư vấn",
+            listOf(
+                FeatureItem(
+                    "Tư vấn bác sĩ",
+                    Icons.Default.Person,
+                    "UserChatScreen",
+                    Color(0xFF007BFF)
+                )
+            )
         ),
-        FeatureItem(
-            "Tra cứu AI",
-            Icons.Default.SmartToy,
-            "AISearchScreen",
-            Color(0xFF6366F1)
-        ),
-        FeatureItem(
-            "Gợi ý AI",
-            Icons.Default.AutoAwesome,
-            "chat",
-            Color(0xFFEF4444)
-        )
     )
 
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Text(
-            text = "Tiện ích",
-            fontSize = 18.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-            modifier = Modifier.padding(
-                start = 4.dp,
-                bottom = 12.dp
+        featureGroups.forEach { group ->
+            Text(
+                text = group.title,
+                fontSize = 18.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(
+                    top = 8.dp,
+                    bottom = 12.dp
+                )
             )
-        )
 
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            userScrollEnabled = false,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(360.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-
-            items(features) { feature ->
-                Card(
-                    modifier = Modifier
-                        .size(110.dp)
-                        .clickable {
-                            if (!isLoggedIn) {
-                                Toast.makeText(
-                                    context,
-                                    "Vui lòng đăng nhập",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-
-                                navController.navigate("LoginScreen")
-                                return@clickable
-                            }
-
-                            navigateFeature(feature, navController)
-                        },
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                userScrollEnabled = false,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(
+                        ((group.items.size + 2) / 3 * 120).dp
                     ),
-                    elevation = CardDefaults.cardElevation(0.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                items(group.items) { feature ->
+                    Card(
+                        modifier = Modifier
+                            .size(110.dp)
+                            .clickable {
+
+                                if (!isLoggedIn) {
+                                    Toast.makeText(
+                                        context,
+                                        "Vui lòng đăng nhập",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+
+                                    navController.navigate("LoginScreen")
+                                    return@clickable
+                                }
+
+                                navigateFeature(feature, navController)
+                            },
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White
+                        ),
+                        elevation = CardDefaults.cardElevation(0.dp)
                     ) {
-                        Box(
-                            modifier = Modifier.size(52.dp),
-                            contentAlignment = Alignment.Center
+
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
 
                             Box(
@@ -138,24 +160,25 @@ fun FeatureSection(
                                     .background(
                                         feature.color.copy(alpha = 0.12f),
                                         CircleShape
-                                    )
-                            )
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = feature.icon,
+                                    contentDescription = null,
+                                    tint = feature.color,
+                                    modifier = Modifier.size(32.dp)
+                                )
+                            }
+                            Spacer(Modifier.height(8.dp))
 
-                            Icon(
-                                imageVector = feature.icon,
-                                contentDescription = null,
-                                tint = feature.color,
-                                modifier = Modifier.size(32.dp)
+                            Text(
+                                text = feature.title,
+                                fontSize = 13.sp,
+                                fontWeight = FontWeight.Medium,
+                                color = Color(0xFF0F172A)
                             )
                         }
-                        Spacer(Modifier.height(8.dp))
-
-                        Text(
-                            text = feature.title,
-                            fontSize = 13.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = Color(0xFF0F172A)
-                        )
                     }
                 }
             }
@@ -175,20 +198,12 @@ fun navigateFeature(
             }
         }
 
-        "SuggestScreen" -> {
-            navController.navigate("SuggestScreen")
-        }
+        "SuggestScreen" -> navController.navigate("SuggestScreen")
 
-        "drug_lookup" -> {
-            navController.navigate("drug_lookup")
-        }
+        "drug_lookup" -> navController.navigate("drug_lookup")
 
-        "AISearchScreen" -> {
-            navController.navigate("AISearchScreen")
-        }
+        "AISearchScreen" -> navController.navigate("AISearchScreen")
 
-        "chat" -> {
-            navController.navigate("chat")
-        }
+        "chat" -> navController.navigate("chat")
     }
 }

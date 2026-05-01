@@ -5,11 +5,10 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -40,81 +39,145 @@ fun HealthProfileScreen(
     var birthDate by remember(profile) { mutableStateOf(profile.birthDate) }
     var gender by remember(profile) { mutableStateOf(profile.gender) }
     var bloodType by remember(profile) { mutableStateOf(profile.bloodType) }
+    var medicalHistory by remember(profile) { mutableStateOf(profile.medicalHistory) }
 
-    var medicalHistory by remember(profile) {
-        mutableStateOf(profile.medicalHistory)
-    }
+    var height by remember(profile) { mutableStateOf(profile.height.toString()) }
+    var weight by remember(profile) { mutableStateOf(profile.weight.toString()) }
 
     var isSaving by remember { mutableStateOf(false) }
+    var expandedDisease by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
+    val diseases = listOf(
+        "Cao huyết áp",
+        "Hạ huyết áp",
+        "Rối loạn mỡ máu",
+        "Béo phì",
+        "Thiếu cân",
+        "Thiếu máu",
+        "Bệnh tim mạch vành",
+        "Suy tim",
+        "Rối loạn nhịp tim",
+        "Đột quỵ",
+        "Xơ vữa động mạch",
+        "Hen suyễn",
+        "Viêm phổi",
+        "Viêm phế quản",
+        "Cảm cúm mãn tính",
+        "Viêm dạ dày",
+        "Loét dạ dày",
+        "Trào ngược dạ dày",
+        "Viêm đại tràng",
+        "Hội chứng ruột kích thích",
+        "Gan nhiễm mỡ",
+        "Viêm gan B",
+        "Viêm gan C",
+        "Suy thận",
+        "Sỏi thận",
+        "Viêm đường tiết niệu",
+        "Viêm khớp",
+        "Thoái hóa khớp",
+        "Loãng xương",
+        "Đau lưng mãn tính",
+        "Động kinh",
+        "Đau nửa đầu",
+        "Rối loạn lo âu",
+        "Trầm cảm",
+        "Rối loạn tuyến giáp",
+        "Dị ứng thời tiết",
+        "Dị ứng thực phẩm",
+        "Dị ứng thuốc",
+        "Viêm da dị ứng",
+        "COVID-19 hậu di chứng",
+        "Sốt xuất huyết",
+        "Viêm gan virus",
+        "Nhiễm trùng mãn tính",
+        "Suy giảm miễn dịch",
+        "Mệt mỏi mãn tính"
+    )
+
+    val bmi = remember(height, weight) {
+        val h = height.toFloatOrNull()
+        val w = weight.toFloatOrNull()
+
+        if (h != null && w != null && h > 0)
+            w / ((h / 100) * (h / 100))
+        else null
+    }
+
+    LaunchedEffect(userId) {
         viewModel.loadProfile(userId)
     }
 
-    val diseases = listOf(
-        "Tiểu đường","Cao huyết áp","Tim mạch","Hen suyễn","Ung thư",
-        "Đột quỵ","Béo phì","Mỡ máu cao","Gan nhiễm mỡ","Viêm gan B",
-        "Viêm gan C","Suy thận","Loãng xương","Viêm khớp","Dạ dày",
-        "Trào ngược dạ dày","Dị ứng","Rối loạn tuyến giáp","Thiếu máu",
-        "Trầm cảm","Rối loạn lo âu","COPD","COVID-19 hậu di chứng",
-        "Parkinson","Alzheimer"
-    )
+    Scaffold(
+        containerColor = Color(0xFFF5F5F5),
 
-    Box {
-
-        Scaffold(
-            containerColor = Color(0xFFF5F5F5),
-
-            topBar = {
-                SmallTopAppBar(
-                    title = {
-                        Text(
-                            "Hồ sơ sức khỏe",
-                            color = Color.Black,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton({ navController.popBackStack() }) {
-                            Icon(Icons.Default.ArrowBackIos, null, tint = Color.Black)
-                        }
-                    },
-                    colors = TopAppBarDefaults.smallTopAppBarColors(
-                        containerColor = Color.White
+        topBar = {
+            SmallTopAppBar(
+                title = {
+                    Text(
+                        "Hồ sơ sức khỏe",
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black
                     )
-                )
-            },
-
-            bottomBar = {
-                Surface(tonalElevation = 8.dp) {
-                    Button(
-                        enabled = !isSaving,
-                        onClick = {
-                            isSaving = true
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                            .height(50.dp),
-                        shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFEC4899)
-                        )
-                    ) {
-                        Text("Lưu hồ sơ", fontWeight = FontWeight.SemiBold)
+                },
+                navigationIcon = {
+                    IconButton({ navController.popBackStack() }) {
+                        Icon(Icons.Default.ArrowBackIos, null, tint = Color.Black)
                     }
+                },
+                colors = TopAppBarDefaults.smallTopAppBarColors(
+                    containerColor = Color.White,
+                    titleContentColor = Color.Black,
+                    navigationIconContentColor = Color.Black
+                )
+            )
+        },
+
+        bottomBar = {
+            Surface(tonalElevation = 0.dp) {
+                Button(
+                    enabled = !isSaving,
+                    onClick = { isSaving = true },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .height(52.dp),
+                    shape = RoundedCornerShape(16.dp),
+
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Black,
+                        contentColor = Color.White
+                    )
+                ) {
+                    Text(
+                        "Lưu hồ sơ",
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
+        }
 
-        ) { padding ->
+    ) { padding ->
 
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .verticalScroll(rememberScrollState())
-                    .padding(16.dp)
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+        ) {
+
+            Card(
+                shape = RoundedCornerShape(20.dp),
+                elevation = CardDefaults.cardElevation(6.dp),
+                colors = CardDefaults.cardColors(containerColor = Color.White)
             ) {
-                ModernCard("Thông tin cơ bản") {
+
+                Column(
+                    Modifier.padding(16.dp)
+                ) {
+
+                    Text("Thông tin cơ bản", fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.height(12.dp))
 
                     DatePickerField(
                         value = birthDate,
@@ -123,97 +186,71 @@ fun HealthProfileScreen(
                     )
                     Spacer(Modifier.height(12.dp))
 
-                    DropdownField(
-                        "Giới tính",
-                        listOf("Nam", "Nữ", "Khác"),
-                        gender,
-                    ) { gender = it }
+                    DropdownField("Giới tính", listOf("Nam","Nữ","Khác"), gender) {
+                        gender = it
+                    }
+
                     Spacer(Modifier.height(12.dp))
 
-                    DropdownField(
-                        "Nhóm máu",
-                        listOf("A", "B", "AB", "O"),
-                        bloodType,
-                    ) { bloodType = it }
-                }
-                Spacer(Modifier.height(16.dp))
-
-                ModernCard("Tiền sử bệnh") {
-                    diseases.forEach { disease ->
-
-                        Row(
-                            Modifier
-                                .fillMaxWidth()
-                                .toggleable(
-                                    value = medicalHistory.contains(disease),
-                                    onValueChange = { checked ->
-                                        medicalHistory =
-                                            if (checked)
-                                                medicalHistory + disease
-                                            else
-                                                medicalHistory - disease
-                                    }
-                                )
-                                .padding(vertical = 8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Checkbox(
-                                checked = medicalHistory.contains(disease),
-                                onCheckedChange = null
-                            )
-                            Spacer(Modifier.width(8.dp))
-                            Text(disease)
-                        }
+                    DropdownField("Nhóm máu", listOf("A","B","AB","O"), bloodType) {
+                        bloodType = it
                     }
                 }
-                Spacer(Modifier.height(40.dp))
             }
+            Spacer(Modifier.height(16.dp))
+
+            HealthBmiCard(
+                height = height,
+                weight = weight,
+                bmi = bmi,
+                onHeightChange = { height = it },
+                onWeightChange = { weight = it }
+            )
+            Spacer(Modifier.height(16.dp))
+
+            HealthMedicalHistoryCard(
+                medicalHistory = medicalHistory,
+                expanded = expandedDisease,
+                onExpandedChange = { expandedDisease = it },
+                diseases = diseases,
+                onToggleDisease = { disease ->
+                    medicalHistory =
+                        if (medicalHistory.contains(disease))
+                            medicalHistory - disease
+                        else
+                            medicalHistory + disease
+                }
+            )
+            Spacer(Modifier.height(40.dp))
+        }
+    }
+
+    if (isSaving) {
+        LaunchedEffect(Unit) {
+            delay(1500)
+
+            viewModel.saveProfile(
+                HealthProfile(
+                    userId,
+                    birthDate,
+                    gender,
+                    bloodType,
+                    medicalHistory,
+                    height = height.toFloatOrNull() ?: 0f,
+                    weight = weight.toFloatOrNull() ?: 0f,
+                    bmi = bmi ?: 0f
+                )
+            )
+            isSaving = false
         }
 
-        if (isSaving) {
-            LaunchedEffect(Unit) {
-                delay(2000)
-
-                viewModel.saveProfile(
-                    HealthProfile(
-                        userId,
-                        birthDate,
-                        gender,
-                        bloodType,
-                        medicalHistory
-                    )
-                )
-                isSaving = false
-                navController.popBackStack()
-            }
-
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.35f)),
-                contentAlignment = Alignment.Center
-            ) {
-
-                Card(
-                    shape = RoundedCornerShape(20.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(28.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-
-                        CircularProgressIndicator(
-                            color = Color(0xFFEC4899)
-                        )
-                        Spacer(Modifier.height(16.dp))
-
-                        Text(
-                            "Đang lưu hồ sơ...",
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-            }
+        Box(
+            Modifier
+                .fillMaxSize()
+                .background(Color.Black.copy(0.3f)),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(color = Color.Black)
         }
     }
 }

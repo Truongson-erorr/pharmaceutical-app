@@ -108,16 +108,6 @@ fun ProductDetailScreen(
                                 .height(48.dp)
                                 .clip(RoundedCornerShape(14.dp))
                                 .background(Color.Transparent)
-                                .border(
-                                    width = 1.5.dp,
-                                    brush = Brush.horizontalGradient(
-                                        listOf(
-                                            Color(0xFF7C3AED),
-                                            Color(0xFFEC4899)
-                                        )
-                                    ),
-                                    shape = RoundedCornerShape(14.dp)
-                                )
                                 .clickable {
                                     if (!isLoggedIn) {
                                         Toast.makeText(
@@ -133,7 +123,7 @@ fun ProductDetailScreen(
                         ) {
                             Text(
                                 text = "Giỏ hàng",
-                                color = Color(0xFFEC4899),
+                                color = Color.Black,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -144,12 +134,7 @@ fun ProductDetailScreen(
                                 .weight(0.7f)
                                 .height(48.dp)
                                 .background(
-                                    brush = Brush.horizontalGradient(
-                                        listOf(
-                                            Color(0xFF7C3AED),
-                                            Color(0xFFEC4899)
-                                        )
-                                    ),
+                                    Color.Black,
                                     shape = RoundedCornerShape(14.dp)
                                 ),
                             shape = RoundedCornerShape(14.dp),
@@ -231,7 +216,7 @@ fun ProductDetailScreen(
                                     .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
                                     .clip(CircleShape)
                                     .background(
-                                        if (pagerState.currentPage == index) Color(0xFFEC4899)
+                                        if (pagerState.currentPage == index) Color.Black
                                         else Color.LightGray
                                     )
                             )

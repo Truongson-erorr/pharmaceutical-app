@@ -95,7 +95,9 @@ fun CartItemRow(
                     color = Color.Gray
                 )
 
-                Row(verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     IconButton(onClick = onDecrease) {
                         Text("−", fontSize = MaterialTheme.typography.titleLarge.fontSize)
                     }
@@ -113,7 +115,7 @@ fun CartItemRow(
             ) {
                 Text(
                     text = "Xóa",
-                    color = Color(0xFFEC4899),
+                    color = Color.Black,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp)
                 )

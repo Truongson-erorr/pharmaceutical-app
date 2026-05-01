@@ -31,7 +31,7 @@ fun CategoryHorizontalItem(
 ) {
     Surface(
         modifier = Modifier
-            .width(100.dp)
+            .width(90.dp)
             .height(160.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(14.dp),
@@ -39,29 +39,28 @@ fun CategoryHorizontalItem(
         shadowElevation = 0.dp
     ) {
         Column(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(8.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+
             AsyncImage(
                 model = imageUrl,
                 contentDescription = name,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(90.dp)
+                    .size(60.dp)
                     .clip(RoundedCornerShape(10.dp)),
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 text = name,
                 fontWeight = FontWeight.Medium,
-                maxLines = 2,
+                maxLines = 1,
                 textAlign = TextAlign.Center
             )
         }
     }
 }
-
 

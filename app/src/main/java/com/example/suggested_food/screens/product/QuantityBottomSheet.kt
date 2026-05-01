@@ -91,12 +91,7 @@ fun QuantityBottomSheet(
                 .fillMaxWidth()
                 .height(40.dp)
                 .background(
-                    brush = Brush.horizontalGradient(
-                        listOf(
-                            Color(0xFF7C3AED),
-                            Color(0xFFEC4899)
-                        )
-                    ),
+                    Color.Black,
                     shape = RoundedCornerShape(14.dp)
                 ),
             shape = RoundedCornerShape(14.dp),
