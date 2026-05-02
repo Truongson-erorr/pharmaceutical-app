@@ -55,7 +55,6 @@ fun MainScreen(
         route: String
     ) {
         val selected = currentRoute == route
-
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -75,28 +74,20 @@ fun MainScreen(
                     Icon(
                         icon,
                         contentDescription = title,
-                        tint =
-                        if (selected) Color(0xFFEC4899)
-                        else Color.Gray
+                        tint = if (selected) Color(0xFFEC4899) else Color.Gray
                     )
                 },
                 label = {
                     Text(
                         title,
                         fontWeight = FontWeight.SemiBold,
-                        color =
-                        if (selected) Color(0xFFEC4899)
-                        else Color.Black
+                        color = if (selected) Color(0xFFEC4899) else Color.Black
                     )
                 },
                 shape = RoundedCornerShape(12.dp),
-
-                modifier = Modifier
-                    .fillMaxWidth(0.96f),
-
+                modifier = Modifier.fillMaxWidth(0.98f),
                 colors = NavigationDrawerItemDefaults.colors(
-                    selectedContainerColor =
-                    Color(0xFFEC4899).copy(alpha = 0.15f),
+                    selectedContainerColor = Color(0xFFEC4899).copy(alpha = 0.15f),
                     unselectedContainerColor = Color.Transparent
                 )
             )
@@ -108,9 +99,7 @@ fun MainScreen(
         drawerContent = {
 
             ModalDrawerSheet(
-                modifier = Modifier
-                    .fillMaxWidth(0.7f)
-                    .verticalScroll(rememberScrollState()),
+                modifier = Modifier.fillMaxWidth(0.7f),
                 drawerContainerColor = Color.White
             ) {
                 Column(
@@ -127,7 +116,6 @@ fun MainScreen(
                         .padding(top = 50.dp, bottom = 24.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-
                     Surface(
                         shape = CircleShape,
                         color = Color.White,
@@ -155,46 +143,30 @@ fun MainScreen(
                         fontSize = 13.sp
                     )
                 }
-                Spacer(Modifier.height(16.dp))
-
-                DrawerItem("Trang chủ", Icons.Default.Home, "MainScreen")
-                DrawerItem("Tương tác thuốc", Icons.Default.Medication, "DrugInteractionScreen")
-                DrawerItem("Kiến thức y khoa", Icons.Default.MenuBook, "GuidelineScreen")
-                DrawerItem("An toàn thai kỳ", Icons.Default.ChildCare, "PregnancySafetyScreen")
-                DrawerItem("Tương kỵ thuốc tiêm", Icons.Default.Science, "IVCompatibilityScreen")
-                DrawerItem("Quản lý kháng sinh", Icons.Default.Biotech, "AntibioticScreen")
-                DrawerItem("Theo dõi nồng độ", Icons.Default.MonitorHeart, "DrugMonitoringScreen")
-                DrawerItem("Máy tính lâm sàng", Icons.Default.Calculate, "ClinicalCalculatorScreen")
-                DrawerItem("Quản lý kho thuốc", Icons.Default.Inventory, "InventoryScreen")
-                DrawerItem("Tạo hóa đơn", Icons.Default.ReceiptLong, "InvoiceScreen")
-                Spacer(Modifier.height(20.dp))
-
                 Spacer(Modifier.height(12.dp))
 
-                Row(
+                Column(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp)
-                        .height(48.dp)
-                        .background(Color.Transparent),
-                    verticalAlignment = Alignment.CenterVertically
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
                 ) {
 
-                    Icon(
-                        Icons.Default.Logout,
-                        contentDescription = null,
-                        tint = Color.Red
-                    )
-                    Spacer(Modifier.width(12.dp))
+                    DrawerItem("Trang chủ", Icons.Default.Home, "MainScreen")
+                    DrawerItem("Tương tác thuốc", Icons.Default.Medication, "DrugInteractionScreen")
+                    DrawerItem("Kiến thức y khoa", Icons.Default.MenuBook, "GuidelineScreen")
+                    DrawerItem("An toàn thai kỳ", Icons.Default.ChildCare, "PregnancySafetyScreen")
+                    DrawerItem("Tương kỵ thuốc tiêm", Icons.Default.Science, "IVCompatibilityScreen")
+                    DrawerItem("Quản lý kháng sinh", Icons.Default.Biotech, "AntibioticScreen")
+                    DrawerItem("Theo dõi nồng độ", Icons.Default.MonitorHeart, "DrugMonitoringScreen")
+                    DrawerItem("Máy tính lâm sàng", Icons.Default.Calculate, "ClinicalCalculatorScreen")
+                    DrawerItem("Quản lý kho thuốc", Icons.Default.Inventory, "InventoryScreen")
+                    DrawerItem("Tạo hóa đơn", Icons.Default.ReceiptLong, "InvoiceScreen")
+                    Spacer(Modifier.height(24.dp))
 
-                    Text(
-                        "Đăng xuất",
-                        color = Color.Red,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = 8.dp)
+                            .padding(horizontal = 20.dp)
                             .clickable {
                                 scope.launch { drawerState.close() }
 
@@ -206,13 +178,29 @@ fun MainScreen(
                                     Toast.LENGTH_SHORT
                                 ).show()
                             }
-                    )
-                }
+                            .padding(vertical = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Icon(
+                            Icons.Default.Logout,
+                            contentDescription = null,
+                            tint = Color.Red
+                        )
+                        Spacer(Modifier.width(12.dp))
 
-                Spacer(Modifier.height(24.dp))
+                        Text(
+                            "Đăng xuất",
+                            color = Color.Red,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp
+                        )
+                    }
+                    Spacer(Modifier.height(24.dp))
+                }
             }
         }
     ) {
+
         Scaffold(
             topBar = {
                 Box(
@@ -227,7 +215,6 @@ fun MainScreen(
                             )
                         )
                 ) {
-
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -237,8 +224,7 @@ fun MainScreen(
                                 top = 40.dp,
                                 bottom = 20.dp
                             ),
-                        horizontalArrangement =
-                        Arrangement.SpaceBetween,
+                        horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
 
@@ -271,11 +257,10 @@ fun MainScreen(
                 }
             },
             containerColor = Color(0xFFF5F5F5)
-        ) { innerPadding ->
-
+        ) {
             Box(
                 modifier = Modifier
-                    .padding(innerPadding)
+                    .padding(it)
                     .fillMaxSize()
             ) {
                 HomeContent(navController)
