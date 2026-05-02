@@ -3,6 +3,7 @@ package com.example.suggested_food.viewmodels
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.suggested_food.models.MedicineResult
 import com.example.suggested_food.models.ProductData
 import com.opencsv.CSVParserBuilder
 import com.opencsv.CSVReaderBuilder
@@ -20,19 +21,6 @@ import java.io.FileOutputStream
 import java.io.InputStreamReader
 import kotlin.math.exp
 
-data class MedicineResult(
-    val name: String,
-    val score: Float,
-    val composition: String,
-    val uses: String,
-    val sideEffects: String,
-    val imageUrl: String,
-    val manufacturer: String,
-    val excellent: String,
-    val average: String,
-    val poor: String
-)
-
 class SuggestViewModel(
     application: Application
 ) : AndroidViewModel(application) {
@@ -40,6 +28,7 @@ class SuggestViewModel(
     private val _result = MutableStateFlow<List<MedicineResult>>(emptyList())
     val result: StateFlow<List<MedicineResult>> = _result
 
+    // Trạng thái loading khi xử lý AI
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
 
@@ -51,6 +40,7 @@ class SuggestViewModel(
         loadMedicineCsv()
     }
 
+    // Load dữ liệu thuốc từ file CSV
     private fun loadMedicineCsv(): List<ProductData> {
 
         val list = mutableListOf<ProductData>()
@@ -85,22 +75,27 @@ class SuggestViewModel(
                 )
             }
         }
-
         return list
     }
 
+    // pipeline
     fun suggest(symptom: String) {
 
+        // b1: kiểm tra input rỗng
         if (symptom.isBlank()) return
 
+        // b2: bật loading
         _loading.value = true
 
         viewModelScope.launch(Dispatchers.Default) {
 
+            // b3: load model + vocab + labels (nếu chưa load)
             loadAI()
 
+            // b4: dịch triệu chứng Việt → Anh
             val translated = translateSymptom(symptom)
 
+            // b5: chuyển text → vector input
             val vector = textToVector(translated)
 
             val tensor = Tensor.fromBlob(
@@ -108,12 +103,15 @@ class SuggestViewModel(
                 longArrayOf(1, vector.size.toLong())
             )
 
+            // b6: đưa input vào model AI để dự đoán
             val output = module!!
                 .forward(IValue.from(tensor))
                 .toTensor()
 
+            // b7: chuẩn hóa output bằng softmax
             val scores = softmax(output.dataAsFloatArray)
 
+            // b8: map kết quả AI → danh sách thuốc + thông tin chi tiết
             val results = scores
                 .withIndex()
                 .mapNotNull { (index, score) ->
@@ -141,11 +139,15 @@ class SuggestViewModel(
                 .sortedByDescending { it.score }
                 .take(5)
 
+            // b9: cập nhật UI result
             _result.value = results
+
+            // b10: tắt loading
             _loading.value = false
         }
     }
 
+    // Map triệu chứng tiếng Việt → tiếng Anh
     private val symptomMap = mapOf(
         "sổ mũi" to "runny nose",
         "nghẹt mũi" to "nasal congestion",
@@ -182,6 +184,7 @@ class SuggestViewModel(
         "tim đập nhanh" to "rapid heartbeat"
     )
 
+    // Dịch input người dùng sang tiếng Anh
     private fun translateSymptom(text: String): String {
 
         var result = text.lowercase()
@@ -193,6 +196,7 @@ class SuggestViewModel(
         return result
     }
 
+    // Chuyển text thành vector input cho model
     private fun textToVector(text: String): FloatArray {
 
         val vector = FloatArray(vocab.size)
@@ -206,6 +210,7 @@ class SuggestViewModel(
         return vector
     }
 
+    // Hàm softmax chuẩn hóa output model
     private fun softmax(logits: FloatArray): FloatArray {
 
         val max = logits.maxOrNull() ?: 0f
@@ -215,6 +220,7 @@ class SuggestViewModel(
         return expVals.map { it / sum }.toFloatArray()
     }
 
+    // Load AI model + vocab + labels
     private fun loadAI() {
 
         if (module != null) return
@@ -229,6 +235,7 @@ class SuggestViewModel(
         labels = loadLabels(context)
     }
 
+    // Load vocab từ JSON
     private fun loadVocab(context: Application): Map<String, Int> {
 
         val json = context.assets
@@ -242,6 +249,7 @@ class SuggestViewModel(
             .associateWith { obj.getInt(it) }
     }
 
+    // Load danh sách label output
     private fun loadLabels(context: Application): List<String> {
 
         val json = context.assets
@@ -254,6 +262,7 @@ class SuggestViewModel(
         return List(arr.length()) { arr.getString(it) }
     }
 
+    // Copy file model từ assets sang storage để PyTorch load
     private fun assetFilePath(
         context: Application,
         assetName: String

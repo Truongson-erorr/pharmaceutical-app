@@ -2,16 +2,12 @@ package com.example.suggested_food
 
 import android.os.Build
 import android.os.Bundle
-import android.view.textservice.SuggestionsInfo
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,9 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
@@ -33,32 +26,20 @@ import androidx.navigation.navArgument
 import com.example.suggested_food.authentication.ForgotPasswordScreen
 import com.example.suggested_food.authentication.LoginScreen
 import com.example.suggested_food.authentication.RegisterScreen
-import com.example.suggested_food.screens.address.AddressScreen
 import com.example.suggested_food.screens.ai.AISearchScreen
 import com.example.suggested_food.screens.category.AllCategoriesScreen
-import com.example.suggested_food.screens.cart.CartContent
 import com.example.suggested_food.screens.category.CategoryProductsScreen
 import com.example.suggested_food.screens.chat_ai.ChatScreen
-import com.example.suggested_food.screens.checkout.CheckoutScreen
 import com.example.suggested_food.screens.drug_look_up.DrugLookupScreen
 import com.example.suggested_food.screens.home.MainScreen
-import com.example.suggested_food.screens.order.OrderDetailScreen
-import com.example.suggested_food.screens.order.OrderHistoryScreen
-import com.example.suggested_food.screens.checkout.PaymentSuccessScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
 import com.example.suggested_food.screens.profile.ProfileContent
-import com.example.suggested_food.screens.chat_doctor.UserChatScreen
-import com.example.suggested_food.screens.health.HealthProfileScreen
-import com.example.suggested_food.screens.product.AllProductScreen
+import com.example.suggested_food.screens.drug.AllProductScreen
 import com.example.suggested_food.screens.search.SearchScreen
 import com.example.suggested_food.screens.suggest.SuggestScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodels.AuthViewModel
-import com.example.suggested_food.viewmodels.CartViewModel
-import com.example.suggested_food.viewmodels.HealthProfileViewModel
-import com.example.suggested_food.viewmodels.OrderHistoryViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
-import com.example.suggested_food.viewmodels.UserViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -81,10 +62,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigation(
     authViewModel: AuthViewModel = viewModel(),
-    cartViewModel: CartViewModel = viewModel(),
-    userViewModel: UserViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
-    orderHistoryViewModel: OrderHistoryViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
 
@@ -99,10 +77,6 @@ fun AppNavigation(
             CircularProgressIndicator()
         }
         return
-    }
-
-    LaunchedEffect(Unit) {
-        cartViewModel.loadCartFromFirestore()
     }
 
     val startDestination = when {
@@ -148,13 +122,6 @@ fun AppNavigation(
                 authViewModel = authViewModel
             )
         }
-        composable("CartContent") {
-            CartContent(
-                navController = navController,
-                cartViewModel = cartViewModel,
-                authViewModel = authViewModel
-            )
-        }
         composable("AllCategoriesScreen") {
             AllCategoriesScreen(navController = navController)
         }
@@ -180,42 +147,10 @@ fun AppNavigation(
             ProductDetailScreen(
                 navController = navController,
                 productId = productId,
-                cartViewModel = cartViewModel,
-                authViewModel = authViewModel
             )
-        }
-        composable("checkout") {
-            CheckoutScreen(navController, cartViewModel, userViewModel)
-        }
-        composable("payment_success") {
-            PaymentSuccessScreen(navController)
         }
         composable("chat") {
             ChatScreen(navController)
-        }
-        composable("OrderHistoryScreen") {
-            OrderHistoryScreen(navController, orderHistoryViewModel)
-        }
-        composable(
-            route = "order_detail/{orderId}",
-            arguments = listOf(
-                navArgument("orderId") { type = NavType.StringType }
-            )
-        ) { backStackEntry ->
-            val orderId = backStackEntry.arguments?.getString("orderId") ?: return@composable
-            OrderDetailScreen(orderId = orderId, navController = navController)
-        }
-        composable(
-            "UserChatScreen/{userId}",
-            arguments = listOf(navArgument("userId") { type = NavType.StringType })
-        ) {
-            UserChatScreen(
-                navController = navController,
-                userId = it.arguments?.getString("userId")!!
-            )
-        }
-        composable("address") {
-            AddressScreen(navController)
         }
         composable("drug_lookup") {
             DrugLookupScreen(navController)
@@ -225,9 +160,6 @@ fun AppNavigation(
         }
         composable("ForgotPasswordScreen") {
             ForgotPasswordScreen(navController, authViewModel)
-        }
-        composable("health_profile") {
-            HealthProfileScreen(navController, authViewModel)
         }
         composable("SearchScreen") {
             SearchScreen(navController, productViewModel = productViewModel)

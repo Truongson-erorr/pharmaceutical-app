@@ -41,7 +41,7 @@ fun AllCategoriesScreen(
             SmallTopAppBar(
                 title = {
                     Text(
-                        text = "Tất cả danh mục",
+                        text = "Phân loại điều trị",
                         color = Color.Black,
                         fontWeight = FontWeight.Bold
                     )

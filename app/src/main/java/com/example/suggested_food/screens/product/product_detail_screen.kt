@@ -1,11 +1,7 @@
 package com.example.suggested_food.screens.product
 
-import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -14,26 +10,19 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.suggested_food.models.CartItemModel
-import com.example.suggested_food.screens.home.formatVND
-import com.example.suggested_food.viewmodels.AuthViewModel
-import com.example.suggested_food.viewmodels.CartViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -41,34 +30,27 @@ import com.example.suggested_food.viewmodels.ProductViewModel
 fun ProductDetailScreen(
     navController: NavController,
     productId: String,
-    productViewModel: ProductViewModel = viewModel(),
-    cartViewModel: CartViewModel,
-    authViewModel: AuthViewModel
+    productViewModel: ProductViewModel = viewModel()
 ) {
     val product by productViewModel.productDetail.collectAsState()
     val loading by productViewModel.detailLoading.collectAsState()
     val scrollState = rememberScrollState()
-
-    val context = LocalContext.current
-    val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
-    var showBottomSheet by remember { mutableStateOf(false) }
 
     LaunchedEffect(productId) {
         productViewModel.fetchProductById(productId)
     }
 
     Scaffold(
-        modifier = Modifier.background(
-            Color(0xFFF5F5F5)
-        ),
+        modifier = Modifier.background(Color(0xFFF5F5F5)),
         containerColor = Color.Transparent,
+
         topBar = {
             SmallTopAppBar(
                 title = {
                     Text(
-                        text = product?.name ?: "Chi tiết sản phẩm",
-                        color = Color.Black,
+                        text = product?.name ?: "Thông tin thuốc",
                         fontWeight = FontWeight.Bold,
+                        color = Color.Black,
                         maxLines = 1
                     )
                 },
@@ -85,76 +67,10 @@ fun ProductDetailScreen(
                     containerColor = Color.White
                 )
             )
-        },
-
-        bottomBar = {
-            if (product != null) {
-                Surface(shadowElevation = 8.dp) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(
-                                start = 12.dp,
-                                end = 12.dp,
-                                top = 8.dp,
-                                bottom = 28.dp
-                            ),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
-
-                        Box(
-                            modifier = Modifier
-                                .weight(0.3f)
-                                .height(48.dp)
-                                .clip(RoundedCornerShape(14.dp))
-                                .background(Color.Transparent)
-                                .clickable {
-                                    if (!isLoggedIn) {
-                                        Toast.makeText(
-                                            context,
-                                            "Vui lòng đăng nhập để thêm vào giỏ hàng",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                        return@clickable
-                                    }
-                                    showBottomSheet = true
-                                },
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = "Giỏ hàng",
-                                color = Color.Black,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-
-                        Button(
-                            onClick = { },
-                            modifier = Modifier
-                                .weight(0.7f)
-                                .height(48.dp)
-                                .background(
-                                    Color.Black,
-                                    shape = RoundedCornerShape(14.dp)
-                                ),
-                            shape = RoundedCornerShape(14.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color.Transparent
-                            ),
-                            contentPadding = PaddingValues()
-                        ) {
-                            Text(
-                                text = "Mua ngay",
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-                }
-            }
         }
     ) { innerPadding ->
         when {
+
             loading -> {
                 Box(
                     modifier = Modifier
@@ -173,27 +89,28 @@ fun ProductDetailScreen(
                         .padding(innerPadding),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("Không tìm thấy sản phẩm")
+                    Text("Không tìm thấy thông tin thuốc")
                 }
             }
-
             else -> {
                 val images = product!!.images
-                val pagerState = rememberPagerState(
-                    pageCount = { images.size }
-                )
+                val pagerState = rememberPagerState {
+                    images.size
+                }
 
                 Column(
                     modifier = Modifier
                         .padding(innerPadding)
                         .verticalScroll(scrollState)
                 ) {
+
                     HorizontalPager(
                         state = pagerState,
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(240.dp)
                     ) { page ->
+
                         AsyncImage(
                             model = images[page],
                             contentDescription = product!!.name,
@@ -213,10 +130,13 @@ fun ProductDetailScreen(
                             Box(
                                 modifier = Modifier
                                     .padding(4.dp)
-                                    .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
+                                    .size(
+                                        if (pagerState.currentPage == index) 8.dp else 6.dp
+                                    )
                                     .clip(CircleShape)
                                     .background(
-                                        if (pagerState.currentPage == index) Color.Black
+                                        if (pagerState.currentPage == index)
+                                            Color.Black
                                         else Color.LightGray
                                     )
                             )
@@ -224,8 +144,7 @@ fun ProductDetailScreen(
                     }
 
                     Column(
-                        modifier = Modifier
-                            .padding(16.dp)
+                        modifier = Modifier.padding(16.dp)
                     ) {
 
                         Text(
@@ -233,15 +152,7 @@ fun ProductDetailScreen(
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold
                         )
-                        Spacer(Modifier.height(8.dp))
-
-                        Text(
-                            text = formatVND(product!!.price),
-                            color = Color.Red,
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(12.dp))
 
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Text(
@@ -249,69 +160,55 @@ fun ProductDetailScreen(
                                 fontWeight = FontWeight.Bold
                             )
                             Spacer(Modifier.width(12.dp))
+
                             Text(
-                                if (product!!.stock > 0) "Còn hàng" else "Hết hàng",
-                                color = if (product!!.stock > 0)
-                                    Color(0xFF16A34A) else Color.Gray,
+                                text =
+                                if (product!!.stock > 0)
+                                    "Đang lưu hành"
+                                else
+                                    "Ngưng lưu hành",
+
+                                color =
+                                if (product!!.stock > 0)
+                                    Color(0xFF16A34A)
+                                else
+                                    Color.Gray,
+
                                 fontWeight = FontWeight.Medium
                             )
                         }
+                        Spacer(Modifier.height(20.dp))
 
-                        if (product!!.onSale) {
-                            Spacer(Modifier.height(8.dp))
-                            Text(
-                                "🔥 Đang giảm giá",
-                                color = Color.Red,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text = "Mô tả thuốc",
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(6.dp))
 
-                        Text("Mô tả sản phẩm", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = product!!.description.ifBlank {
+                                "Chưa có mô tả"
+                            }
+                        )
+                        Spacer(Modifier.height(20.dp))
 
-                        Text(product!!.description.ifBlank { "Chưa có mô tả" })
-                        Spacer(Modifier.height(16.dp))
+                        Text(
+                            text = "Hướng dẫn sử dụng",
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(6.dp))
 
-                        Text(text = "Hướng dẫn sử dụng", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = product!!.usage.ifBlank {
+                                "Chưa có hướng dẫn sử dụng"
+                            },
+                            color = Color.DarkGray
+                        )
 
-                        Text(text = product!!.usage.ifBlank { "Chưa có hướng dẫn sử dụng" }, color = Color.DarkGray)
-                        Spacer(Modifier.height(16.dp))
+                        Spacer(Modifier.height(24.dp))
                     }
                 }
             }
         }
-
-        if (showBottomSheet) {
-            ModalBottomSheet(
-                onDismissRequest = { showBottomSheet = false },
-                containerColor = Color.White
-            ) {
-                QuantityBottomSheet(
-                    product = product,
-                    onConfirm = { quantity ->
-                        product?.let {
-                            cartViewModel.addToCart(
-                                CartItemModel(
-                                    productId = it.id,
-                                    name = it.name,
-                                    image = it.images.firstOrNull() ?: "",
-                                    price = it.price,
-                                    quantity = quantity
-                                )
-                            )
-                            Toast.makeText(
-                                context,
-                                "Đã thêm vào giỏ hàng",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        showBottomSheet = false
-                    }
-                )
-            }
-        }
     }
 }
-

@@ -109,7 +109,7 @@ class DrugLookupViewModel(
                 }
 
                 _result.value = response
-                Log.d(TAG, "✅ Drug info loaded for: '${drug.name}'")
+                Log.d(TAG, "Drug info loaded for: '${drug.name}'")
             }
 
             _isLoading.value = false

@@ -109,7 +109,7 @@ fun HomeContent(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    "Danh mục",
+                    "Phân loại điều trị",
                     fontWeight = FontWeight.Bold
                 )
 
@@ -162,7 +162,7 @@ fun HomeContent(
             ) {
 
                 Text(
-                    text = "Sản phẩm phổ biến",
+                    text = "Thư viện thuốc",
                     fontWeight = FontWeight.Bold,
                     style = MaterialTheme.typography.titleMedium
                 )

@@ -44,7 +44,7 @@ fun CategoryProductsScreen(
             TopAppBar(
                 title = {
                     Text(
-                        text = category?.name ?: "Danh mục",
+                        text = category?.name ?: "Phân loại điều trị",
                         fontWeight = FontWeight.Bold,
                         color = Color.Black
                     )
