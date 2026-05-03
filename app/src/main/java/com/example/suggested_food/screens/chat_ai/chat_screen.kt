@@ -11,10 +11,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Send
-import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowBackIosNew
 import androidx.compose.material.icons.outlined.History
-import androidx.compose.material.icons.outlined.SupportAgent
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -26,12 +24,11 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.suggested_food.models.CartItemModel
 import com.example.suggested_food.models.ChatMessage
 import com.example.suggested_food.models.ProductModel
-import com.example.suggested_food.viewmodels.CartViewModel
 import com.example.suggested_food.viewmodels.ChatViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,72 +37,52 @@ fun ChatScreen(
     chatViewModel: ChatViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel()
 ) {
+
     val messages by chatViewModel.messages.collectAsState()
     val products by productViewModel.products.collectAsState()
+    val isLoading by chatViewModel.isLoading.collectAsState()
 
     val productNames = products.map { it.name }
+
     var input by remember { mutableStateOf("") }
-
-    var suggestedProducts by remember {
-        mutableStateOf<List<ProductModel>>(emptyList())
-    }
-    val isLoading by chatViewModel.isLoading.collectAsState()
-    val cartViewModel: CartViewModel = viewModel()
-
+    var suggestedProducts by remember { mutableStateOf<List<ProductModel>>(emptyList()) }
     var showHistorySheet by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        chatViewModel.addToCartEvent.collect { product ->
-            cartViewModel.addToCart(
-                CartItemModel(
-                    productId = product.id,
-                    name = product.name,
-                    image = product.images.firstOrNull() ?: "",
-                    price = product.price,
-                    quantity = 1
-                )
-            )
-        }
-    }
 
     LaunchedEffect(messages) {
-        val lastBotMessage = messages.lastOrNull { !it.isUser } ?: return@LaunchedEffect
+
+        val lastBotMessage =
+            messages.lastOrNull { !it.isUser } ?: return@LaunchedEffect
 
         val drugNames = extractDrugNames(lastBotMessage.text)
 
         suggestedProducts = products.filter { product ->
-            drugNames.any { it.equals(product.name, ignoreCase = true) }
+            drugNames.any {
+                it.equals(product.name, ignoreCase = true)
+            }
         }
     }
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Color(0xFFF5F5F5)
-            )
+            .background(Color(0xFFF5F5F5))
     ) {
+
         TopAppBar(
             title = {
                 Text(
-                    "AI gợi ý thuốc",
-                    fontWeight = FontWeight.Bold,
-                    color = Color.Black
+                    "AI tư vấn thuốc",
+                    fontWeight = FontWeight.Bold
                 )
             },
             navigationIcon = {
                 IconButton(onClick = { navController.popBackStack() }) {
-                    Icon(Icons.Outlined.ArrowBackIosNew, null, tint = Color.Black)
+                    Icon(Icons.Outlined.ArrowBackIosNew, null)
                 }
             },
             actions = {
-                IconButton(
-                    onClick = { showHistorySheet = true }
-                ) {
-                    Icon(
-                        Icons.Default.MoreVert,
-                        contentDescription = null,
-                        tint = Color.Black
-                    )
+                IconButton(onClick = { showHistorySheet = true }) {
+                    Icon(Icons.Default.MoreVert, null)
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -119,23 +96,29 @@ fun ChatScreen(
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
+
             itemsIndexed(messages) { index, msg ->
+
                 ChatBubble(msg)
 
                 val isLastBotMessage =
                     !msg.isUser && index == messages.lastIndex
 
                 if (isLastBotMessage && suggestedProducts.isNotEmpty()) {
+
                     Spacer(modifier = Modifier.height(6.dp))
 
                     LazyRow(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement =
+                        Arrangement.spacedBy(12.dp)
                     ) {
                         items(suggestedProducts) { product ->
                             ProductSuggestionCard(
                                 product = product,
                                 onClick = {
-                                    navController.navigate("ProductDetail/${product.id}")
+                                    navController.navigate(
+                                        "ProductDetail/${product.id}"
+                                    )
                                 }
                             )
                         }
@@ -162,11 +145,14 @@ fun ChatScreen(
                 .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             TextField(
                 value = input,
                 onValueChange = { input = it },
                 modifier = Modifier.weight(1f),
-                placeholder = { Text("Nhập triệu chứng hoặc câu hỏi...") },
+                placeholder = {
+                    Text("Nhập triệu chứng hoặc câu hỏi...")
+                },
                 shape = RoundedCornerShape(24.dp),
                 singleLine = true,
                 colors = TextFieldDefaults.textFieldColors(
@@ -201,27 +187,24 @@ fun ChatScreen(
             ModalBottomSheet(
                 onDismissRequest = {
                     showHistorySheet = false
-                },
-                shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp)
+                }
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp)
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+
                         Icon(
-                            imageVector = Icons.Outlined.History,
-                            contentDescription = "History",
-                            tint = Color(0xFFEC4899),
-                            modifier = Modifier.size(24.dp)
+                            Icons.Outlined.History,
+                            contentDescription = null,
+                            tint = Color(0xFFEC4899)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
 
                         Text(
-                            "Lịch sử gợi ý thuốc",
+                            "Lịch sử tư vấn AI",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -234,13 +217,18 @@ fun ChatScreen(
 
 @Composable
 fun ChatBubble(message: ChatMessage) {
+
     val isTyping = message.text == "…"
 
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = if (message.isUser)
-            Arrangement.End else Arrangement.Start
+        horizontalArrangement =
+        if (message.isUser)
+            Arrangement.End
+        else
+            Arrangement.Start
     ) {
+
         Box(
             modifier = Modifier
                 .background(
@@ -252,12 +240,17 @@ fun ChatBubble(message: ChatMessage) {
                 )
                 .padding(12.dp)
         ) {
+
             if (isTyping) {
                 TypingDots()
             } else {
                 Text(
                     text = message.text,
-                    color = if (message.isUser) Color.White else Color.Black
+                    color =
+                    if (message.isUser)
+                        Color.White
+                    else
+                        Color.Black
                 )
             }
         }
@@ -266,6 +259,7 @@ fun ChatBubble(message: ChatMessage) {
 
 @Composable
 fun TypingDots() {
+
     var dots by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
@@ -276,7 +270,7 @@ fun TypingDots() {
                 2 -> "..."
                 else -> ""
             }
-            kotlinx.coroutines.delay(400)
+            delay(400)
         }
     }
 
@@ -322,6 +316,7 @@ fun ProductSuggestionCard(
             )
 
             Column(modifier = Modifier.padding(8.dp)) {
+
                 Text(
                     text = product.name,
                     fontWeight = FontWeight.SemiBold,

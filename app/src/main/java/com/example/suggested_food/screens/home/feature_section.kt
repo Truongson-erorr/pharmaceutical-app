@@ -83,18 +83,6 @@ fun FeatureSection(
                 )
             )
         ),
-
-        FeatureGroup(
-            "Tư vấn",
-            listOf(
-                FeatureItem(
-                    "Tư vấn bác sĩ",
-                    Icons.Default.Person,
-                    "UserChatScreen",
-                    Color(0xFF007BFF)
-                )
-            )
-        ),
     )
 
     Column(
