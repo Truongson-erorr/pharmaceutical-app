@@ -15,7 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,12 +34,15 @@ import com.example.suggested_food.screens.home.MainScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
 import com.example.suggested_food.screens.profile.ProfileContent
 import com.example.suggested_food.screens.drug.AllProductScreen
+import com.example.suggested_food.screens.export_receipt.ExportStockScreen
 import com.example.suggested_food.screens.inventory.InventoryAddScreen
 import com.example.suggested_food.screens.inventory.InventoryDetailScreen
 import com.example.suggested_food.screens.inventory.InventoryEditScreen
 import com.example.suggested_food.screens.inventory.InventoryScreen
+import com.example.suggested_food.screens.invoice.InvoiceDashboardScreen
+import com.example.suggested_food.screens.invoice.InvoiceScreen
 import com.example.suggested_food.screens.search.SearchScreen
-import com.example.suggested_food.screens.stock.ImportStockScreen
+import com.example.suggested_food.screens.import_receipt.ImportStockScreen
 import com.example.suggested_food.screens.stock.StockAllScreen
 import com.example.suggested_food.screens.stock.StockScreen
 import com.example.suggested_food.screens.suggest.SuggestScreen
@@ -202,6 +204,15 @@ fun AppNavigation(
         }
         composable("ImportStockScreen") {
             ImportStockScreen(navController)
+        }
+        composable("InvoiceScreen") {
+            InvoiceScreen(navController)
+        }
+        composable("InvoiceDashboardScreen") {
+            InvoiceDashboardScreen(navController)
+        }
+        composable("ExportStockScreen") {
+            ExportStockScreen(navController)
         }
     }
 }

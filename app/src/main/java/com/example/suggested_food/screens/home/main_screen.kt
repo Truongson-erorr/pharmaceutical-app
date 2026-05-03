@@ -161,7 +161,7 @@ fun MainScreen(
                     DrawerItem("Máy tính lâm sàng", Icons.Default.Calculate, "ClinicalCalculatorScreen")
                     DrawerItem("Quản lý kho thuốc", Icons.Default.Inventory, "InventoryScreen")
                     DrawerItem("Quản lý tồn kho", Icons.Default.Storefront, "StockScreen")
-                    DrawerItem("Tạo hóa đơn", Icons.Default.ReceiptLong, "InvoiceScreen")
+                    DrawerItem("Hóa đơn", Icons.Default.ReceiptLong, "InvoiceDashboardScreen")
                     Spacer(Modifier.height(24.dp))
 
                     Row(
