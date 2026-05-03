@@ -35,7 +35,14 @@ import com.example.suggested_food.screens.home.MainScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
 import com.example.suggested_food.screens.profile.ProfileContent
 import com.example.suggested_food.screens.drug.AllProductScreen
+import com.example.suggested_food.screens.inventory.InventoryAddScreen
+import com.example.suggested_food.screens.inventory.InventoryDetailScreen
+import com.example.suggested_food.screens.inventory.InventoryEditScreen
+import com.example.suggested_food.screens.inventory.InventoryScreen
 import com.example.suggested_food.screens.search.SearchScreen
+import com.example.suggested_food.screens.stock.ImportStockScreen
+import com.example.suggested_food.screens.stock.StockAllScreen
+import com.example.suggested_food.screens.stock.StockScreen
 import com.example.suggested_food.screens.suggest.SuggestScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodels.AuthViewModel
@@ -172,6 +179,29 @@ fun AppNavigation(
         }
         composable("AllProductScreen") {
             AllProductScreen(navController)
+        }
+        composable("InventoryScreen") {
+            InventoryScreen(navController)
+        }
+        composable("product_detail/{id}") { backStack ->
+            val id = backStack.arguments?.getString("id") ?: ""
+            InventoryDetailScreen(navController, id)
+        }
+        composable("inventory_edit/{id}") {
+            val id = it.arguments?.getString("id")!!
+            InventoryEditScreen(navController, id)
+        }
+        composable("InventoryAddScreen") {
+            InventoryAddScreen(navController)
+        }
+        composable("StockScreen") {
+            StockScreen(navController)
+        }
+        composable("StockAllScreen") {
+            StockAllScreen(navController)
+        }
+        composable("ImportStockScreen") {
+            ImportStockScreen(navController)
         }
     }
 }

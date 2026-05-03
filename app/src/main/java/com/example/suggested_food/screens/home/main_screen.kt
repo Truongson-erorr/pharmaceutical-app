@@ -160,6 +160,7 @@ fun MainScreen(
                     DrawerItem("Theo dõi nồng độ", Icons.Default.MonitorHeart, "DrugMonitoringScreen")
                     DrawerItem("Máy tính lâm sàng", Icons.Default.Calculate, "ClinicalCalculatorScreen")
                     DrawerItem("Quản lý kho thuốc", Icons.Default.Inventory, "InventoryScreen")
+                    DrawerItem("Quản lý tồn kho", Icons.Default.Storefront, "StockScreen")
                     DrawerItem("Tạo hóa đơn", Icons.Default.ReceiptLong, "InvoiceScreen")
                     Spacer(Modifier.height(24.dp))
 
@@ -169,7 +170,6 @@ fun MainScreen(
                             .padding(horizontal = 20.dp)
                             .clickable {
                                 scope.launch { drawerState.close() }
-
                                 authViewModel.logout()
 
                                 Toast.makeText(
@@ -200,7 +200,6 @@ fun MainScreen(
             }
         }
     ) {
-
         Scaffold(
             topBar = {
                 Box(
