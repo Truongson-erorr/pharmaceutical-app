@@ -43,10 +43,15 @@ import com.example.suggested_food.screens.invoice.InvoiceDashboardScreen
 import com.example.suggested_food.screens.invoice.InvoiceScreen
 import com.example.suggested_food.screens.search.SearchScreen
 import com.example.suggested_food.screens.import_receipt.ImportStockScreen
+import com.example.suggested_food.screens.invoice_history.ExportDetailScreen
+import com.example.suggested_food.screens.invoice_history.ImportDetailScreen
+import com.example.suggested_food.screens.invoice_history.InvoiceHistoryScreen
 import com.example.suggested_food.screens.stock.StockAllScreen
 import com.example.suggested_food.screens.stock.StockScreen
 import com.example.suggested_food.screens.suggest.SuggestScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
+import com.example.suggested_food.viewmodel.ExportViewModel
+import com.example.suggested_food.viewmodel.ImportViewModel
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -71,6 +76,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigation(
     authViewModel: AuthViewModel = viewModel(),
+    importViewModel: ImportViewModel = viewModel(),
+    exportViewModel: ExportViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
@@ -213,6 +220,23 @@ fun AppNavigation(
         }
         composable("ExportStockScreen") {
             ExportStockScreen(navController)
+        }
+        composable("InvoiceHistoryScreen") {
+            InvoiceHistoryScreen(navController)
+        }
+        composable("import_detail/{receiptId}") { backStack ->
+            val id = backStack.arguments?.getString("receiptId") ?: ""
+            ImportDetailScreen(
+                receiptId = id,
+                viewModel = importViewModel
+            )
+        }
+        composable("export_detail/{receiptId}") { backStack ->
+            val id = backStack.arguments?.getString("receiptId") ?: ""
+            ExportDetailScreen(
+                receiptId = id,
+                viewModel = exportViewModel
+            )
         }
     }
 }

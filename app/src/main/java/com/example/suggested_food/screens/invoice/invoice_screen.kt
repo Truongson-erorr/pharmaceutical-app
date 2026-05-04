@@ -69,7 +69,7 @@ fun InvoiceScreen(
                 title = "Lịch sử nhập / xuất",
                 desc = "Xem các giao dịch đã thực hiện"
             ) {
-                navController.navigate("stock_history")
+                navController.navigate("InvoiceHistoryScreen")
             }
         }
     }

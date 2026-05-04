@@ -1,12 +1,10 @@
 package com.example.suggested_food.viewmodel
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.suggested_food.models.ImportReceipt
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
 class ImportViewModel : ViewModel() {
 
@@ -17,6 +15,12 @@ class ImportViewModel : ViewModel() {
 
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
+
+    private val _selectedReceipt =
+        MutableStateFlow<ImportReceipt?>(null)
+
+    val selectedReceipt: StateFlow<ImportReceipt?> =
+        _selectedReceipt
 
     fun saveImportReceipt(receipt: ImportReceipt) {
 
@@ -50,5 +54,24 @@ class ImportViewModel : ViewModel() {
             _loading.value = false
             _saveState.value = false
         }
+    }
+
+    fun loadImportReceipt(receiptId: String) {
+
+        _loading.value = true
+
+        db.collection("import_receipts")
+            .document(receiptId)
+            .get()
+            .addOnSuccessListener { snapshot ->
+
+                _selectedReceipt.value =
+                    snapshot.toObject(ImportReceipt::class.java)
+
+                _loading.value = false
+            }
+            .addOnFailureListener {
+                _loading.value = false
+            }
     }
 }

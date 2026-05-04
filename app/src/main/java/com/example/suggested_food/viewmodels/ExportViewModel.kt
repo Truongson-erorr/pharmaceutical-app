@@ -16,7 +16,14 @@ class ExportViewModel : ViewModel() {
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
 
+    private val _selectedReceipt =
+        MutableStateFlow<ExportReceipt?>(null)
+
+    val selectedReceipt: StateFlow<ExportReceipt?> =
+        _selectedReceipt
+
     fun saveExportReceipt(receipt: ExportReceipt) {
+
         _loading.value = true
 
         val productRef =
@@ -48,5 +55,24 @@ class ExportViewModel : ViewModel() {
             _loading.value = false
             _saveState.value = false
         }
+    }
+
+    fun loadExportReceipt(receiptId: String) {
+
+        _loading.value = true
+
+        db.collection("export_receipts")
+            .document(receiptId)
+            .get()
+            .addOnSuccessListener {
+
+                _selectedReceipt.value =
+                    it.toObject(ExportReceipt::class.java)
+
+                _loading.value = false
+            }
+            .addOnFailureListener {
+                _loading.value = false
+            }
     }
 }
