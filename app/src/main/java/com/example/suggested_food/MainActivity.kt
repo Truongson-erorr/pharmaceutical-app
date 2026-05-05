@@ -15,7 +15,6 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -35,16 +34,24 @@ import com.example.suggested_food.screens.home.MainScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
 import com.example.suggested_food.screens.profile.ProfileContent
 import com.example.suggested_food.screens.drug.AllProductScreen
+import com.example.suggested_food.screens.export_receipt.ExportStockScreen
 import com.example.suggested_food.screens.inventory.InventoryAddScreen
 import com.example.suggested_food.screens.inventory.InventoryDetailScreen
 import com.example.suggested_food.screens.inventory.InventoryEditScreen
 import com.example.suggested_food.screens.inventory.InventoryScreen
+import com.example.suggested_food.screens.invoice.InvoiceDashboardScreen
+import com.example.suggested_food.screens.invoice.InvoiceScreen
 import com.example.suggested_food.screens.search.SearchScreen
-import com.example.suggested_food.screens.stock.ImportStockScreen
+import com.example.suggested_food.screens.import_receipt.ImportStockScreen
+import com.example.suggested_food.screens.invoice_history.ExportDetailScreen
+import com.example.suggested_food.screens.invoice_history.ImportDetailScreen
+import com.example.suggested_food.screens.invoice_history.InvoiceHistoryScreen
 import com.example.suggested_food.screens.stock.StockAllScreen
 import com.example.suggested_food.screens.stock.StockScreen
 import com.example.suggested_food.screens.suggest.SuggestScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
+import com.example.suggested_food.viewmodel.ExportViewModel
+import com.example.suggested_food.viewmodel.ImportViewModel
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -69,6 +76,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppNavigation(
     authViewModel: AuthViewModel = viewModel(),
+    importViewModel: ImportViewModel = viewModel(),
+    exportViewModel: ExportViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
@@ -202,6 +211,34 @@ fun AppNavigation(
         }
         composable("ImportStockScreen") {
             ImportStockScreen(navController)
+        }
+        composable("InvoiceScreen") {
+            InvoiceScreen(navController)
+        }
+        composable("InvoiceDashboardScreen") {
+            InvoiceDashboardScreen(navController)
+        }
+        composable("ExportStockScreen") {
+            ExportStockScreen(navController)
+        }
+        composable("InvoiceHistoryScreen") {
+            InvoiceHistoryScreen(navController)
+        }
+        composable("import_detail/{receiptId}") { backStack ->
+            val id = backStack.arguments?.getString("receiptId") ?: ""
+            ImportDetailScreen(
+                navController= navController,
+                receiptId = id,
+                viewModel = importViewModel
+            )
+        }
+        composable("export_detail/{receiptId}") { backStack ->
+            val id = backStack.arguments?.getString("receiptId") ?: ""
+            ExportDetailScreen(
+                receiptId = id,
+                navController = navController,
+                viewModel = exportViewModel
+            )
         }
     }
 }

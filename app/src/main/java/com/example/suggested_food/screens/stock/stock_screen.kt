@@ -34,9 +34,6 @@ fun StockScreen(
 
     Scaffold(
         topBar = {
-
-            var menuExpanded by remember { mutableStateOf(false) }
-
             TopAppBar(
                 title = {
                     Text("Quản lý tồn kho", fontWeight = FontWeight.Bold)
@@ -47,31 +44,6 @@ fun StockScreen(
                         Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
                     }
                 },
-
-                actions = {
-
-                    IconButton(onClick = { menuExpanded = true }) {
-                        Icon(Icons.Default.MoreVert, contentDescription = null)
-                    }
-
-                    StockMenuDropdown(
-                        expanded = menuExpanded,
-                        onDismiss = { menuExpanded = false },
-                        onImport = {
-                            menuExpanded = false
-                            navController.navigate("ImportStockScreen")
-                        },
-                        onExport = {
-                            menuExpanded = false
-                            navController.navigate("export_stock")
-                        },
-                        onHistory = {
-                            menuExpanded = false
-                            navController.navigate("stock_history")
-                        }
-                    )
-                },
-
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.White
                 )

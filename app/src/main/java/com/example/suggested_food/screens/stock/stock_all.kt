@@ -89,7 +89,6 @@ fun StockAllScreen(
                         ) { tempFilter = "LOW" }
                     }
 
-                    // HÀNG 3 (FULL)
                     FilterItem(
                         text = "Hết hàng",
                         selected = tempFilter == "OUT",

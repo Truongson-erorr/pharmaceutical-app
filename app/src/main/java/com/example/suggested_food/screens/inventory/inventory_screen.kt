@@ -7,10 +7,12 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,8 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.suggested_food.models.ProductModel
 import com.example.suggested_food.viewmodels.InventoryViewModel
+import java.text.NumberFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,104 +34,137 @@ fun InventoryScreen(
 ) {
     val products by inventoryViewModel.products.collectAsState()
 
+    val currency =
+        NumberFormat.getInstance(Locale("vi", "VN"))
+
     Scaffold(
+        containerColor = Color.White,
+
         topBar = {
             TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White
+                ),
                 title = {
-                    Text("Quản lý kho thuốc", fontWeight = FontWeight.Bold)
+                    Text(
+                        "Quản lý kho thuốc",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
                 },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBackIosNew, null)
+                    IconButton(
+                        onClick = { navController.popBackStack() }
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBackIosNew,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
                     }
                 },
                 actions = {
                     TextButton(
-                        onClick = { navController.navigate("InventoryAddScreen") },
+                        onClick = {
+                            navController.navigate("InventoryAddScreen")
+                        },
                         colors = ButtonDefaults.textButtonColors(
-                            containerColor = Color(0xFFE8F5E9)
+                            contentColor = Color(0xFF1565C0)
                         ),
-                        shape = RoundedCornerShape(10.dp)
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .background(
+                                Color(0xFFE3F2FD),
+                                RoundedCornerShape(30.dp)
+                            )
+                            .height(35.dp)
                     ) {
                         Text(
-                            "Thêm thuốc mới",
-                            color = Color(0xFF00C853),
-                            fontWeight = FontWeight.SemiBold
+                            "Thêm thuốc",
+                            fontWeight = FontWeight.Bold
                         )
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
-                )
+                }
             )
         }
     ) { padding ->
 
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
-                .padding(12.dp)
+                .background(Color(0xFFF4F7FB))
+                .padding(16.dp),
+
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+            items(products) { product ->
 
-                items(products) { product ->
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            navController.navigate(
+                                "product_detail/${product.id}"
+                            )
+                        },
+                    shape = RoundedCornerShape(16.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.White
+                    ),
+                    elevation = CardDefaults.cardElevation(0.dp)
+                ) {
 
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color.White, RoundedCornerShape(14.dp))
-                            .padding(12.dp)
+                    Row(
+                        modifier = Modifier.padding(14.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
 
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically
+                        AsyncImage(
+                            model = product.images.firstOrNull(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(64.dp)
+                                .padding(end = 12.dp)
+                        )
+
+                        Column(
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
 
-                            AsyncImage(
-                                model = product.images.firstOrNull(),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(60.dp)
-                                    .padding(end = 10.dp)
+                            Text(
+                                text = product.name,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
 
-                            Column(modifier = Modifier.weight(1f)) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
 
                                 Text(
-                                    text = product.name,
-                                    fontWeight = FontWeight.Bold,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    text = "Giá:",
+                                    color = Color.Gray,
+                                    fontWeight = FontWeight.Normal
                                 )
+                                Spacer(modifier = Modifier.width(6.dp))
 
-                                Text("Cách dùng: ${product.usage}")
+                                Text(
+                                    text = "${currency.format(product.price)} đ",
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Bold
+                                )
                             }
                         }
-                        Spacer(Modifier.height(8.dp))
 
-                        Box(
-                            modifier = Modifier
-                                .align(Alignment.End)
-                                .background(
-                                    color = Color(0xFFE3F2FD),
-                                    shape = RoundedCornerShape(10.dp)
-                                )
-                                .clickable {
-                                    navController.navigate("product_detail/${product.id}")
-                                }
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                        ) {
-                            Text(
-                                text = "Chi tiết",
-                                color = Color(0xFF0D47A1),
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                        Icon(
+                            imageVector = Icons.Default.ChevronRight,
+                            contentDescription = null,
+                            tint = Color.Gray
+                        )
                     }
                 }
             }
