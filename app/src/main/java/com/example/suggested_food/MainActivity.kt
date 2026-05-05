@@ -227,6 +227,7 @@ fun AppNavigation(
         composable("import_detail/{receiptId}") { backStack ->
             val id = backStack.arguments?.getString("receiptId") ?: ""
             ImportDetailScreen(
+                navController= navController,
                 receiptId = id,
                 viewModel = importViewModel
             )
@@ -235,6 +236,7 @@ fun AppNavigation(
             val id = backStack.arguments?.getString("receiptId") ?: ""
             ExportDetailScreen(
                 receiptId = id,
+                navController = navController,
                 viewModel = exportViewModel
             )
         }

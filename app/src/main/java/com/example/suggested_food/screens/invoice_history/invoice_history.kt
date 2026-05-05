@@ -89,7 +89,7 @@ fun InvoiceHistoryScreen(
                                 .height(42.dp)
                                 .background(
                                     if (selected)
-                                        Color(0xFF1E88E5)
+                                        Color.Black
                                     else
                                         Color.Transparent,
                                     RoundedCornerShape(50)

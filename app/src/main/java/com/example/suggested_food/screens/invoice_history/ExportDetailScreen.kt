@@ -3,25 +3,31 @@ package com.example.suggested_food.screens.invoice_history
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.suggested_food.viewmodel.ExportViewModel
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExportDetailScreen(
+    navController: NavController,
     receiptId: String,
     viewModel: ExportViewModel
 ) {
-
     val receipt by viewModel.selectedReceipt.collectAsState()
     val loading by viewModel.loading.collectAsState()
 
@@ -35,66 +41,144 @@ fun ExportDetailScreen(
     val formatter =
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-    if (loading || receipt == null) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+    Scaffold(
+        containerColor = Color.White,
+
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White
+                ),
+                title = {
+                    Text(
+                        "Chi tiết hóa đơn",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                },
+                navigationIcon = {
+                    IconButton(
+                        onClick = { navController.popBackStack() }
+                    ) {
+                        Icon(
+                            Icons.Default.ArrowBack,
+                            contentDescription = null,
+                            tint = Color.Black
+                        )
+                    }
+                },
+
+                actions = {
+                    TextButton(
+                        onClick = {
+
+                        },
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = Color(0xFFE65100)
+                        ),
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .background(
+                                Color(0xFFFFE0B2),
+                                RoundedCornerShape(50.dp)
+                            )
+                            .height(33.dp)
+                    ) {
+                        Text(
+                            "Xuất PDF",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+            )
         }
-        return
-    }
+    ) { padding ->
 
-    val data = receipt!!
+        if (loading || receipt == null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(padding),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+            return@Scaffold
+        }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFF4F7FB))
-            .verticalScroll(rememberScrollState())
-            .padding(20.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
-    ) {
+        val data = receipt!!
 
-        Text(
-            "Chi tiết hóa đơn xuất",
-            style = MaterialTheme.typography.headlineSmall,
-            fontWeight = FontWeight.Bold
-        )
+        Column(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .background(Color(0xFFF4F7FB))
+                .verticalScroll(rememberScrollState())
+                .padding(16.dp)
+        ) {
 
-        Item("ID hóa đơn", data.id)
-        Item("Người xuất", data.user)
-        Item("Tên sản phẩm", data.productName)
-        Item("Số lượng", data.quantity.toString())
-        Item("Giá xuất", "${currency.format(data.price)} đ")
-        Item("Tổng tiền", "${currency.format(data.totalPrice)} đ")
-        Item("Khách hàng", data.customer)
-        Item("Lô hàng", data.lot)
-        Item("Hạn sử dụng", data.expiryDate)
-        Item(
-            "Ngày xuất",
-            formatter.format(Date(data.date))
-        )
-        DetailItem("Product ID", data.productId)
-    }
-}
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(16.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = Color.White
+                )
+            ) {
 
-@Composable
-fun Item(
-    label: String,
-    value: String
-) {
-    Column {
-        Text(
-            text = label,
-            color = Color.Gray,
-            style = MaterialTheme.typography.labelMedium
-        )
+                Column(
+                    modifier = Modifier.padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
 
-        Text(
-            text = value.ifEmpty { "-" },
-            fontWeight = FontWeight.SemiBold,
-            style = MaterialTheme.typography.bodyLarge
-        )
+                    Text(
+                        text = "HÓA ĐƠN XUẤT",
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(Modifier.height(22.dp))
+                    Divider()
+
+                    InvoiceRow("Mã số phiếu", data.id)
+                    InvoiceRow("Người xuất", data.user)
+                    InvoiceRow(
+                        "Ngày",
+                        formatter.format(Date(data.date))
+                    )
+                    Divider()
+
+                    InvoiceRow("Sản phẩm", data.productName)
+
+                    InvoiceRow(
+                        "Số lượng",
+                        data.quantity.toString()
+                    )
+                    Divider()
+
+                    InvoiceRow2Col(
+                        "Lô", data.lot,
+                        "HSD", data.expiryDate
+                    )
+
+                    InvoiceRow(
+                        "Khách hàng",
+                        data.customer
+                    )
+                    Divider()
+
+                    InvoiceRow(
+                        "Giá xuất",
+                        "${currency.format(data.price)} đ"
+                    )
+
+                    InvoiceRow(
+                        "Tổng tiền",
+                        "${currency.format(data.totalPrice)} đ"
+                    )
+                }
+            }
+        }
     }
 }
