@@ -27,9 +27,9 @@ fun StockListSection(products: List<ProductModel>) {
         items(products) { item ->
 
             val statusColor = when {
-                item.stock == 0 -> Color(0xFFC62828)
-                item.stock <= 10 -> Color(0xFFF9A825)
-                else -> Color(0xFF2E7D32)
+                item.stock == 0 -> Color(0xFFFF5A5F)
+                item.stock <= 10 -> Color(0xFFFFB020)
+                else -> Color(0xFF22C55E)
             }
 
             val statusText = when {
@@ -37,7 +37,6 @@ fun StockListSection(products: List<ProductModel>) {
                 item.stock <= 10 -> "Sắp hết"
                 else -> "Còn hàng"
             }
-
             val statusBg = statusColor.copy(alpha = 0.12f)
 
             Card(

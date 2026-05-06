@@ -22,6 +22,21 @@ class ExportViewModel : ViewModel() {
     val selectedReceipt: StateFlow<ExportReceipt?> =
         _selectedReceipt
 
+    private val _exportList = MutableStateFlow<List<ExportReceipt>>(emptyList())
+    val exportList: StateFlow<List<ExportReceipt>> = _exportList
+
+    fun loadAllExports() {
+        db.collection("export_receipts")
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot != null) {
+                    _exportList.value =
+                        snapshot.documents.mapNotNull {
+                            it.toObject(ExportReceipt::class.java)
+                        }
+                }
+            }
+    }
+
     fun saveExportReceipt(receipt: ExportReceipt) {
 
         _loading.value = true

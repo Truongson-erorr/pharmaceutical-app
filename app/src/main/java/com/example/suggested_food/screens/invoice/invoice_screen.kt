@@ -1,7 +1,9 @@
 package com.example.suggested_food.screens.invoice
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowForwardIos
@@ -46,28 +48,34 @@ fun InvoiceScreen(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
+                .background(Color(0xFFF6F7F9))
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
             InvoiceActionCard(
                 title = "Nhập thuốc",
-                desc = "Tạo phiếu nhập kho"
+                desc = "Tạo phiếu nhập kho",
+                borderColor = Color(0xFF10B981),
+                backgroundColor = Color(0xFFD1FAE5)
             ) {
                 navController.navigate("ImportStockScreen")
             }
 
             InvoiceActionCard(
                 title = "Xuất thuốc",
-                desc = "Tạo phiếu xuất kho"
+                desc = "Tạo phiếu xuất kho",
+                borderColor = Color(0xFFF97316),
+                backgroundColor = Color(0xFFFFEDD5)
             ) {
                 navController.navigate("ExportStockScreen")
             }
 
             InvoiceActionCard(
                 title = "Lịch sử nhập / xuất",
-                desc = "Xem các giao dịch đã thực hiện"
+                desc = "Xem các giao dịch đã thực hiện",
+                borderColor = Color(0xFF3B82F6),
+                backgroundColor = Color(0xFFDBEAFE)
             ) {
                 navController.navigate("InvoiceHistoryScreen")
             }
@@ -79,15 +87,20 @@ fun InvoiceScreen(
 fun InvoiceActionCard(
     title: String,
     desc: String,
+    borderColor: Color,
+    backgroundColor: Color,
     onClick: () -> Unit
 ) {
+
     Card(
         onClick = onClick,
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
         elevation = CardDefaults.cardElevation(0.dp),
-        shape = MaterialTheme.shapes.large
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = backgroundColor
+        ),
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
 
         Row(
@@ -102,21 +115,21 @@ fun InvoiceActionCard(
             ) {
                 Text(
                     title,
-                    fontWeight = FontWeight.Bold
+                    fontWeight = FontWeight.Bold,
+                    color = borderColor
                 )
-
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
                     desc,
-                    color = Color.Gray
+                    color = borderColor.copy(alpha = 0.8f)
                 )
             }
 
             Icon(
                 Icons.Default.ArrowForwardIos,
                 contentDescription = null,
-                tint = Color.Gray
+                tint = borderColor
             )
         }
     }

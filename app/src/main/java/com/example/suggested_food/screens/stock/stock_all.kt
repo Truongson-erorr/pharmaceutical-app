@@ -160,9 +160,9 @@ fun StockAllScreen(
             items(filteredProducts) { item ->
 
                 val statusColor = when {
-                    item.stock == 0 -> Color(0xFFC62828)
-                    item.stock <= 10 -> Color(0xFFF9A825)
-                    else -> Color(0xFF2E7D32)
+                    item.stock == 0 -> Color(0xFFFF5A5F)
+                    item.stock <= 10 -> Color(0xFFFFB020)
+                    else -> Color(0xFF22C55E)
                 }
 
                 val statusText = when {

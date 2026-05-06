@@ -7,6 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +21,7 @@ import com.example.suggested_food.viewmodel.ExportViewModel
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,6 +43,8 @@ fun ExportDetailScreen(
     val formatter =
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
+    val context = androidx.compose.ui.platform.LocalContext.current
+
     Scaffold(
         containerColor = Color.White,
 
@@ -61,7 +65,7 @@ fun ExportDetailScreen(
                         onClick = { navController.popBackStack() }
                     ) {
                         Icon(
-                            Icons.Default.ArrowBack,
+                            Icons.Default.ArrowBackIosNew,
                             contentDescription = null,
                             tint = Color.Black
                         )
@@ -71,7 +75,21 @@ fun ExportDetailScreen(
                 actions = {
                     TextButton(
                         onClick = {
+                            receipt?.let { data ->
 
+                                kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+
+                                    val file = ExportHistoryPdfExporter.export(context, data)
+                                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+
+                                        android.widget.Toast.makeText(
+                                            context,
+                                            "Đã tạo PDF: ${file.name}",
+                                            android.widget.Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            }
                         },
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = Color(0xFFE65100)
@@ -112,7 +130,7 @@ fun ExportDetailScreen(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFF4F7FB))
+                .background(Color(0xFFF5F5F5))
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {

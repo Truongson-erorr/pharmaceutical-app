@@ -2,24 +2,70 @@ package com.example.suggested_food.screens.invoice
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.suggested_food.viewmodel.ExportViewModel
+import com.example.suggested_food.viewmodel.ImportViewModel
+import java.text.NumberFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InvoiceDashboardScreen(
     navController: NavController
 ) {
+    val exportViewModel: ExportViewModel = viewModel()
+    val importViewModel: ImportViewModel = viewModel()
+
+    val exports by exportViewModel.exportList.collectAsState()
+    val imports by importViewModel.importList.collectAsState()
+
+    val currency = NumberFormat.getInstance(Locale("vi", "VN"))
+
+    LaunchedEffect(Unit) {
+        exportViewModel.loadAllExports()
+        importViewModel.loadAllImports()
+    }
+
+    val importCount = imports.size.toString()
+    val exportCount = exports.size.toString()
+
+    val today = System.currentTimeMillis()
+    val oneDay = 24 * 60 * 60 * 1000
+
+    val todayCount = exports.count {
+        it.date >= today - oneDay
+    }.toString()
+
+    val totalMoney = currency.format(
+        (exports.sumOf { it.totalPrice } +
+                imports.sumOf { it.totalPrice })
+    ) + " đ"
+
+    val recentActivity = remember(exports, imports) {
+        (exports.map {
+            Triple("EXPORT", it.productName, it.quantity)
+        } + imports.map {
+            Triple("IMPORT", it.productName, it.quantity)
+        })
+            .takeLast(6)
+            .reversed()
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -27,9 +73,7 @@ fun InvoiceDashboardScreen(
                     Text("Quản lý hóa đơn", fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBackIosNew, null)
                     }
                 },
@@ -41,73 +85,153 @@ fun InvoiceDashboardScreen(
 
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    navController.navigate("InvoiceScreen")
-                },
-                containerColor = Color.Black
+                onClick = { navController.navigate("InvoiceScreen") },
+                containerColor = Color(0xFF111827)
             ) {
-                Icon(Icons.Default.Add, null, tint = Color.White)
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(Icons.Default.Add, null, tint = Color.White)
+                    Spacer(modifier = Modifier.width(6.dp))
+                    Text("Tạo hóa đơn", color = Color.White, fontWeight = FontWeight.Bold)
+                }
             }
         }
     ) { padding ->
-
         Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFF6F7FB))
+                .background(Color(0xFFF5F5F5))
+                .verticalScroll(rememberScrollState())
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
 
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+            Text(
+                text = "Tổng quan hệ thống",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                fontSize = 15.sp,
+                color = Color(0xFF111827)
+            )
+
+            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 DashboardCard(
-                    "Phiếu nhập",
-                    "25",
-                    Icons.Default.Inventory,
-                    Color(0xFFE3F2FD),
-                    Color(0xFF1E88E5),
+                    "Phiếu nhập", importCount, Icons.Default.Inventory,
+                    listOf(Color(0xFFFEE140), Color(0xFFFA709A)),
                     Modifier.weight(1f)
                 )
 
                 DashboardCard(
-                    "Phiếu xuất",
-                    "18",
-                    Icons.Default.LocalShipping,
-                    Color(0xFFFFF3E0),
-                    Color(0xFFFB8C00),
+                    "Phiếu xuất", exportCount, Icons.Default.LocalShipping,
+                    listOf(Color(0xFFF093FB), Color(0xFFF5576C)),
                     Modifier.weight(1f)
                 )
             }
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 DashboardCard(
-                    "Hôm nay",
-                    "6",
-                    Icons.Default.Today,
-                    Color(0xFFE8F5E9),
-                    Color(0xFF43A047),
+                    "Hôm nay", todayCount, Icons.Default.Today,
+                    listOf(Color(0xFF00F2FE), Color(0xFF4FACFE)),
                     Modifier.weight(1f)
                 )
 
                 DashboardCard(
-                    "Tổng tiền",
-                    "5.200.000đ",
-                    Icons.Default.AttachMoney,
-                    Color(0xFFF3E5F5),
-                    Color(0xFF8E24AA),
+                    "Tổng tiền", totalMoney, Icons.Default.AttachMoney,
+                    listOf(Color(0xFF4FACFE), Color(0xFF6A11CB)),
                     Modifier.weight(1f)
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
             Text(
-                "Nhấn + để tạo hóa đơn mới",
-                color = Color.Gray
+                "Hoạt động gần đây",
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF111827)
             )
+
+            Column(
+                verticalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                recentActivity.forEach { (type, name, qty) ->
+
+                    val (icon, color) = if (type == "EXPORT") {
+                        Icons.Default.LocalShipping to Color(0xFF4FC3F7) // xanh nước nhạt
+                    } else {
+                        Icons.Default.Inventory to Color(0xFF4FC3F7) // cùng màu cho đồng bộ
+                    }
+
+                    Card(
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(containerColor = Color.White),
+                        elevation = CardDefaults.cardElevation(0.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(14.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = name,
+                                    fontWeight = FontWeight.SemiBold,
+                                    color = Color(0xFF111827)
+                                )
+
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+
+                                    val (statusText, textColor, bgColor) =
+                                        if (type == "EXPORT") {
+                                            Triple(
+                                                "Xuất kho",
+                                                Color(0xFFF59E0B),
+                                                Color(0xFFFFF7D6)
+                                            )
+                                        } else {
+                                            Triple(
+                                                "Nhập kho",
+                                                Color(0xFF7C3AED),
+                                                Color(0xFFEDE9FE)
+                                            )
+                                        }
+
+                                    Box(
+                                        modifier = Modifier
+                                            .background(bgColor, RoundedCornerShape(8.dp))
+                                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    ) {
+                                        Text(
+                                            text = statusText,
+                                            color = textColor,
+                                            fontWeight = FontWeight.Medium,
+                                            style = MaterialTheme.typography.bodySmall
+                                        )
+                                    }
+                                    Spacer(modifier = Modifier.width(8.dp))
+
+                                    Text(
+                                        text = "Số lượng: $qty",
+                                        color = Color.Black,
+                                        style = MaterialTheme.typography.bodySmall
+                                    )
+                                }
+                            }
+
+                            Icon(
+                                Icons.Default.ChevronRight,
+                                contentDescription = null,
+                                tint = Color.LightGray
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
 }
@@ -117,51 +241,52 @@ fun DashboardCard(
     title: String,
     value: String,
     icon: ImageVector,
-    bgColor: Color,
-    iconColor: Color,
+    colors: List<Color>,
     modifier: Modifier = Modifier
 ) {
     Card(
-        modifier = modifier.height(120.dp),
-        shape = RoundedCornerShape(18.dp),
-        elevation = CardDefaults.cardElevation(6.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        modifier = modifier.height(130.dp),
+        shape = RoundedCornerShape(22.dp),
+        elevation = CardDefaults.cardElevation(0.dp)
     ) {
-
         Box(
             modifier = Modifier
                 .fillMaxSize()
+                .background(Brush.linearGradient(colors))
                 .padding(16.dp)
         ) {
+
+            Text(
+                text = title,
+                color = Color.White.copy(alpha = 0.9f),
+                modifier = Modifier.align(Alignment.TopStart)
+            )
+
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .size(40.dp)
-                    .background(bgColor, RoundedCornerShape(10.dp)),
+                    .size(44.dp)
+                    .background(
+                        Color.White.copy(alpha = 0.25f),
+                        RoundedCornerShape(12.dp)
+                    ),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     icon,
                     contentDescription = null,
-                    tint = iconColor,
+                    tint = Color.White,
                     modifier = Modifier.size(22.dp)
                 )
             }
 
-            Column(
-                modifier = Modifier.align(Alignment.BottomStart),
-                verticalArrangement = Arrangement.spacedBy(6.dp)
-            ) {
-                Text(
-                    title,
-                    color = Color.Gray
-                )
-                Text(
-                    value,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.headlineSmall
-                )
-            }
+            Text(
+                text = value,
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.align(Alignment.BottomStart)
+            )
         }
     }
 }
