@@ -150,12 +150,11 @@ fun StockAllScreen(
 
                 val statusBg = statusColor.copy(alpha = 0.12f)
 
-                // ===== HSD COLOR LOGIC =====
                 val expiryColor = when {
                     item.expiryDate.isBlank() -> Color.Gray
-                    item.expiryDate < today -> Color(0xFFFF5A5F)   // hết hạn
-                    item.expiryDate <= "2026-06-01" -> Color(0xFFFFB020) // sắp hết hạn
-                    else -> Color(0xFF22C55E) // còn hạn
+                    item.expiryDate < today -> Color(0xFFFF5A5F)
+                    item.expiryDate <= "2026-06-01" -> Color(0xFFFFB020)
+                    else -> Color(0xFF22C55E)
                 }
 
                 val expiryBg = expiryColor.copy(alpha = 0.12f)
@@ -172,7 +171,6 @@ fun StockAllScreen(
                             .padding(14.dp)
                     ) {
 
-                        // STATUS STOCK
                         Box(
                             modifier = Modifier
                                 .align(Alignment.TopEnd)
@@ -199,7 +197,6 @@ fun StockAllScreen(
                                 contentDescription = null,
                                 modifier = Modifier.size(44.dp)
                             )
-
                             Spacer(Modifier.width(12.dp))
 
                             Column(
@@ -214,7 +211,6 @@ fun StockAllScreen(
                                     color = Color.Gray
                                 )
 
-                                // ===== HSD UI =====
                                 if (item.expiryDate.isNotBlank()) {
                                     Box(
                                         modifier = Modifier

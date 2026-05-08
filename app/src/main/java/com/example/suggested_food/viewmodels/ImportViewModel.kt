@@ -13,16 +13,18 @@ class ImportViewModel : ViewModel() {
     private val _saveState = MutableStateFlow<Boolean?>(null)
     val saveState: StateFlow<Boolean?> = _saveState
 
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
+
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
 
     private val _selectedReceipt =
         MutableStateFlow<ImportReceipt?>(null)
+    val selectedReceipt: StateFlow<ImportReceipt?> = _selectedReceipt
 
-    val selectedReceipt: StateFlow<ImportReceipt?> =
-        _selectedReceipt
-
-    private val _importList = MutableStateFlow<List<ImportReceipt>>(emptyList())
+    private val _importList =
+        MutableStateFlow<List<ImportReceipt>>(emptyList())
     val importList: StateFlow<List<ImportReceipt>> = _importList
 
     fun loadAllImports() {
@@ -40,14 +42,14 @@ class ImportViewModel : ViewModel() {
     fun saveImportReceipt(receipt: ImportReceipt) {
 
         _loading.value = true
+        _errorMessage.value = null
+        _saveState.value = null
 
         val productRef =
-            db.collection("products")
-                .document(receipt.productId)
+            db.collection("products").document(receipt.productId)
 
         val importRef =
-            db.collection("import_receipts")
-                .document(receipt.id)
+            db.collection("import_receipts").document(receipt.id)
 
         db.runTransaction { transaction ->
 
@@ -59,7 +61,6 @@ class ImportViewModel : ViewModel() {
             val newStock = currentStock + receipt.quantity
 
             transaction.update(productRef, "stock", newStock)
-
             transaction.set(importRef, receipt)
 
         }.addOnSuccessListener {
@@ -67,7 +68,7 @@ class ImportViewModel : ViewModel() {
             _saveState.value = true
         }.addOnFailureListener {
             _loading.value = false
-            _saveState.value = false
+            _errorMessage.value = it.message ?: "Có lỗi xảy ra"
         }
     }
 
@@ -87,6 +88,12 @@ class ImportViewModel : ViewModel() {
             }
             .addOnFailureListener {
                 _loading.value = false
+                _errorMessage.value = it.message
             }
+    }
+
+    fun clearState() {
+        _saveState.value = null
+        _errorMessage.value = null
     }
 }

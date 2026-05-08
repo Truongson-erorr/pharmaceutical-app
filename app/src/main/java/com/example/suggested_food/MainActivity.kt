@@ -46,6 +46,7 @@ import com.example.suggested_food.screens.import_receipt.ImportStockScreen
 import com.example.suggested_food.screens.invoice_history.ExportDetailScreen
 import com.example.suggested_food.screens.invoice_history.ImportDetailScreen
 import com.example.suggested_food.screens.invoice_history.InvoiceHistoryScreen
+import com.example.suggested_food.screens.notifications.NotificationScreen
 import com.example.suggested_food.screens.stock.StockAllScreen
 import com.example.suggested_food.screens.stock.StockScreen
 import com.example.suggested_food.screens.suggest.SuggestScreen
@@ -239,6 +240,9 @@ fun AppNavigation(
                 navController = navController,
                 viewModel = exportViewModel
             )
+        }
+        composable("NotificationScreen") {
+            NotificationScreen(navController)
         }
     }
 }

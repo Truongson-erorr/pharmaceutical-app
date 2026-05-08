@@ -9,21 +9,29 @@ import kotlinx.coroutines.flow.StateFlow
 class ExportViewModel : ViewModel() {
 
     private val db = FirebaseFirestore.getInstance()
-
     private val _saveState = MutableStateFlow<Boolean?>(null)
     val saveState: StateFlow<Boolean?> = _saveState
 
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
 
-    private val _selectedReceipt =
-        MutableStateFlow<ExportReceipt?>(null)
+    private val _errorMessage = MutableStateFlow<String?>(null)
+    val errorMessage: StateFlow<String?> = _errorMessage
 
-    val selectedReceipt: StateFlow<ExportReceipt?> =
-        _selectedReceipt
+    private val _selectedReceipt = MutableStateFlow<ExportReceipt?>(null)
+    val selectedReceipt: StateFlow<ExportReceipt?> = _selectedReceipt
 
     private val _exportList = MutableStateFlow<List<ExportReceipt>>(emptyList())
     val exportList: StateFlow<List<ExportReceipt>> = _exportList
+
+    fun clearState() {
+        _saveState.value = null
+        _errorMessage.value = null
+    }
+
+    fun clearError() {
+        _errorMessage.value = null
+    }
 
     fun loadAllExports() {
         db.collection("export_receipts")
@@ -40,6 +48,20 @@ class ExportViewModel : ViewModel() {
     fun saveExportReceipt(receipt: ExportReceipt) {
 
         _loading.value = true
+        _errorMessage.value = null
+        _saveState.value = null
+
+        if (receipt.quantity <= 0) {
+            _loading.value = false
+            _errorMessage.value = "Số lượng xuất phải lớn hơn 0"
+            return
+        }
+
+        if (receipt.productId.isBlank()) {
+            _loading.value = false
+            _errorMessage.value = "Vui lòng chọn thuốc"
+            return
+        }
 
         val productRef =
             db.collection("products").document(receipt.productId)
@@ -55,7 +77,7 @@ class ExportViewModel : ViewModel() {
                 snapshot.getLong("stock")?.toInt() ?: 0
 
             if (receipt.quantity > currentStock) {
-                throw Exception("Không đủ tồn kho")
+                throw Exception("Không đủ tồn kho để xuất")
             }
 
             val newStock = currentStock - receipt.quantity
@@ -66,15 +88,17 @@ class ExportViewModel : ViewModel() {
         }.addOnSuccessListener {
             _loading.value = false
             _saveState.value = true
-        }.addOnFailureListener {
+        }.addOnFailureListener { e ->
             _loading.value = false
             _saveState.value = false
+            _errorMessage.value = e.message ?: "Có lỗi xảy ra"
         }
     }
 
     fun loadExportReceipt(receiptId: String) {
 
         _loading.value = true
+        _errorMessage.value = null
 
         db.collection("export_receipts")
             .document(receiptId)
@@ -86,8 +110,9 @@ class ExportViewModel : ViewModel() {
 
                 _loading.value = false
             }
-            .addOnFailureListener {
+            .addOnFailureListener { e ->
                 _loading.value = false
+                _errorMessage.value = e.message
             }
     }
 }

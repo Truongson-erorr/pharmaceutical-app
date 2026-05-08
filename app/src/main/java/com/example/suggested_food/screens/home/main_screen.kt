@@ -249,7 +249,7 @@ fun MainScreen(
 
                             IconButton(
                                 onClick = {
-                                    scope.launch { drawerState.open() }
+                                    navController.navigate("NotificationScreen")
                                 }
                             ) {
                                 Icon(
