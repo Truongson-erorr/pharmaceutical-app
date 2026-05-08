@@ -7,7 +7,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.PictureAsPdf
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodel.ImportViewModel
+import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,68 +32,92 @@ fun ImportDetailScreen(
 ) {
     val receipt by viewModel.selectedReceipt.collectAsState()
     val loading by viewModel.loading.collectAsState()
+    val context = androidx.compose.ui.platform.LocalContext.current
 
     LaunchedEffect(receiptId) {
         viewModel.loadImportReceipt(receiptId)
     }
 
-    val currency =
-        NumberFormat.getInstance(Locale("vi", "VN"))
-
-    val formatter =
-        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    val currency = NumberFormat.getInstance(Locale("vi", "VN"))
+    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     Scaffold(
         containerColor = Color.White,
-
-            topBar = {
-                TopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Color.White
-                    ),
-                    title = {
-                        Text(
-                            "Chi tiết hóa đơn",
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White
+                ),
+                title = {
+                    Text(
+                        "Chi tiết hóa đơn",
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            Icons.Default.ArrowBackIosNew,
+                            contentDescription = null,
+                            tint = Color.Black
                         )
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = { navController.popBackStack() }
-                        ) {
-                            Icon(
-                                Icons.Default.ArrowBack,
-                                contentDescription = null,
-                                tint = Color.Black
-                            )
-                        }
-                    },
-
-                    actions = {
-                        TextButton(
-                            onClick = {
-
-                            },
-                            colors = ButtonDefaults.textButtonColors(
-                                contentColor = Color(0xFF1565C0)
-                            ),
-                            modifier = Modifier
-                                .padding(end = 8.dp)
-                                .background(
-                                    color = Color(0xFFE3F2FD),
-                                    shape = RoundedCornerShape(30.dp)
-                                )
-                                .height(35.dp)
-                        ) {
-                            Text(
-                                text = "Xuất PDF",
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
                     }
-                )
-            }
+                },
+                actions = {
+                    TextButton(
+                        onClick = {
+                            receipt?.let { data ->
+
+                                kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
+
+                                    val file = ImportReceiptPdfExporter.export(context, data)
+                                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+
+                                        try {
+                                            val uri = androidx.core.content.FileProvider.getUriForFile(
+                                                context,
+                                                context.packageName + ".provider",
+                                                file
+                                            )
+
+                                            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                                                setDataAndType(uri, "application/pdf")
+                                                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                                addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            }
+
+                                            context.startActivity(intent)
+
+                                        } catch (e: Exception) {
+
+                                            android.widget.Toast.makeText(
+                                                context,
+                                                "Không mở được PDF",
+                                                android.widget.Toast.LENGTH_SHORT
+                                            ).show()
+
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        colors = ButtonDefaults.textButtonColors(
+                            contentColor = Color(0xFF1565C0)
+                        ),
+                        modifier = Modifier
+                            .padding(end = 8.dp)
+                            .background(
+                                color = Color(0xFFE3F2FD),
+                                shape = RoundedCornerShape(30.dp)
+                            )
+                            .height(35.dp)
+                    ) {
+                        Text("Xuất PDF", fontWeight = FontWeight.Bold)
+                    }
+                }
+            )
+        }
     ) { padding ->
 
         if (loading || receipt == null) {
@@ -106,14 +131,13 @@ fun ImportDetailScreen(
             }
             return@Scaffold
         }
-
         val data = receipt!!
 
         Column(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFF4F7FB))
+                .background(Color(0xFFF5F5F5))
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp)
         ) {
@@ -139,7 +163,6 @@ fun ImportDetailScreen(
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(22.dp))
-
                     Divider()
 
                     InvoiceRow("Mã số phiếu", data.id)
@@ -194,11 +217,9 @@ fun InvoiceRow(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-
         Text(
             text = label,
-            color = Color.Gray,
-            fontWeight = FontWeight.Normal
+            color = Color.Gray
         )
 
         Text(
@@ -217,7 +238,6 @@ fun InvoiceRow2Col(
     value2: String
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-
         InvoiceRow(label1, value1)
         InvoiceRow(label2, value2)
     }

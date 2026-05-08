@@ -22,6 +22,21 @@ class ImportViewModel : ViewModel() {
     val selectedReceipt: StateFlow<ImportReceipt?> =
         _selectedReceipt
 
+    private val _importList = MutableStateFlow<List<ImportReceipt>>(emptyList())
+    val importList: StateFlow<List<ImportReceipt>> = _importList
+
+    fun loadAllImports() {
+        db.collection("import_receipts")
+            .addSnapshotListener { snapshot, _ ->
+                if (snapshot != null) {
+                    _importList.value =
+                        snapshot.documents.mapNotNull {
+                            it.toObject(ImportReceipt::class.java)
+                        }
+                }
+            }
+    }
+
     fun saveImportReceipt(receipt: ImportReceipt) {
 
         _loading.value = true

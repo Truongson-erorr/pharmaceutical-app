@@ -6,11 +6,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.filled.Inventory
+import androidx.compose.material.icons.filled.Medication
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -67,18 +72,19 @@ fun StockScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     StatCard(
-                        title = "Tổng số lượng thuốc",
-                        value = products.size.toString(),
-                        mainColor = Color(0xFF1976D2),
-                        modifier = Modifier.weight(1f)
+                        "Số lượng thuốc",
+                        products.size.toString(),
+                        listOf(Color(0xFF43E97B), Color(0xFF38F9D7)), // xanh lá mint
+                        Modifier.weight(1f)
                     )
 
                     StatCard(
-                        title = "Tổng số lượng tồn",
-                        value = totalStock.toString(),
-                        mainColor = Color(0xFF7B1FA2),
-                        modifier = Modifier.weight(1f)
+                        "Số lượng tồn",
+                        totalStock.toString(),
+                        listOf(Color(0xFF4FACFE), Color(0xFF6A11CB)), // xanh → tím
+                        Modifier.weight(1f)
                     )
+
                 }
 
                 Row(
@@ -86,17 +92,17 @@ fun StockScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     StatCard(
-                        title = "Thuốc sắp hết",
-                        value = lowStock.size.toString(),
-                        mainColor = Color(0xFFF9A825),
-                        modifier = Modifier.weight(1f)
+                        "Thuốc sắp hết",
+                        lowStock.size.toString(),
+                        listOf(Color(0xFFF6D365), Color(0xFFFDA085)), // vàng cam
+                        Modifier.weight(1f)
                     )
 
                     StatCard(
-                        title = "Hết hàng",
-                        value = outStock.size.toString(),
-                        mainColor = Color(0xFFC62828),
-                        modifier = Modifier.weight(1f)
+                        "Hết hàng",
+                        outStock.size.toString(),
+                        listOf(Color(0xFFFF758C), Color(0xFFFF7EB3)), // đỏ hồng modern
+                        Modifier.weight(1f)
                     )
                 }
             }
@@ -144,47 +150,62 @@ fun StockScreen(
 fun StatCard(
     title: String,
     value: String,
-    mainColor: Color,
+    colors: List<Color>,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier.height(100.dp),
-        shape = RoundedCornerShape(18.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.Transparent
-        ),
+    val icon = when (title) {
+        "Số lượng thuốc" -> Icons.Default.Medication
+        "Số lượng tồn" -> Icons.Default.Inventory
+        "Thuốc sắp hết" -> Icons.Default.Warning
+        "Hết hàng" -> Icons.Default.Error
+        else -> Icons.Default.Inventory
+    }
 
+    Card(
+        modifier = modifier.height(120.dp),
+        shape = RoundedCornerShape(22.dp),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
 
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    color = mainColor.copy(alpha = 0.12f),
-                    shape = RoundedCornerShape(18.dp)
-                )
-                .padding(14.dp)
+                .background(Brush.linearGradient(colors))
+                .padding(16.dp)
         ) {
 
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween
+            Text(
+                text = title,
+                modifier = Modifier.align(Alignment.TopStart),
+                color = Color.White.copy(alpha = 0.9f),
+                fontWeight = FontWeight.Medium
+            )
+
+            Box(
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .size(44.dp)
+                    .background(
+                        Color.White.copy(alpha = 0.25f),
+                        RoundedCornerShape(12.dp)
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-
-                Text(
-                    text = title,
-                    color = mainColor,
-                    fontWeight = FontWeight.SemiBold
-                )
-
-                Text(
-                    text = value,
-                    color = mainColor,
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.headlineSmall
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(22.dp)
                 )
             }
+
+            Text(
+                text = value,
+                modifier = Modifier.align(Alignment.BottomStart),
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                style = MaterialTheme.typography.headlineMedium
+            )
         }
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
@@ -62,31 +63,30 @@ fun InventoryScreen(
                             tint = Color.Black
                         )
                     }
-                },
-                actions = {
-                    TextButton(
-                        onClick = {
-                            navController.navigate("InventoryAddScreen")
-                        },
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = Color(0xFF1565C0)
-                        ),
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .background(
-                                Color(0xFFE3F2FD),
-                                RoundedCornerShape(30.dp)
-                            )
-                            .height(35.dp)
-                    ) {
-                        Text(
-                            "Thêm thuốc",
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
                 }
             )
-        }
+        },
+
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = {
+                    navController.navigate("InventoryAddScreen")
+                },
+                containerColor = Color.Black,
+                contentColor = Color.White,
+                shape = RoundedCornerShape(18.dp)
+            ) {
+                Icon(Icons.Default.Add, contentDescription = null)
+                Spacer(modifier = Modifier.width(6.dp))
+                Text(
+                    "Thêm thuốc",
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        },
+
+        floatingActionButtonPosition =
+        FabPosition.End
     ) { padding ->
 
         LazyColumn(
@@ -131,7 +131,8 @@ fun InventoryScreen(
 
                         Column(
                             modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                            verticalArrangement =
+                            Arrangement.spacedBy(6.dp)
                         ) {
 
                             Text(
@@ -142,18 +143,22 @@ fun InventoryScreen(
                             )
 
                             Row(
-                                verticalAlignment = Alignment.CenterVertically
+                                verticalAlignment =
+                                Alignment.CenterVertically
                             ) {
 
                                 Text(
                                     text = "Giá:",
-                                    color = Color.Gray,
-                                    fontWeight = FontWeight.Normal
+                                    color = Color.Gray
                                 )
-                                Spacer(modifier = Modifier.width(6.dp))
+
+                                Spacer(
+                                    modifier = Modifier.width(6.dp)
+                                )
 
                                 Text(
-                                    text = "${currency.format(product.price)} đ",
+                                    text =
+                                    "${currency.format(product.price)} đ",
                                     color = Color.Black,
                                     fontWeight = FontWeight.Bold
                                 )
@@ -161,7 +166,8 @@ fun InventoryScreen(
                         }
 
                         Icon(
-                            imageVector = Icons.Default.ChevronRight,
+                            imageVector =
+                            Icons.Default.ChevronRight,
                             contentDescription = null,
                             tint = Color.Gray
                         )
