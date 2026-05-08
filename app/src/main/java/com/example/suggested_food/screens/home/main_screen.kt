@@ -226,8 +226,9 @@ fun MainScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-
                         Column {
+                            Spacer(modifier = Modifier.height(15.dp))
+
                             Text(
                                 "Hello, $displayName",
                                 fontSize = 30.sp,
@@ -236,21 +237,39 @@ fun MainScreen(
                             )
 
                             Text(
-                                "Clinical Support System",
+                                "Dành cho chuyên gia",
                                 color = Color.White.copy(alpha = 0.85f)
                             )
                         }
 
-                        IconButton(
-                            onClick = {
-                                scope.launch { drawerState.open() }
-                            }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                Icons.Default.Menu,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
+
+                            IconButton(
+                                onClick = {
+                                    scope.launch { drawerState.open() }
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Default.NotificationsNone,
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    scope.launch { drawerState.open() }
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Default.Menu,
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            }
                         }
                     }
                 }

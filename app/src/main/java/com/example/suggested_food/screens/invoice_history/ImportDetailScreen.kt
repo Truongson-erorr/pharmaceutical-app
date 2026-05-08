@@ -71,7 +71,7 @@ fun ImportDetailScreen(
 
                                 kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
 
-                                    val file = ImportReceiptPdfExporter.export(context, data)
+                                    val file = ImportReceiptCsvExporter.export(context, data)
                                     kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
 
                                         try {
@@ -82,7 +82,7 @@ fun ImportDetailScreen(
                                             )
 
                                             val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
-                                                setDataAndType(uri, "application/pdf")
+                                                setDataAndType(uri, "text/csv")
                                                 addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
                                                 addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
                                             }
@@ -93,10 +93,9 @@ fun ImportDetailScreen(
 
                                             android.widget.Toast.makeText(
                                                 context,
-                                                "Không mở được PDF",
+                                                "Không mở được file Excel",
                                                 android.widget.Toast.LENGTH_SHORT
                                             ).show()
-
                                         }
                                     }
                                 }
@@ -113,7 +112,7 @@ fun ImportDetailScreen(
                             )
                             .height(35.dp)
                     ) {
-                        Text("Xuất PDF", fontWeight = FontWeight.Bold)
+                        Text("Xuất Excel", fontWeight = FontWeight.Bold)
                     }
                 }
             )

@@ -10,7 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -19,25 +18,37 @@ import coil.compose.AsyncImage
 import com.example.suggested_food.models.ProductModel
 
 @Composable
-fun StockListSection(products: List<ProductModel>) {
-
+fun StockListSection(
+    products: List<ProductModel>
+) {
+    val today = "2026-05-08"
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         items(products) { item ->
 
-            val statusColor = when {
+            val stockColor = when {
                 item.stock == 0 -> Color(0xFFFF5A5F)
                 item.stock <= 10 -> Color(0xFFFFB020)
                 else -> Color(0xFF22C55E)
             }
 
-            val statusText = when {
+            val stockText = when {
                 item.stock == 0 -> "Hết hàng"
                 item.stock <= 10 -> "Sắp hết"
                 else -> "Còn hàng"
             }
-            val statusBg = statusColor.copy(alpha = 0.12f)
+
+            val stockBg = stockColor.copy(alpha = 0.12f)
+
+            val expiryColor = when {
+                item.expiryDate.isBlank() -> Color.Gray
+                item.expiryDate < today -> Color(0xFFFF5A5F)
+                item.expiryDate <= "2026-06-01" -> Color(0xFFFFB020)
+                else -> Color(0xFF22C55E)
+            }
+
+            val expiryBg = expiryColor.copy(alpha = 0.12f)
 
             Card(
                 modifier = Modifier.fillMaxWidth(),
@@ -51,19 +62,18 @@ fun StockListSection(products: List<ProductModel>) {
                         .fillMaxWidth()
                         .padding(14.dp)
                 ) {
-
                     Box(
                         modifier = Modifier
                             .align(Alignment.TopEnd)
                             .background(
-                                color = statusBg,
+                                color = stockBg,
                                 shape = RoundedCornerShape(10.dp)
                             )
                             .padding(horizontal = 8.dp, vertical = 4.dp)
                     ) {
                         Text(
-                            text = statusText,
-                            color = statusColor,
+                            text = stockText,
+                            color = stockColor,
                             fontSize = 11.sp,
                             fontWeight = FontWeight.Bold
                         )
@@ -86,7 +96,8 @@ fun StockListSection(products: List<ProductModel>) {
                         Spacer(modifier = Modifier.width(12.dp))
 
                         Column(
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            verticalArrangement = Arrangement.spacedBy(4.dp)
                         ) {
 
                             Text(
@@ -100,6 +111,24 @@ fun StockListSection(products: List<ProductModel>) {
                                 color = Color.Gray,
                                 fontWeight = FontWeight.SemiBold
                             )
+
+                            if (item.expiryDate.isNotBlank()) {
+                                Box(
+                                    modifier = Modifier
+                                        .background(
+                                            color = expiryBg,
+                                            shape = RoundedCornerShape(8.dp)
+                                        )
+                                        .padding(horizontal = 8.dp, vertical = 3.dp)
+                                ) {
+                                    Text(
+                                        text = "HSD: ${item.expiryDate}",
+                                        color = expiryColor,
+                                        fontSize = 11.sp,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -107,3 +136,4 @@ fun StockListSection(products: List<ProductModel>) {
         }
     }
 }
+

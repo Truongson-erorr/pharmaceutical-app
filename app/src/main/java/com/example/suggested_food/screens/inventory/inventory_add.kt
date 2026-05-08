@@ -9,7 +9,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -119,15 +119,14 @@ fun InventoryAddScreen(
                         fontWeight = FontWeight.Bold
                     )
                 }
-
-                EditField("Tên thuốc", name) { name = it }
-                EditField("Mô tả", description) { description = it }
-                EditField("Tồn kho", stock) { stock = it }
-                EditField("Giá", price) { price = it }
-                EditField("Hãng SX", manufacturer) { manufacturer = it }
-                EditField("Công dụng", usage) { usage = it }
-                EditField("Liều lượng", ingredients) { ingredients = it }
-                EditField("HSD", expiryDate) { expiryDate = it }
+                AddField("Tên thuốc", name) { name = it }
+                AddField("Mô tả", description) { description = it }
+                AddField("Tồn kho", stock) { stock = it }
+                AddField("Giá", price) { price = it }
+                AddField("Hãng SX", manufacturer) { manufacturer = it }
+                AddField("Công dụng", usage) { usage = it }
+                AddField("Liều lượng", ingredients) { ingredients = it }
+                AddField("HSD", expiryDate) { expiryDate = it }
             }
 
             Box(
@@ -139,7 +138,6 @@ fun InventoryAddScreen(
             ) {
                 Button(
                     onClick = {
-
                         val isInvalid =
                             name.isBlank() ||
                                     description.isBlank() ||
@@ -175,13 +173,13 @@ fun InventoryAddScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFE3F2FD)
+                        containerColor = Color.Black
                     ),
                     shape = RoundedCornerShape(14.dp)
                 ) {
                     Text(
                         "Thêm thuốc",
-                        color = Color(0xFF0D47A1),
+                        color = Color.White,
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -206,5 +204,45 @@ fun InventoryAddScreen(
                 }
             )
         }
+    }
+}
+
+@Composable
+fun AddField(
+    label: String,
+    value: String,
+    onChange: (String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White, RoundedCornerShape(12.dp))
+            .padding(12.dp)
+    ) {
+
+        Text(
+            text = label,
+            color = Color.Gray,
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.height(6.dp))
+
+        TextField(
+            value = value,
+            onValueChange = onChange,
+            modifier = Modifier.fillMaxWidth(),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent
+            ),
+            textStyle = LocalTextStyle.current.copy(
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold
+            )
+        )
     }
 }
