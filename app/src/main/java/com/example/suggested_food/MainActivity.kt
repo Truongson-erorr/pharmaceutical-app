@@ -33,7 +33,6 @@ import com.example.suggested_food.screens.chat_ai.ChatScreen
 import com.example.suggested_food.screens.drug_look_up.DrugLookupScreen
 import com.example.suggested_food.screens.home.MainScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
-import com.example.suggested_food.screens.profile.ProfileContent
 import com.example.suggested_food.screens.drug.AllProductScreen
 import com.example.suggested_food.screens.export_receipt.ExportStockScreen
 import com.example.suggested_food.screens.inventory.InventoryAddScreen
@@ -56,7 +55,7 @@ import com.example.suggested_food.screens.suggest.SuggestScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodel.ExportViewModel
 import com.example.suggested_food.viewmodel.ImportViewModel
-import com.example.suggested_food.viewmodel.ReminderViewModel
+import com.example.suggested_food.viewmodels.ReminderViewModel
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -138,12 +137,6 @@ fun AppNavigation(
         composable("register") {
             RegisterScreen(navController = navController)
         }
-        composable("ProfileContent") {
-            ProfileContent(
-                navController = navController,
-                authViewModel = authViewModel
-            )
-        }
         composable("AllCategoriesScreen") {
             AllCategoriesScreen(navController = navController)
         }
@@ -185,9 +178,6 @@ fun AppNavigation(
         }
         composable("SearchScreen") {
             SearchScreen(navController, productViewModel = productViewModel)
-        }
-        composable("ProfileContent") {
-            ProfileContent(navController, authViewModel)
         }
         composable("SuggestScreen") {
             SuggestScreen(navController)

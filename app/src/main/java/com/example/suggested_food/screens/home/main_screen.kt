@@ -38,13 +38,10 @@ fun MainScreen(
     val context = LocalContext.current
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
-
     val userName by authViewModel.userName.collectAsState()
     val user = authViewModel.getCurrentUser()
-
     val displayName = userName ?: "Chuyên gia"
     val email = user?.email ?: "Chưa có email"
-
     val currentRoute =
         navController.currentBackStackEntryAsState().value?.destination?.route
 
@@ -152,10 +149,11 @@ fun MainScreen(
                 ) {
                     DrawerItem("Trang chủ", Icons.Default.Home, "MainScreen")
                     DrawerItem("Hồ sơ bệnh nhân", Icons.Default.PeopleAlt, "PatientScreen")
-                    DrawerItem("Quản lý kho thuốc", Icons.Default.Inventory, "InventoryScreen")
+                    DrawerItem("Lịch nhắc nhở", Icons.Default.NotificationsActive, "ReminderScreen")
+                    DrawerItem("Mã khuyến mãi", Icons.Default.LocalOffer, "PromoCodeScreen")
+                    DrawerItem("Quản lý kho thuốc", Icons.Default.Cable, "InventoryScreen")
                     DrawerItem("Quản lý tồn kho", Icons.Default.Storefront, "StockScreen")
                     DrawerItem("Hóa đơn", Icons.Default.ReceiptLong, "InvoiceDashboardScreen")
-                    DrawerItem("Lịch nhắc nhở", Icons.Default.NotificationsActive, "ReminderScreen")
                     Spacer(Modifier.height(24.dp))
 
                     Row(
