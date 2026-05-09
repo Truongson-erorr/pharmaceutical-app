@@ -1,26 +1,15 @@
 package com.example.suggested_food.screens.notifications
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.NotificationsNone
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,8 +19,10 @@ import androidx.compose.ui.unit.dp
 import com.example.suggested_food.models.AppNotification
 
 @Composable
-fun NotificationItem(item: AppNotification) {
-
+fun NotificationItem(
+    item: AppNotification,
+    onClick: (AppNotification) -> Unit
+) {
     val color = when (item.type) {
         "IMPORT" -> Color(0xFF2196F3)
         "EXPORT" -> Color(0xFF22C55E)
@@ -42,7 +33,8 @@ fun NotificationItem(item: AppNotification) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp),
+            .padding(vertical = 6.dp)
+            .clickable { onClick(item) },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -54,6 +46,7 @@ fun NotificationItem(item: AppNotification) {
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+
             Box(
                 modifier = Modifier
                     .size(44.dp)
@@ -64,21 +57,14 @@ fun NotificationItem(item: AppNotification) {
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    imageVector = when (item.type) {
-                        "IMPORT" -> Icons.Default.NotificationsNone
-                        "EXPORT" -> Icons.Default.NotificationsNone
-                        "WARNING" -> Icons.Default.NotificationsNone
-                        else -> Icons.Default.Notifications
-                    },
+                    imageVector = Icons.Default.NotificationsNone,
                     contentDescription = null,
                     tint = color
                 )
             }
             Spacer(Modifier.width(14.dp))
 
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
+            Column(modifier = Modifier.weight(1f)) {
 
                 Text(
                     text = item.title,
@@ -106,18 +92,17 @@ fun NotificationItem(item: AppNotification) {
                     Text(
                         text = formatTime(item.time),
                         color = Color(0xFF22C55E),
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
+                        style = MaterialTheme.typography.labelSmall
                     )
                 }
             }
             Spacer(Modifier.width(8.dp))
 
             Icon(
-                imageVector = Icons.Default.ChevronRight,
+                Icons.Default.ChevronRight,
                 contentDescription = null,
-                tint = Color(0xFFBDBDBD),
-                modifier = Modifier.size(24.dp)
+                tint = Color(0xFFBDBDBD)
             )
         }
     }

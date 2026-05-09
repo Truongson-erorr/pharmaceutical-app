@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodels.NotificationViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.suggested_food.models.AppNotification
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -22,6 +23,9 @@ fun NotificationScreen(
     viewModel: NotificationViewModel = viewModel()
 ) {
     val notifications by viewModel.notifications.collectAsState()
+    var selectedNotification by remember {
+        mutableStateOf<AppNotification?>(null)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.loadNotifications()
@@ -75,12 +79,23 @@ fun NotificationScreen(
                 ) {
 
                     notifications.forEach { item ->
-
-                        NotificationItem(item)
-                        Spacer(Modifier.height(8.dp))
+                        NotificationItem(
+                            item = item,
+                            onClick = {
+                                selectedNotification = it
+                            }
+                        )
+                        Spacer(Modifier.height(3.dp))
                     }
                 }
             }
+        }
+
+        selectedNotification?.let {
+            NotificationDetailDialog(
+                item = it,
+                onDismiss = { selectedNotification = null }
+            )
         }
     }
 }
