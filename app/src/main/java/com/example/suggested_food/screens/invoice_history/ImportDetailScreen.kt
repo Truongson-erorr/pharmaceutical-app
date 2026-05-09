@@ -1,5 +1,6 @@
 package com.example.suggested_food.screens.invoice_history
 
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -18,7 +19,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodel.ImportViewModel
-import kotlinx.coroutines.launch
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,6 +40,7 @@ fun ImportDetailScreen(
 
     val currency = NumberFormat.getInstance(Locale("vi", "VN"))
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = Color.White,
@@ -68,51 +69,33 @@ fun ImportDetailScreen(
                     TextButton(
                         onClick = {
                             receipt?.let { data ->
-
-                                kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
-
-                                    val file = ImportReceiptCsvExporter.export(context, data)
-                                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
-
-                                        try {
-                                            val uri = androidx.core.content.FileProvider.getUriForFile(
-                                                context,
-                                                context.packageName + ".provider",
-                                                file
-                                            )
-
-                                            val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
-                                                setDataAndType(uri, "text/csv")
-                                                addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                                                addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            }
-
-                                            context.startActivity(intent)
-
-                                        } catch (e: Exception) {
-
-                                            android.widget.Toast.makeText(
-                                                context,
-                                                "Không mở được file Excel",
-                                                android.widget.Toast.LENGTH_SHORT
-                                            ).show()
-                                        }
-                                    }
-                                }
+                                ImportReceiptImageExporter.export(context, data)
+                                showDialog = true
                             }
                         },
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = Color(0xFF1565C0)
-                        ),
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .background(
-                                color = Color(0xFFE3F2FD),
-                                shape = RoundedCornerShape(30.dp)
-                            )
-                            .height(35.dp)
+                        )
                     ) {
-                        Text("Xuất Excel", fontWeight = FontWeight.Bold)
+                        Text(
+                            "Xuất hóa đơn nhập",
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    if (showDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showDialog = false },
+                            confirmButton = {
+                                TextButton(onClick = { showDialog = false }) {
+                                    Text("OK")
+                                }
+                            },
+                            title = {
+                                Text("Xuất hóa đơn thành công")
+                            },
+                            containerColor = Color.White
+                        )
                     }
                 }
             )

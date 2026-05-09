@@ -44,6 +44,7 @@ fun ExportDetailScreen(
         SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     val context = androidx.compose.ui.platform.LocalContext.current
+    var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         containerColor = Color.White,
@@ -79,14 +80,10 @@ fun ExportDetailScreen(
 
                                 kotlinx.coroutines.CoroutineScope(kotlinx.coroutines.Dispatchers.IO).launch {
 
-                                    val file = ExportHistoryPdfExporter.export(context, data)
-                                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                    val file = ExportHistoryImageExporter.export(context, data)
 
-                                        android.widget.Toast.makeText(
-                                            context,
-                                            "Đã tạo PDF: ${file.name}",
-                                            android.widget.Toast.LENGTH_SHORT
-                                        ).show()
+                                    kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.Main) {
+                                        showDialog = true
                                     }
                                 }
                             }
@@ -94,17 +91,25 @@ fun ExportDetailScreen(
                         colors = ButtonDefaults.textButtonColors(
                             contentColor = Color(0xFFE65100)
                         ),
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .background(
-                                Color(0xFFFFE0B2),
-                                RoundedCornerShape(50.dp)
-                            )
-                            .height(33.dp)
                     ) {
                         Text(
-                            "Xuất PDF",
+                            "Xuất hóa đơn xuất",
                             fontWeight = FontWeight.Bold
+                        )
+                    }
+
+                    if (showDialog) {
+                        AlertDialog(
+                            onDismissRequest = { showDialog = false },
+                            confirmButton = {
+                                TextButton(onClick = { showDialog = false }) {
+                                    Text("OK")
+                                }
+                            },
+                            title = {
+                                Text("Xuất hóa đơn thành công")
+                            },
+                            containerColor = Color.White
                         )
                     }
                 }
