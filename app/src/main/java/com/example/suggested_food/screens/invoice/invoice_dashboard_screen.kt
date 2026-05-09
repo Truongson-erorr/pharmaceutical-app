@@ -57,13 +57,18 @@ fun InvoiceDashboardScreen(
     ) + " đ"
 
     val recentActivity = remember(exports, imports) {
-        (exports.map {
-            Triple("EXPORT", it.productName, it.quantity)
-        } + imports.map {
-            Triple("IMPORT", it.productName, it.quantity)
-        })
-            .takeLast(6)
-            .reversed()
+
+        val exportActivity = exports.map {
+            Triple("EXPORT", it.productName, it.quantity) to it.date
+        }
+
+        val importActivity = imports.map {
+            Triple("IMPORT", it.productName, it.quantity) to it.date
+        }
+
+        (exportActivity + importActivity)
+            .sortedByDescending { it.second }
+            .map { it.first }
     }
 
     Scaffold(
@@ -232,61 +237,6 @@ fun InvoiceDashboardScreen(
                     }
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun DashboardCard(
-    title: String,
-    value: String,
-    icon: ImageVector,
-    colors: List<Color>,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier.height(130.dp),
-        shape = RoundedCornerShape(22.dp),
-        elevation = CardDefaults.cardElevation(0.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Brush.linearGradient(colors))
-                .padding(16.dp)
-        ) {
-
-            Text(
-                text = title,
-                color = Color.White.copy(alpha = 0.9f),
-                modifier = Modifier.align(Alignment.TopStart)
-            )
-
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .size(44.dp)
-                    .background(
-                        Color.White.copy(alpha = 0.25f),
-                        RoundedCornerShape(12.dp)
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    icon,
-                    contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(22.dp)
-                )
-            }
-
-            Text(
-                text = value,
-                color = Color.White,
-                fontWeight = FontWeight.Bold,
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.align(Alignment.BottomStart)
-            )
         }
     }
 }

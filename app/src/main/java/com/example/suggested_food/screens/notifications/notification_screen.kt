@@ -1,12 +1,9 @@
 package com.example.suggested_food.screens.notifications
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,9 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.suggested_food.models.AppNotification
 import com.example.suggested_food.viewmodels.NotificationViewModel
-import java.util.Date
 import androidx.lifecycle.viewmodel.compose.viewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,93 +30,73 @@ fun NotificationScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Thông báo", fontWeight = FontWeight.Bold) },
+                title = {
+                    Text(
+                        "Thông báo",
+                        fontWeight = FontWeight.Bold
+                    )
+                },
                 navigationIcon = {
                     IconButton(
-                        onClick = {
-                            navController.popBackStack()
-                        }
+                        onClick = { navController.popBackStack() }
                     ) {
-                        Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
+                        Icon(
+                            Icons.Default.ArrowBackIosNew,
+                            contentDescription = null
+                        )
                     }
                 },
-
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.White,
                     titleContentColor = Color.Black,
-                    navigationIconContentColor = Color.Black,
-                    actionIconContentColor = Color.Black
+                    navigationIconContentColor = Color.Black
                 )
             )
         }
     ) { padding ->
+        Box(
+            modifier = Modifier
+                .padding(padding)
+                .fillMaxSize()
+                .background(Color(0xFFF5F5F5))
+        ) {
+            if (notifications.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Chưa có thông báo")
+                }
+            } else {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
 
-        if (notifications.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-                    .background(Color(0xFFF5F5F5)),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Chưa có thông báo")
-            }
-        } else {
+                    notifications.forEach { item ->
 
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .fillMaxSize()
-                    .padding(12.dp)
-            ) {
-
-                notifications.forEach { item ->
-
-                    NotificationItem(item)
-                    Spacer(Modifier.height(10.dp))
+                        NotificationItem(item)
+                        Spacer(Modifier.height(8.dp))
+                    }
                 }
             }
         }
     }
 }
 
-@Composable
-fun NotificationItem(item: AppNotification) {
+fun formatTime(time: Long): String {
+    val diff = System.currentTimeMillis() - time
 
-    val color = when (item.type) {
-        "IMPORT" -> Color(0xFF1565C0)
-        "EXPORT" -> Color(0xFF2E7D32)
-        "WARNING" -> Color(0xFFC62828)
-        else -> Color(0xFF546E7A)
-    }
+    val minutes = diff / (1000 * 60)
+    val hours = diff / (1000 * 60 * 60)
+    val days = diff / (1000 * 60 * 60 * 24)
 
-    Card(
-        shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(2.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Column(modifier = Modifier.padding(14.dp)) {
-
-            Text(
-                text = item.title,
-                fontWeight = FontWeight.Bold,
-                color = color
-            )
-            Spacer(Modifier.height(4.dp))
-
-            Text(
-                text = item.message,
-                color = Color.DarkGray
-            )
-            Spacer(Modifier.height(6.dp))
-
-            Text(
-                text = Date(item.time).toString(),
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.Gray
-            )
-        }
+    return when {
+        minutes < 1 -> "Vừa xong"
+        minutes < 60 -> "$minutes phút trước"
+        hours < 24 -> "$hours giờ trước"
+        else -> "$days ngày trước"
     }
 }
 

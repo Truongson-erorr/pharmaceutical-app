@@ -108,20 +108,17 @@ fun StockAllScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Tất cả tồn kho", fontWeight = FontWeight.Bold) },
+                title = {
+                    Text("Tất cả sản phẩm tồn kho", fontWeight = FontWeight.Bold)
+                },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBackIosNew, null)
+                        Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
                     }
                 },
-                actions = {
-                    IconButton(onClick = {
-                        tempFilter = filter
-                        showDialog = true
-                    }) {
-                        Icon(Icons.Default.FilterList, null)
-                    }
-                }
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color.White
+                )
             )
         }
     ) { padding ->

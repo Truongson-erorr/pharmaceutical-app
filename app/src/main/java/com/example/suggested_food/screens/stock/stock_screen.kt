@@ -23,8 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
-import com.example.suggested_food.models.ProductModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.example.suggested_food.viewmodels.StockViewModel
 

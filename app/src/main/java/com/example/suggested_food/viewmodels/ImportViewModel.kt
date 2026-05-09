@@ -63,13 +63,30 @@ class ImportViewModel : ViewModel() {
             transaction.update(productRef, "stock", newStock)
             transaction.set(importRef, receipt)
 
-        }.addOnSuccessListener {
-            _loading.value = false
-            _saveState.value = true
-        }.addOnFailureListener {
-            _loading.value = false
-            _errorMessage.value = it.message ?: "Có lỗi xảy ra"
+            newStock
         }
+            .addOnSuccessListener { newStock ->
+
+                _loading.value = false
+                _saveState.value = true
+
+                val notifRef =
+                    db.collection("notifications").document()
+
+                val notification = mapOf(
+                    "id" to notifRef.id,
+                    "title" to "Nhập kho thành công",
+                    "message" to "Đã nhập ${receipt.quantity} ${receipt.productName}",
+                    "time" to System.currentTimeMillis(),
+                    "type" to "IMPORT"
+                )
+
+                notifRef.set(notification)
+            }
+            .addOnFailureListener {
+                _loading.value = false
+                _errorMessage.value = it.message ?: "Có lỗi xảy ra"
+            }
     }
 
     fun loadImportReceipt(receiptId: String) {

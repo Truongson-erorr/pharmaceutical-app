@@ -85,14 +85,47 @@ class ExportViewModel : ViewModel() {
             transaction.update(productRef, "stock", newStock)
             transaction.set(exportRef, receipt)
 
-        }.addOnSuccessListener {
-            _loading.value = false
-            _saveState.value = true
-        }.addOnFailureListener { e ->
-            _loading.value = false
-            _saveState.value = false
-            _errorMessage.value = e.message ?: "Có lỗi xảy ra"
+            newStock
         }
+            .addOnSuccessListener { newStock ->
+
+                _loading.value = false
+                _saveState.value = true
+
+                val exportNotifRef =
+                    db.collection("notifications").document()
+
+                val exportNotification = mapOf(
+                    "id" to exportNotifRef.id,
+                    "title" to "Xuất kho thành công",
+                    "message" to "Đã xuất ${receipt.quantity} ${receipt.productName}",
+                    "time" to System.currentTimeMillis(),
+                    "type" to "EXPORT"
+                )
+
+                exportNotifRef.set(exportNotification)
+
+                if (newStock < 10) {
+
+                    val warningNotifRef =
+                        db.collection("notifications").document()
+
+                    val warningNotification = mapOf(
+                        "id" to warningNotifRef.id,
+                        "title" to "Cảnh báo tồn kho",
+                        "message" to "${receipt.productName} còn $newStock sản phẩm",
+                        "time" to System.currentTimeMillis(),
+                        "type" to "WARNING"
+                    )
+
+                    warningNotifRef.set(warningNotification)
+                }
+            }
+            .addOnFailureListener { e ->
+                _loading.value = false
+                _saveState.value = false
+                _errorMessage.value = e.message ?: "Có lỗi xảy ra"
+            }
     }
 
     fun loadExportReceipt(receiptId: String) {
