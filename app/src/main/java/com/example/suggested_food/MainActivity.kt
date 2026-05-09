@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -46,12 +47,16 @@ import com.example.suggested_food.screens.import_receipt.ImportStockScreen
 import com.example.suggested_food.screens.invoice_history.ExportDetailScreen
 import com.example.suggested_food.screens.invoice_history.ImportDetailScreen
 import com.example.suggested_food.screens.invoice_history.InvoiceHistoryScreen
+import com.example.suggested_food.screens.notifications.NotificationScreen
+import com.example.suggested_food.screens.reminder.AddReminderScreen
+import com.example.suggested_food.screens.reminder.ReminderScreen
 import com.example.suggested_food.screens.stock.StockAllScreen
 import com.example.suggested_food.screens.stock.StockScreen
 import com.example.suggested_food.screens.suggest.SuggestScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodel.ExportViewModel
 import com.example.suggested_food.viewmodel.ImportViewModel
+import com.example.suggested_food.viewmodel.ReminderViewModel
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
@@ -75,6 +80,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigation(
+    reminderViewModel: ReminderViewModel = viewModel(),
     authViewModel: AuthViewModel = viewModel(),
     importViewModel: ImportViewModel = viewModel(),
     exportViewModel: ExportViewModel = viewModel(),
@@ -87,7 +93,7 @@ fun AppNavigation(
 
     if (isLoggedIn && role == null) {
         Box(
-            modifier = androidx.compose.ui.Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             CircularProgressIndicator()
@@ -238,6 +244,26 @@ fun AppNavigation(
                 receiptId = id,
                 navController = navController,
                 viewModel = exportViewModel
+            )
+        }
+        composable("NotificationScreen") {
+            NotificationScreen(navController)
+        }
+        composable("ReminderScreen") {
+            val viewModel: ReminderViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+
+            ReminderScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+        composable("AddReminderScreen") {
+            val viewModel: ReminderViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
+
+            AddReminderScreen(
+                navController = navController,
+                viewModel = viewModel,
+                productViewModel
             )
         }
     }

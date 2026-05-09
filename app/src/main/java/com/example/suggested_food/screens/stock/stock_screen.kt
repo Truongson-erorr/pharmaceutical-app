@@ -2,6 +2,8 @@ package com.example.suggested_food.screens.stock
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -9,7 +11,6 @@ import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.filled.Inventory
 import androidx.compose.material.icons.filled.Medication
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -33,9 +34,16 @@ fun StockScreen(
     stockViewModel: StockViewModel = viewModel()
 ) {
     val products by productViewModel.products.collectAsState()
+
     val totalStock = stockViewModel.totalStock(products)
     val lowStock = stockViewModel.lowStock(products)
     val outStock = stockViewModel.outOfStock(products)
+    val today = "2026-05-08"
+
+    val expiredStock = products.filter {
+        it.expiryDate.isNotBlank() &&
+                it.expiryDate < today
+    }
 
     Scaffold(
         topBar = {
@@ -43,7 +51,6 @@ fun StockScreen(
                 title = {
                     Text("Quản lý tồn kho", fontWeight = FontWeight.Bold)
                 },
-
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
@@ -74,17 +81,16 @@ fun StockScreen(
                     StatCard(
                         "Số lượng thuốc",
                         products.size.toString(),
-                        listOf(Color(0xFF43E97B), Color(0xFF38F9D7)), // xanh lá mint
+                        listOf(Color(0xFF43E97B), Color(0xFF38F9D7)),
                         Modifier.weight(1f)
                     )
 
                     StatCard(
                         "Số lượng tồn",
                         totalStock.toString(),
-                        listOf(Color(0xFF4FACFE), Color(0xFF6A11CB)), // xanh → tím
+                        listOf(Color(0xFF4FACFE), Color(0xFF6A11CB)),
                         Modifier.weight(1f)
                     )
-
                 }
 
                 Row(
@@ -94,16 +100,29 @@ fun StockScreen(
                     StatCard(
                         "Thuốc sắp hết",
                         lowStock.size.toString(),
-                        listOf(Color(0xFFF6D365), Color(0xFFFDA085)), // vàng cam
+                        listOf(Color(0xFFF6D365), Color(0xFFFDA085)),
                         Modifier.weight(1f)
                     )
 
                     StatCard(
                         "Hết hàng",
                         outStock.size.toString(),
-                        listOf(Color(0xFFFF758C), Color(0xFFFF7EB3)), // đỏ hồng modern
+                        listOf(Color(0xFFFF758C), Color(0xFFFF7EB3)),
                         Modifier.weight(1f)
                     )
+                }
+
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    StatCard(
+                        "Hết hạn sử dụng",
+                        expiredStock.size.toString(),
+                        listOf(Color(0xFFEF4444), Color(0xFFFB7185)),
+                        Modifier.weight(1f)
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
                 }
             }
 
@@ -209,3 +228,4 @@ fun StatCard(
         }
     }
 }
+

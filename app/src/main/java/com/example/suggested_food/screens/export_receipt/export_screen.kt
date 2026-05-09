@@ -3,6 +3,7 @@ package com.example.suggested_food.screens.export_receipt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
@@ -61,44 +62,71 @@ fun ExportStockScreen(
         (quantity.toIntOrNull() ?: 0) *
                 (price.toIntOrNull() ?: 0)
 
+    val errorMessage by exportViewModel.errorMessage.collectAsState()
+
     LaunchedEffect(saveState) {
         if (saveState == true) {
-            navController.popBackStack()
+
         }
     }
 
     if (showExportPicker) {
-
         val state = rememberDatePickerState()
 
         DatePickerDialog(
             onDismissRequest = { showExportPicker = false },
             confirmButton = {
-                TextButton({
-                    state.selectedDateMillis?.let {
-                        exportDate = Date(it)
+                TextButton(
+                    onClick = {
+                        state.selectedDateMillis?.let {
+                            exportDate = Date(it)
+                        }
+                        showExportPicker = false
                     }
-                    showExportPicker = false
-                }) { Text("OK") }
+                ) {
+                    Text("OK")
+                }
             }
-        ) { DatePicker(state) }
+        ) {
+            MaterialTheme(
+                colorScheme = lightColorScheme(
+                    primary = Color(0xFF03A9F4),
+                    onPrimary = Color.White,
+                    surface = Color.White,
+                    background = Color.White
+                )
+            ) {
+                DatePicker(state = state)
+            }
+        }
     }
 
     if (showExpiryPicker) {
-
         val state = rememberDatePickerState()
 
         DatePickerDialog(
             onDismissRequest = { showExpiryPicker = false },
             confirmButton = {
-                TextButton({
-                    state.selectedDateMillis?.let {
-                        expiryDate = Date(it)
+                TextButton(
+                    onClick = {
+                        state.selectedDateMillis?.let {
+                            expiryDate = Date(it)
+                        }
+                        showExpiryPicker = false
                     }
-                    showExpiryPicker = false
-                }) { Text("OK") }
+                ) { Text("OK") }
             }
-        ) { DatePicker(state) }
+        ) {
+            MaterialTheme(
+                colorScheme = lightColorScheme(
+                    primary = Color(0xFF03A9F4),
+                    onPrimary = Color.White,
+                    surface = Color.White
+                )
+            ) {
+                DatePicker(state = state)
+            }
+        }
     }
 
     Scaffold(
@@ -106,8 +134,9 @@ fun ExportStockScreen(
             TopAppBar(
                 title = { Text("Xuất kho", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
+                    IconButton(
+                        onClick = {
+                            navController.popBackStack()
                     }) {
                         Icon(Icons.Default.ArrowBackIosNew, null)
                     }
@@ -149,7 +178,7 @@ fun ExportStockScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .height(52.dp)
+                    .height(40.dp)
             ) {
                 Text("Xác nhận xuất")
             }
@@ -166,7 +195,6 @@ fun ExportStockScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-
             SectionTitle("Thông tin phiếu")
 
             ReadOnlyField("Mã phiếu", receiptCode)
@@ -250,6 +278,60 @@ fun ExportStockScreen(
                 Text("Tổng tiền", fontWeight = FontWeight.Bold)
                 Text("$totalPrice", fontWeight = FontWeight.Bold)
             }
+        }
+
+        if (!errorMessage.isNullOrBlank()) {
+            AlertDialog(
+                onDismissRequest = {
+                    exportViewModel.clearError()
+                },
+                containerColor = Color.White,
+
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            exportViewModel.clearError()
+                        }
+                    ) {
+                        Text("OK")
+                    }
+                },
+
+                title = {
+                    Text("Không thể xuất kho")
+                },
+
+                text = {
+                    Text(errorMessage ?: "")
+                }
+            )
+        }
+
+        if (saveState == true) {
+            AlertDialog(
+                onDismissRequest = {
+                    exportViewModel.clearState()
+                },
+                containerColor = Color.White,
+
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            exportViewModel.clearState()
+                        }
+                    ) {
+                        Text("OK")
+                    }
+                },
+
+                title = {
+                    Text("Xuất kho thành công")
+                },
+
+                text = {
+                    Text("Phiếu xuất đã được lưu và cập nhật tồn kho.")
+                }
+            )
         }
     }
 }

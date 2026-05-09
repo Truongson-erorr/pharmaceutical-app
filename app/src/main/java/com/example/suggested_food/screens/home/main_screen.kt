@@ -150,18 +150,12 @@ fun MainScreen(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-
                     DrawerItem("Trang chủ", Icons.Default.Home, "MainScreen")
-                    DrawerItem("Tương tác thuốc", Icons.Default.Medication, "DrugInteractionScreen")
-                    DrawerItem("Kiến thức y khoa", Icons.Default.MenuBook, "GuidelineScreen")
-                    DrawerItem("An toàn thai kỳ", Icons.Default.ChildCare, "PregnancySafetyScreen")
-                    DrawerItem("Tương kỵ thuốc tiêm", Icons.Default.Science, "IVCompatibilityScreen")
-                    DrawerItem("Quản lý kháng sinh", Icons.Default.Biotech, "AntibioticScreen")
-                    DrawerItem("Theo dõi nồng độ", Icons.Default.MonitorHeart, "DrugMonitoringScreen")
-                    DrawerItem("Máy tính lâm sàng", Icons.Default.Calculate, "ClinicalCalculatorScreen")
+                    DrawerItem("Hồ sơ bệnh nhân", Icons.Default.PeopleAlt, "PatientScreen")
                     DrawerItem("Quản lý kho thuốc", Icons.Default.Inventory, "InventoryScreen")
                     DrawerItem("Quản lý tồn kho", Icons.Default.Storefront, "StockScreen")
                     DrawerItem("Hóa đơn", Icons.Default.ReceiptLong, "InvoiceDashboardScreen")
+                    DrawerItem("Lịch nhắc nhở", Icons.Default.NotificationsActive, "ReminderScreen")
                     Spacer(Modifier.height(24.dp))
 
                     Row(
@@ -226,8 +220,9 @@ fun MainScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-
                         Column {
+                            Spacer(modifier = Modifier.height(15.dp))
+
                             Text(
                                 "Hello, $displayName",
                                 fontSize = 30.sp,
@@ -236,21 +231,39 @@ fun MainScreen(
                             )
 
                             Text(
-                                "Clinical Support System",
+                                "Dành cho chuyên gia",
                                 color = Color.White.copy(alpha = 0.85f)
                             )
                         }
 
-                        IconButton(
-                            onClick = {
-                                scope.launch { drawerState.open() }
-                            }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
-                            Icon(
-                                Icons.Default.Menu,
-                                contentDescription = null,
-                                tint = Color.White
-                            )
+
+                            IconButton(
+                                onClick = {
+                                    navController.navigate("NotificationScreen")
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Default.NotificationsNone,
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            }
+
+                            IconButton(
+                                onClick = {
+                                    scope.launch { drawerState.open() }
+                                }
+                            ) {
+                                Icon(
+                                    Icons.Default.Menu,
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            }
                         }
                     }
                 }

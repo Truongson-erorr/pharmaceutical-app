@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -31,7 +32,14 @@ fun DateField(label: String, value: String, onClick: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(value)
-            TextButton(onClick = onClick) {
+            TextButton(
+                onClick = onClick,
+                colors = ButtonDefaults.textButtonColors(
+                    containerColor = Color(0xFFD6F0FF),
+                    contentColor = Color(0xFF1565C0)
+                ),
+                shape = RoundedCornerShape(40.dp)
+            ) {
                 Text("Chọn")
             }
         }

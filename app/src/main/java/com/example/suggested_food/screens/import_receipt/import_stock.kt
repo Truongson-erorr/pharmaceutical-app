@@ -55,7 +55,7 @@ fun ImportStockScreen(
 
     var quantity by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
-    var lot by remember { mutableStateOf("") }
+    val lot by remember { mutableStateOf("") }
     var supplier by remember { mutableStateOf("") }
     var note by remember { mutableStateOf("") }
 
@@ -65,7 +65,7 @@ fun ImportStockScreen(
 
     LaunchedEffect(saveState) {
         if (saveState == true) {
-            navController.popBackStack()
+
         }
     }
 
@@ -75,14 +75,29 @@ fun ImportStockScreen(
         DatePickerDialog(
             onDismissRequest = { showImportPicker = false },
             confirmButton = {
-                TextButton({
-                    state.selectedDateMillis?.let {
-                        importDate = Date(it)
+                TextButton(
+                    onClick = {
+                        state.selectedDateMillis?.let {
+                            importDate = Date(it)
+                        }
+                        showImportPicker = false
                     }
-                    showImportPicker = false
-                }) { Text("OK") }
+                ) {
+                    Text("OK")
+                }
             }
-        ) { DatePicker(state = state) }
+        ) {
+            MaterialTheme(
+                colorScheme = lightColorScheme(
+                    primary = Color(0xFF03A9F4),
+                    onPrimary = Color.White,
+                    surface = Color.White,
+                    background = Color.White
+                )
+            ) {
+                DatePicker(state)
+            }
+        }
     }
 
     if (showExpiryPicker) {
@@ -91,24 +106,40 @@ fun ImportStockScreen(
         DatePickerDialog(
             onDismissRequest = { showExpiryPicker = false },
             confirmButton = {
-                TextButton({
-                    state.selectedDateMillis?.let {
-                        expiryDate = Date(it)
+                TextButton(
+                    onClick = {
+                        state.selectedDateMillis?.let {
+                            expiryDate = Date(it)
+                        }
+                        showExpiryPicker = false
                     }
-                    showExpiryPicker = false
-                }) { Text("OK") }
+                ) {
+                    Text("OK")
+                }
             }
-        ) { DatePicker(state = state) }
+        ) {
+            MaterialTheme(
+                colorScheme = lightColorScheme(
+                    primary = Color(0xFF03A9F4),
+                    onPrimary = Color.White,
+                    surface = Color.White,
+                    background = Color.White
+                )
+            ) {
+                DatePicker(state)
+            }
+        }
     }
 
     Scaffold(
-
         topBar = {
             TopAppBar(
                 title = { Text("Nhập kho", fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(
-                        onClick = { navController.popBackStack() }
+                        onClick = {
+                            navController.popBackStack()
+                        }
                     ) {
                         Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
                     }
@@ -151,7 +182,7 @@ fun ImportStockScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .height(56.dp),
+                    .height(40.dp),
                 shape = RoundedCornerShape(25.dp)
             ) {
                 if (loading)
@@ -234,6 +265,31 @@ fun ImportStockScreen(
                 Text("Tổng tiền", fontWeight = FontWeight.Bold)
                 Text("$totalPrice", fontWeight = FontWeight.Bold)
             }
+        }
+
+        if (saveState == true) {
+            AlertDialog(
+                onDismissRequest = { importViewModel.clearState() },
+                containerColor = Color.White,
+
+                title = {
+                    Text("Thành công")
+                },
+
+                text = {
+                    Text("Nhập kho thành công")
+                },
+
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            importViewModel.clearState()
+                        }
+                    ) {
+                        Text("OK")
+                    }
+                }
+            )
         }
     }
 }

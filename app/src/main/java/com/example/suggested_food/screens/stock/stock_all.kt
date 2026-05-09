@@ -38,6 +38,8 @@ fun StockAllScreen(
     val mainColor = Color.DarkGray
     val lightColor = Color(0xFFF5F5F5)
 
+    val today = "2026-05-08"
+
     val filteredProducts = when (filter) {
         "AVAILABLE" -> products.filter { it.stock > 10 }
         "LOW" -> products.filter { it.stock in 1..10 }
@@ -49,53 +51,39 @@ fun StockAllScreen(
         AlertDialog(
             onDismissRequest = { showDialog = false },
             containerColor = Color.White,
-            title = {
-                Text("Lọc tồn kho", fontWeight = FontWeight.Bold)
-            },
+            title = { Text("Lọc tồn kho", fontWeight = FontWeight.Bold) },
             text = {
 
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
+                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
 
-                    FilterItem(
-                        text = "Tất cả",
-                        selected = tempFilter == "ALL",
-                        mainColor = mainColor,
-                        lightColor = lightColor,
-                        modifier = Modifier.fillMaxWidth()
-                    ) { tempFilter = "ALL" }
+                    FilterItem("Tất cả", tempFilter == "ALL", mainColor, lightColor) {
+                        tempFilter = "ALL"
+                    }
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
-
                         FilterItem(
-                            text = "Còn hàng",
-                            selected = tempFilter == "AVAILABLE",
-                            mainColor = mainColor,
-                            lightColor = lightColor,
-                            modifier = Modifier.weight(1f)
+                            "Còn hàng",
+                            tempFilter == "AVAILABLE",
+                            mainColor,
+                            lightColor,
+                            Modifier.weight(1f)
                         ) { tempFilter = "AVAILABLE" }
 
                         FilterItem(
-                            text = "Sắp hết",
-                            selected = tempFilter == "LOW",
-                            mainColor = mainColor,
-                            lightColor = lightColor,
-                            modifier = Modifier.weight(1f)
+                            "Sắp hết",
+                            tempFilter == "LOW",
+                            mainColor,
+                            lightColor,
+                            Modifier.weight(1f)
                         ) { tempFilter = "LOW" }
                     }
 
-                    FilterItem(
-                        text = "Hết hàng",
-                        selected = tempFilter == "OUT",
-                        mainColor = mainColor,
-                        lightColor = lightColor,
-                        modifier = Modifier.fillMaxWidth()
-                    ) { tempFilter = "OUT" }
+                    FilterItem("Hết hàng", tempFilter == "OUT", mainColor, lightColor) {
+                        tempFilter = "OUT"
+                    }
                 }
             },
             confirmButton = {
@@ -121,29 +109,15 @@ fun StockAllScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Tất cả tồn kho", fontWeight = FontWeight.Bold)
+                    Text("Tất cả sản phẩm tồn kho", fontWeight = FontWeight.Bold)
                 },
-
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBackIosNew, null)
+                        Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
                     }
                 },
-
-                actions = {
-                    IconButton(onClick = {
-                        tempFilter = filter
-                        showDialog = true
-                    }) {
-                        Icon(Icons.Default.FilterList, null)
-                    }
-                },
-
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black,
-                    navigationIconContentColor = Color.Black,
-                    actionIconContentColor = Color.Black
+                    containerColor = Color.White
                 )
             )
         }
@@ -173,6 +147,15 @@ fun StockAllScreen(
 
                 val statusBg = statusColor.copy(alpha = 0.12f)
 
+                val expiryColor = when {
+                    item.expiryDate.isBlank() -> Color.Gray
+                    item.expiryDate < today -> Color(0xFFFF5A5F)
+                    item.expiryDate <= "2026-06-01" -> Color(0xFFFFB020)
+                    else -> Color(0xFF22C55E)
+                }
+
+                val expiryBg = expiryColor.copy(alpha = 0.12f)
+
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -191,7 +174,12 @@ fun StockAllScreen(
                                 .background(statusBg, RoundedCornerShape(10.dp))
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
-                            Text(statusText, color = statusColor, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                            Text(
+                                statusText,
+                                color = statusColor,
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold
+                            )
                         }
 
                         Row(
@@ -208,9 +196,32 @@ fun StockAllScreen(
                             )
                             Spacer(Modifier.width(12.dp))
 
-                            Column(Modifier.weight(1f)) {
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(4.dp)
+                            ) {
+
                                 Text(item.name, fontWeight = FontWeight.Bold)
-                                Text("Tồn: ${item.stock}", color = Color.Gray)
+
+                                Text(
+                                    "Tồn: ${item.stock}",
+                                    color = Color.Gray
+                                )
+
+                                if (item.expiryDate.isNotBlank()) {
+                                    Box(
+                                        modifier = Modifier
+                                            .background(expiryBg, RoundedCornerShape(8.dp))
+                                            .padding(horizontal = 8.dp, vertical = 3.dp)
+                                    ) {
+                                        Text(
+                                            "HSD: ${item.expiryDate}",
+                                            color = expiryColor,
+                                            fontSize = 11.sp,
+                                            fontWeight = FontWeight.SemiBold
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
@@ -231,6 +242,7 @@ fun FilterItem(
 ) {
     Box(
         modifier = modifier
+            .fillMaxWidth()
             .background(
                 color = lightColor,
                 shape = RoundedCornerShape(12.dp)
@@ -241,7 +253,7 @@ fun FilterItem(
                 else Modifier
             )
             .clickable { onClick() }
-            .padding(14.dp),
+            .padding(vertical = 14.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(

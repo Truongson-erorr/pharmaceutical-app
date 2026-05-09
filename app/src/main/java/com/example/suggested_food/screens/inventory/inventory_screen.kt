@@ -25,6 +25,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.InventoryViewModel
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -34,9 +35,7 @@ fun InventoryScreen(
     inventoryViewModel: InventoryViewModel = viewModel()
 ) {
     val products by inventoryViewModel.products.collectAsState()
-
-    val currency =
-        NumberFormat.getInstance(Locale("vi", "VN"))
+    val currency = NumberFormat.getInstance(Locale("vi", "VN"))
 
     Scaffold(
         containerColor = Color.White,
@@ -54,9 +53,7 @@ fun InventoryScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = { navController.popBackStack() }
-                    ) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             Icons.Default.ArrowBackIosNew,
                             contentDescription = null,
@@ -69,24 +66,16 @@ fun InventoryScreen(
 
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = {
-                    navController.navigate("InventoryAddScreen")
-                },
+                onClick = { navController.navigate("InventoryAddScreen") },
                 containerColor = Color.Black,
                 contentColor = Color.White,
                 shape = RoundedCornerShape(18.dp)
             ) {
                 Icon(Icons.Default.Add, contentDescription = null)
                 Spacer(modifier = Modifier.width(6.dp))
-                Text(
-                    "Thêm thuốc",
-                    fontWeight = FontWeight.Bold
-                )
+                Text("Thêm thuốc", fontWeight = FontWeight.Bold)
             }
-        },
-
-        floatingActionButtonPosition =
-        FabPosition.End
+        }
     ) { padding ->
 
         LazyColumn(
@@ -95,24 +84,21 @@ fun InventoryScreen(
                 .fillMaxSize()
                 .background(Color(0xFFF4F7FB))
                 .padding(16.dp),
-
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
             items(products) { product ->
 
+                val expiryColor = getExpiryColor(product.expiryDate)
+
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            navController.navigate(
-                                "product_detail/${product.id}"
-                            )
+                            navController.navigate("product_detail/${product.id}")
                         },
                     shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    ),
+                    colors = CardDefaults.cardColors(containerColor = Color.White),
                     elevation = CardDefaults.cardElevation(0.dp)
                 ) {
 
@@ -131,8 +117,7 @@ fun InventoryScreen(
 
                         Column(
                             modifier = Modifier.weight(1f),
-                            verticalArrangement =
-                            Arrangement.spacedBy(6.dp)
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
 
                             Text(
@@ -142,32 +127,32 @@ fun InventoryScreen(
                                 overflow = TextOverflow.Ellipsis
                             )
 
-                            Row(
-                                verticalAlignment =
-                                Alignment.CenterVertically
+                            Text(
+                                text = "Giá: ${currency.format(product.price)} đ",
+                                color = Color.Black,
+                                fontWeight = FontWeight.Medium
+                            )
+
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.End)
+                                    .background(
+                                        color = expiryColor.copy(alpha = 0.15f),
+                                        shape = RoundedCornerShape(12.dp)
+                                    )
+                                    .padding(horizontal = 10.dp, vertical = 4.dp)
                             ) {
-
                                 Text(
-                                    text = "Giá:",
-                                    color = Color.Gray
-                                )
-
-                                Spacer(
-                                    modifier = Modifier.width(6.dp)
-                                )
-
-                                Text(
-                                    text =
-                                    "${currency.format(product.price)} đ",
-                                    color = Color.Black,
-                                    fontWeight = FontWeight.Bold
+                                    text = "HSD: ${product.expiryDate}",
+                                    color = expiryColor,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    fontWeight = FontWeight.SemiBold
                                 )
                             }
                         }
 
                         Icon(
-                            imageVector =
-                            Icons.Default.ChevronRight,
+                            imageVector = Icons.Default.ChevronRight,
                             contentDescription = null,
                             tint = Color.Gray
                         )
@@ -175,5 +160,31 @@ fun InventoryScreen(
                 }
             }
         }
+    }
+}
+
+fun getExpiryColor(dateStr: String?): Color {
+    if (dateStr == null) return Color.Gray
+
+    return try {
+        val sdf = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        val expiry = sdf.parse(dateStr) ?: return Color.Gray
+
+        val now = Date()
+        val diff = expiry.time - now.time
+
+        when {
+            diff < 0 ->
+                Color(0xFFFF5A5F)
+
+            diff <= 7L * 24 * 60 * 60 * 1000 ->
+                Color(0xFFFFB020)
+
+            else ->
+                Color(0xFF22C55E)
+        }
+
+    } catch (e: Exception) {
+        Color.Gray
     }
 }

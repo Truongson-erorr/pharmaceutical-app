@@ -1,74 +1,133 @@
-package com.example.suggested_food.screens.invoice_history
-
+import android.content.ContentValues
 import android.content.Context
-import android.graphics.pdf.PdfDocument
-import android.os.Environment
+import android.graphics.*
+import android.net.Uri
+import android.provider.MediaStore
 import com.example.suggested_food.models.ImportReceipt
-import java.io.File
-import java.io.FileOutputStream
 import java.text.NumberFormat
-import java.text.SimpleDateFormat
 import java.util.*
 
-object ImportReceiptPdfExporter {
-    fun export(context: Context, data: ImportReceipt): File {
-        val pdfDocument = PdfDocument()
+object ImportReceiptImageExporter {
 
-        val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create() // A4
-        val page = pdfDocument.startPage(pageInfo)
-
-        val canvas = page.canvas
-        val paint = android.graphics.Paint()
-
+    fun export(context: Context, data: ImportReceipt): Uri {
         val currency = NumberFormat.getInstance(Locale("vi", "VN"))
-        val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
-        var y = 50
+        val width = 800f
+        val padding = 50f
+        val contentRight = width - padding
 
-        fun draw(text: String, size: Float = 14f, bold: Boolean = false) {
-            paint.textSize = size
-            paint.isFakeBoldText = bold
-            canvas.drawText(text, 40f, y.toFloat(), paint)
-            y += 40
-        }
+        val lineHeight = 70f
+        val sectionSpacing = 30f
 
-        draw("HÓA ĐƠN NHẬP", 20f, true)
-        y += 20
-
-        draw("Mã số phiếu: ${data.id}")
-        draw("Người nhập: ${data.user}")
-        draw("Ngày: ${formatter.format(Date(data.date))}")
-
-        y += 20
-
-        draw("Sản phẩm: ${data.productName}")
-        draw("Đơn vị: ${data.unit}")
-        draw("Số lượng: ${data.quantity}")
-
-        draw("Lô: ${data.lot}")
-        draw("HSD: ${data.expiryDate}")
-
-        draw("Nhà cung cấp: ${data.supplier}")
-
-        if (data.note.isNotEmpty()) {
-            draw("Ghi chú: ${data.note}")
-        }
-
-        y += 20
-
-        draw("Giá nhập: ${currency.format(data.price)} đ")
-        draw("Tổng tiền: ${currency.format(data.totalPrice)} đ", bold = true)
-
-        pdfDocument.finishPage(page)
-
-        val file = File(
-            context.getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS),
-            "hoa_don_${data.id}.pdf"
+        val fields = listOf(
+            "Mã phiếu" to data.id,
+            "Người nhập" to data.user,
+            "Ngày" to data.date,
+            "Sản phẩm" to data.productName,
+            "Đơn vị" to data.unit,
+            "Số lượng" to data.quantity.toString(),
+            "Lô" to data.lot,
+            "HSD" to data.expiryDate,
+            "Nhà cung cấp" to data.supplier,
+            "Ghi chú" to (if (data.note.isEmpty()) "-" else data.note),
+            "Giá nhập" to "${currency.format(data.price)} đ",
+            "Tổng tiền" to "${currency.format(data.totalPrice)} đ"
         )
 
-        pdfDocument.writeTo(FileOutputStream(file))
-        pdfDocument.close()
+        val height = 1400f
 
-        return file
+        val bitmap = Bitmap.createBitmap(width.toInt(), height.toInt(), Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        canvas.drawColor(Color.WHITE)
+
+        val titlePaint = Paint().apply {
+            color = Color.BLACK
+            textSize = 46f
+            isFakeBoldText = true
+            isAntiAlias = true
+        }
+
+        val subTitlePaint = Paint().apply {
+            color = Color.GRAY
+            textSize = 28f
+            isAntiAlias = true
+        }
+
+        val labelPaint = Paint().apply {
+            color = Color.DKGRAY
+            textSize = 30f
+            isAntiAlias = true
+        }
+
+        val valuePaint = Paint().apply {
+            color = Color.BLACK
+            textSize = 32f
+            isFakeBoldText = true
+            isAntiAlias = true
+        }
+
+        val linePaint = Paint().apply {
+            color = Color.LTGRAY
+            strokeWidth = 2f
+        }
+
+        var y = 120f
+
+        canvas.drawText("NHÀ THUỐC SYSTEM", padding, y, titlePaint)
+        y += 60f
+
+        canvas.drawText("HÓA ĐƠN NHẬP KHO", padding, y, subTitlePaint)
+        y += 80f
+
+        canvas.drawLine(padding, y, contentRight, y, linePaint)
+        y += 60f
+
+        fields.forEachIndexed { index, (label, value) ->
+
+            canvas.drawText(label, padding, y, labelPaint)
+
+            val valueWidth = valuePaint.measureText(value.toString())
+            canvas.drawText(value.toString(), contentRight - valueWidth, y, valuePaint)
+
+            y += lineHeight
+            if (index % 4 == 3) {
+                canvas.drawLine(padding, y - 20f, contentRight, y - 20f, linePaint)
+                y += sectionSpacing
+            }
+        }
+
+        y += 40f
+        canvas.drawLine(padding, y, contentRight, y, linePaint)
+        y += 80f
+
+        val footerPaint = Paint().apply {
+            color = Color.BLACK
+            textSize = 34f
+            isFakeBoldText = true
+            isAntiAlias = true
+        }
+
+        val footerText = "Cảm ơn quý khách!"
+        val x = (width - footerPaint.measureText(footerText)) / 2
+        canvas.drawText(footerText, x, y, footerPaint)
+        val resolver = context.contentResolver
+
+        val values = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "hoa_don_${data.id}.png")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+            put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Suggested_Food")
+        }
+
+        val uri = resolver.insert(
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+            values
+        )!!
+
+        resolver.openOutputStream(uri)?.use {
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, it)
+        }
+
+        return uri
     }
 }

@@ -61,24 +61,6 @@ class ProductViewModel : ViewModel() {
             }
     }
 
-    fun getProductsByCategory(categoryId: String): List<ProductModel> {
-        return _products.value.filter { it.categoryId == categoryId }
-    }
-
-    fun getAvailableProducts(): List<ProductModel> {
-        return _products.value.filter { it.stock > 0 }
-    }
-
-    fun getSaleProducts(): List<ProductModel> {
-        return _products.value.filter { it.onSale }
-    }
-
-    fun searchProducts(query: String): List<ProductModel> {
-        return _products.value.filter {
-            it.name.contains(query, ignoreCase = true)
-        }
-    }
-
     fun getProductsByPrefix(prefix: String): List<ProductModel> {
         return _products.value.filter { it.name.lowercase().startsWith(prefix) }
     }
