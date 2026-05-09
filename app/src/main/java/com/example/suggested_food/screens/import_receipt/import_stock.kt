@@ -182,7 +182,7 @@ fun ImportStockScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .height(56.dp),
+                    .height(40.dp),
                 shape = RoundedCornerShape(25.dp)
             ) {
                 if (loading)

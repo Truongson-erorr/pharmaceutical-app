@@ -178,7 +178,7 @@ fun ExportStockScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .height(52.dp)
+                    .height(40.dp)
             ) {
                 Text("Xác nhận xuất")
             }
