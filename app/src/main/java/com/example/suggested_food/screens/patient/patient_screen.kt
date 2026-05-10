@@ -9,6 +9,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -33,7 +34,7 @@ fun PatientScreen(
 ) {
     val viewModel: PatientViewModel = viewModel()
     val patients by viewModel.patients.collectAsState()
-    var keyword by remember { mutableStateOf("") }
+    val keyword by remember { mutableStateOf("") }
 
     val filteredPatients = patients.filter {
         it.name.contains(keyword, true) ||
@@ -75,8 +76,11 @@ fun PatientScreen(
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(filteredPatients) {
-                    PatientCard(it)
+                items(filteredPatients) { patient ->
+                    PatientCard(
+                        patient = patient,
+                        navController = navController
+                    )
                 }
             }
         }
@@ -84,7 +88,10 @@ fun PatientScreen(
 }
 
 @Composable
-fun PatientCard(patient: Patient) {
+fun PatientCard(
+    patient: Patient,
+    navController: NavController
+) {
     val currency = NumberFormat.getInstance(Locale("vi", "VN"))
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
@@ -92,7 +99,9 @@ fun PatientCard(patient: Patient) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .clickable { },
+            .clickable {
+                navController.navigate("PatientDetail/${patient.phone}")
+            },
         color = Color.White,
         tonalElevation = 0.dp,
         shadowElevation = 0.dp
@@ -197,7 +206,7 @@ fun PatientCard(patient: Patient) {
                                 if (patient.lastVisit != 0L)
                                     dateFormat.format(Date(patient.lastVisit))
                                 else "--",
-                                color = Color(0xFF1565C0),
+                                color = Color(0xFF1E88E5),
                                 fontWeight = FontWeight.SemiBold,
                                 style = MaterialTheme.typography.labelMedium
                             )
@@ -205,6 +214,13 @@ fun PatientCard(patient: Patient) {
                     }
                 }
             }
+
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = "Xem chi tiết",
+                tint = Color(0xFF9CA3AF),
+                modifier = Modifier.size(22.dp)
+            )
         }
     }
 }

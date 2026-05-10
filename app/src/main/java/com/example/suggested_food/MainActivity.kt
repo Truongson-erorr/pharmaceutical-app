@@ -47,6 +47,7 @@ import com.example.suggested_food.screens.invoice_history.ExportDetailScreen
 import com.example.suggested_food.screens.invoice_history.ImportDetailScreen
 import com.example.suggested_food.screens.invoice_history.InvoiceHistoryScreen
 import com.example.suggested_food.screens.notifications.NotificationScreen
+import com.example.suggested_food.screens.patient.PatientDetailScreen
 import com.example.suggested_food.screens.patient.PatientScreen
 import com.example.suggested_food.screens.promotion.AddPromoCodeScreen
 import com.example.suggested_food.screens.promotion.PromoCodeScreen
@@ -267,6 +268,16 @@ fun AppNavigation(
         }
         composable("PatientScreen") {
             PatientScreen(navController)
+        }
+        composable(
+            "PatientDetail/{phone}"
+        ) { backStackEntry ->
+            val phone =
+                backStackEntry.arguments?.getString("phone") ?: ""
+            PatientDetailScreen(
+                navController = navController,
+                phone = phone
+            )
         }
     }
 }

@@ -2,6 +2,8 @@ package com.example.suggested_food.screens.notifications
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
@@ -72,20 +74,19 @@ fun NotificationScreen(
                     Text("Chưa có thông báo")
                 }
             } else {
-                Column(
+                LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-
-                    notifications.forEach { item ->
+                    items(notifications) { item ->
                         NotificationItem(
                             item = item,
                             onClick = {
                                 selectedNotification = it
                             }
                         )
-                        Spacer(Modifier.height(3.dp))
                     }
                 }
             }
