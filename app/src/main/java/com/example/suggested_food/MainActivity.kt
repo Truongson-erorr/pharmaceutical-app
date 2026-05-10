@@ -47,6 +47,8 @@ import com.example.suggested_food.screens.invoice_history.ExportDetailScreen
 import com.example.suggested_food.screens.invoice_history.ImportDetailScreen
 import com.example.suggested_food.screens.invoice_history.InvoiceHistoryScreen
 import com.example.suggested_food.screens.notifications.NotificationScreen
+import com.example.suggested_food.screens.promotion.AddPromoCodeScreen
+import com.example.suggested_food.screens.promotion.PromoCodeScreen
 import com.example.suggested_food.screens.reminder.AddReminderScreen
 import com.example.suggested_food.screens.reminder.ReminderScreen
 import com.example.suggested_food.screens.stock.StockAllScreen
@@ -58,6 +60,7 @@ import com.example.suggested_food.viewmodel.ImportViewModel
 import com.example.suggested_food.viewmodels.ReminderViewModel
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
+import com.example.suggested_food.viewmodels.PromoCodeViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -79,14 +82,13 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigation(
-    reminderViewModel: ReminderViewModel = viewModel(),
     authViewModel: AuthViewModel = viewModel(),
     importViewModel: ImportViewModel = viewModel(),
     exportViewModel: ExportViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
-
+    val promoViewModel: PromoCodeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
     val role by authViewModel.userRole.collectAsState()
 
@@ -255,6 +257,12 @@ fun AppNavigation(
                 viewModel = viewModel,
                 productViewModel
             )
+        }
+        composable("PromoCodeScreen") {
+            PromoCodeScreen(navController, promoViewModel)
+        }
+        composable("AddPromoCodeScreen") {
+            AddPromoCodeScreen(navController, promoViewModel)
         }
     }
 }
