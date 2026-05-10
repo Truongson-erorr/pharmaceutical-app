@@ -6,6 +6,7 @@ import android.graphics.*
 import android.net.Uri
 import android.provider.MediaStore
 import com.example.suggested_food.models.ExportReceipt
+import com.example.suggested_food.utils.generateQR
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -91,9 +92,15 @@ object ExportHistoryImageExporter {
         y += 60f
 
         canvas.drawText("PHIẾU XUẤT KHO", padding, y, subTitlePaint)
-        y += 80f
-        divider()
+        y += 50f
+        val qrBitmap =
+            generateQR("PRODUCT:${data.productName}", 250)
 
+        val qrX = (width - qrBitmap.width) / 2
+        canvas.drawBitmap(qrBitmap, qrX, y, null)
+
+        y += qrBitmap.height + 5f
+        divider()
         drawRow("Mã phiếu", data.id)
         drawRow("Người xuất", data.user)
         drawRow(
@@ -108,7 +115,6 @@ object ExportHistoryImageExporter {
 
         drawRow("Sản phẩm", data.productName)
         drawRow("Số lượng", data.quantity.toString())
-        drawRow("Lô", data.lot ?: "-")
         drawRow("HSD", data.expiryDate ?: "-")
         divider()
 
