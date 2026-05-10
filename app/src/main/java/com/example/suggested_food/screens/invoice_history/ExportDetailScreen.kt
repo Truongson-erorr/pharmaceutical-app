@@ -189,6 +189,10 @@ fun ExportDetailScreen(
                         "Khách hàng",
                         data.customer
                     )
+                    InvoiceRow(
+                        "Số điện thoại",
+                        data.customerPhone
+                    )
                     Divider()
 
                     InvoiceRow(

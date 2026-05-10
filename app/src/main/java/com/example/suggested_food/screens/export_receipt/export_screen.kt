@@ -57,7 +57,7 @@ fun ExportStockScreen(
     var price by remember { mutableStateOf("") }
     var customer by remember { mutableStateOf("") }
     var lot by remember { mutableStateOf("") }
-
+    var customerPhone by remember { mutableStateOf("") }
     val totalPrice =
         (quantity.toIntOrNull() ?: 0) *
                 (price.toIntOrNull() ?: 0)
@@ -166,6 +166,7 @@ fun ExportStockScreen(
                         lot = lot,
                         expiryDate = dateFormat.format(expiryDate),
                         customer = customer,
+                        customerPhone = customerPhone,
                         totalPrice = totalPrice
                     )
 
@@ -270,7 +271,12 @@ fun ExportStockScreen(
             ) { showExpiryPicker = true }
 
             FormField("Khách hàng", customer, { customer = it }, "")
-
+            FormField(
+                "Số điện thoại",
+                customerPhone,
+                { customerPhone = it },
+                "090xxxxxxx"
+            )
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween

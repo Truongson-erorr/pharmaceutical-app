@@ -2,6 +2,7 @@ package com.example.suggested_food.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.suggested_food.models.ExportReceipt
+import com.example.suggested_food.models.Patient
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -9,6 +10,8 @@ import kotlinx.coroutines.flow.StateFlow
 class ExportViewModel : ViewModel() {
 
     private val db = FirebaseFirestore.getInstance()
+    private val patientRef = db.collection("patients")
+
     private val _saveState = MutableStateFlow<Boolean?>(null)
     val saveState: StateFlow<Boolean?> = _saveState
 
@@ -43,6 +46,52 @@ class ExportViewModel : ViewModel() {
                         }
                 }
             }
+    }
+
+    private fun upsertPatient(receipt: ExportReceipt) {
+
+        val customerName = receipt.customer
+        val phone = receipt.customerPhone
+
+        if (customerName.isBlank() || phone.isBlank()) return
+
+        val docRef = patientRef.document(phone)
+
+        db.runTransaction { transaction ->
+
+            val snapshot = transaction.get(docRef)
+
+            if (snapshot.exists()) {
+
+                val patient =
+                    snapshot.toObject(Patient::class.java)!!
+
+                transaction.update(
+                    docRef,
+                    mapOf(
+                        "name" to customerName,
+                        "totalOrders" to patient.totalOrders + 1,
+                        "totalSpent" to patient.totalSpent + receipt.totalPrice,
+                        "lastVisit" to System.currentTimeMillis(),
+                        "updatedAt" to System.currentTimeMillis()
+                    )
+                )
+
+            } else {
+
+                val newPatient = Patient(
+                    id = phone,
+                    name = customerName,
+                    phone = phone,
+                    totalOrders = 1,
+                    totalSpent = receipt.totalPrice.toLong(),
+                    lastVisit = System.currentTimeMillis(),
+                    createdAt = System.currentTimeMillis()
+                )
+
+                transaction.set(docRef, newPatient)
+            }
+        }
     }
 
     fun saveExportReceipt(receipt: ExportReceipt) {
@@ -91,6 +140,7 @@ class ExportViewModel : ViewModel() {
 
                 _loading.value = false
                 _saveState.value = true
+                upsertPatient(receipt)
 
                 val exportNotifRef =
                     db.collection("notifications").document()

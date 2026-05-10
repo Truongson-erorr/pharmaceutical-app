@@ -148,7 +148,7 @@ fun MainScreen(
                         .verticalScroll(rememberScrollState())
                 ) {
                     DrawerItem("Trang chủ", Icons.Default.Home, "MainScreen")
-                    DrawerItem("Hồ sơ bệnh nhân", Icons.Default.PeopleAlt, "PatientScreen")
+                    DrawerItem("Hồ sơ khách hàng", Icons.Default.PeopleAlt, "PatientScreen")
                     DrawerItem("Lịch nhắc nhở", Icons.Default.NotificationsActive, "ReminderScreen")
                     DrawerItem("Mã khuyến mãi", Icons.Default.LocalOffer, "PromoCodeScreen")
                     DrawerItem("Quản lý kho thuốc", Icons.Default.Cable, "InventoryScreen")

@@ -47,6 +47,7 @@ import com.example.suggested_food.screens.invoice_history.ExportDetailScreen
 import com.example.suggested_food.screens.invoice_history.ImportDetailScreen
 import com.example.suggested_food.screens.invoice_history.InvoiceHistoryScreen
 import com.example.suggested_food.screens.notifications.NotificationScreen
+import com.example.suggested_food.screens.patient.PatientScreen
 import com.example.suggested_food.screens.promotion.AddPromoCodeScreen
 import com.example.suggested_food.screens.promotion.PromoCodeScreen
 import com.example.suggested_food.screens.reminder.AddReminderScreen
@@ -263,6 +264,9 @@ fun AppNavigation(
         }
         composable("AddPromoCodeScreen") {
             AddPromoCodeScreen(navController, promoViewModel)
+        }
+        composable("PatientScreen") {
+            PatientScreen(navController)
         }
     }
 }

@@ -113,7 +113,7 @@ object ExportHistoryImageExporter {
         divider()
 
         drawRow("Khách hàng", data.customer)
-
+        drawRow("Số điện thoại", data.customerPhone)
         divider()
 
         drawRow(
