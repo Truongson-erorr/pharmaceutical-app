@@ -14,5 +14,12 @@ data class ProductModel(
     val usage: String = "",
     val expiryDate: String = "",
     val rating: Float = 0f,
-    val reviews: List<String> = emptyList()
+    val reviews: List<String> = emptyList(),
+
+    val sideEffects: String = "",
+    val contraindications: String = "",
+    val dosageByAge: String = "",
+    val warnings: String = "",
+    val storage: String = "",
+    val dosageForm: String = ""
 )

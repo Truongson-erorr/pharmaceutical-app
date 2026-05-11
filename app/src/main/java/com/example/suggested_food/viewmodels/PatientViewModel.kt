@@ -1,6 +1,7 @@
 package com.example.suggested_food.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.example.suggested_food.models.ExportReceipt
 import com.example.suggested_food.models.Patient
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -17,6 +18,12 @@ class PatientViewModel : ViewModel() {
     init {
         loadPatients()
     }
+
+    private val _patientReceipts =
+        MutableStateFlow<List<ExportReceipt>>(emptyList())
+
+    val patientReceipts: StateFlow<List<ExportReceipt>>
+            = _patientReceipts
 
     private fun loadPatients() {
         patientRef.addSnapshotListener { snapshot, _ ->
@@ -71,5 +78,18 @@ class PatientViewModel : ViewModel() {
                 transaction.set(docRef, newPatient)
             }
         }
+    }
+
+    fun loadPatientReceipts(phone: String) {
+
+        db.collection("export_receipts")
+            .whereEqualTo("customerPhone", phone)
+            .addSnapshotListener { snapshot, _ ->
+
+                _patientReceipts.value =
+                    snapshot?.documents?.mapNotNull {
+                        it.toObject(ExportReceipt::class.java)
+                    } ?: emptyList()
+            }
     }
 }
