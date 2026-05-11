@@ -73,6 +73,8 @@ android {
 }
 
 dependencies {
+    implementation("com.google.zxing:core:3.5.3")
+    implementation("com.google.mlkit:barcode-scanning:17.2.0")
     implementation("org.pytorch:pytorch_android:2.1.0")
     implementation("org.pytorch:pytorch_android_torchvision:2.1.0")
     implementation("br.com.devsrsouza.compose.icons:font-awesome:1.1.0")

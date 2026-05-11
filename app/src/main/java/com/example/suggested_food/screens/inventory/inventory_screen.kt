@@ -82,7 +82,7 @@ fun InventoryScreen(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFF4F7FB))
+                .background(Color(0xFFF5F5F5))
                 .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {

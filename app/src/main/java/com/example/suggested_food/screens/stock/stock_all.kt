@@ -109,12 +109,25 @@ fun StockAllScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Tất cả sản phẩm tồn kho", fontWeight = FontWeight.Bold)
+                    Text("Sản phẩm tồn kho", fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
                     }
+                },
+                actions = {
+
+                    IconButton(onClick = {
+                        showDialog = true
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.FilterList,
+                            contentDescription = "Filter",
+                            tint = Color.Black
+                        )
+                    }
+
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.White

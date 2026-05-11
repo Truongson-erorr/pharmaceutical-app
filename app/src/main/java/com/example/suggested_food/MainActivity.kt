@@ -33,7 +33,6 @@ import com.example.suggested_food.screens.chat_ai.ChatScreen
 import com.example.suggested_food.screens.drug_look_up.DrugLookupScreen
 import com.example.suggested_food.screens.home.MainScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
-import com.example.suggested_food.screens.profile.ProfileContent
 import com.example.suggested_food.screens.drug.AllProductScreen
 import com.example.suggested_food.screens.export_receipt.ExportStockScreen
 import com.example.suggested_food.screens.inventory.InventoryAddScreen
@@ -48,6 +47,10 @@ import com.example.suggested_food.screens.invoice_history.ExportDetailScreen
 import com.example.suggested_food.screens.invoice_history.ImportDetailScreen
 import com.example.suggested_food.screens.invoice_history.InvoiceHistoryScreen
 import com.example.suggested_food.screens.notifications.NotificationScreen
+import com.example.suggested_food.screens.patient.PatientDetailScreen
+import com.example.suggested_food.screens.patient.PatientScreen
+import com.example.suggested_food.screens.promotion.AddPromoCodeScreen
+import com.example.suggested_food.screens.promotion.PromoCodeScreen
 import com.example.suggested_food.screens.reminder.AddReminderScreen
 import com.example.suggested_food.screens.reminder.ReminderScreen
 import com.example.suggested_food.screens.stock.StockAllScreen
@@ -56,9 +59,10 @@ import com.example.suggested_food.screens.suggest.SuggestScreen
 import com.example.suggested_food.ui.theme.Suggested_FoodTheme
 import com.example.suggested_food.viewmodel.ExportViewModel
 import com.example.suggested_food.viewmodel.ImportViewModel
-import com.example.suggested_food.viewmodel.ReminderViewModel
+import com.example.suggested_food.viewmodels.ReminderViewModel
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
+import com.example.suggested_food.viewmodels.PromoCodeViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -80,14 +84,13 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigation(
-    reminderViewModel: ReminderViewModel = viewModel(),
     authViewModel: AuthViewModel = viewModel(),
     importViewModel: ImportViewModel = viewModel(),
     exportViewModel: ExportViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
-
+    val promoViewModel: PromoCodeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
     val role by authViewModel.userRole.collectAsState()
 
@@ -138,12 +141,6 @@ fun AppNavigation(
         composable("register") {
             RegisterScreen(navController = navController)
         }
-        composable("ProfileContent") {
-            ProfileContent(
-                navController = navController,
-                authViewModel = authViewModel
-            )
-        }
         composable("AllCategoriesScreen") {
             AllCategoriesScreen(navController = navController)
         }
@@ -185,9 +182,6 @@ fun AppNavigation(
         }
         composable("SearchScreen") {
             SearchScreen(navController, productViewModel = productViewModel)
-        }
-        composable("ProfileContent") {
-            ProfileContent(navController, authViewModel)
         }
         composable("SuggestScreen") {
             SuggestScreen(navController)
@@ -264,6 +258,25 @@ fun AppNavigation(
                 navController = navController,
                 viewModel = viewModel,
                 productViewModel
+            )
+        }
+        composable("PromoCodeScreen") {
+            PromoCodeScreen(navController, promoViewModel)
+        }
+        composable("AddPromoCodeScreen") {
+            AddPromoCodeScreen(navController, promoViewModel)
+        }
+        composable("PatientScreen") {
+            PatientScreen(navController)
+        }
+        composable(
+            "PatientDetail/{phone}"
+        ) { backStackEntry ->
+            val phone =
+                backStackEntry.arguments?.getString("phone") ?: ""
+            PatientDetailScreen(
+                navController = navController,
+                phone = phone
             )
         }
     }

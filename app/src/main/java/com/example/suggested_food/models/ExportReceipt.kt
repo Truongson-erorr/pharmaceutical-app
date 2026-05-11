@@ -15,5 +15,6 @@ data class ExportReceipt(
     val expiryDate: String = "",
 
     val customer: String = "",
+    val customerPhone: String = "",
     val totalPrice: Int = 0
 )

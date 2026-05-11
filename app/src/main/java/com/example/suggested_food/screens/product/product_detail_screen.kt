@@ -24,6 +24,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.ProductViewModel
+import java.text.NumberFormat
+import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -38,6 +40,10 @@ fun ProductDetailScreen(
 
     LaunchedEffect(productId) {
         productViewModel.fetchProductById(productId)
+    }
+
+    val currency = remember {
+        NumberFormat.getInstance(Locale("vi", "VN"))
     }
 
     Scaffold(
@@ -70,7 +76,6 @@ fun ProductDetailScreen(
         }
     ) { innerPadding ->
         when {
-
             loading -> {
                 Box(
                     modifier = Modifier
@@ -92,11 +97,10 @@ fun ProductDetailScreen(
                     Text("Không tìm thấy thông tin thuốc")
                 }
             }
+
             else -> {
                 val images = product!!.images
-                val pagerState = rememberPagerState {
-                    images.size
-                }
+                val pagerState = rememberPagerState { images.size }
 
                 Column(
                     modifier = Modifier
@@ -130,9 +134,7 @@ fun ProductDetailScreen(
                             Box(
                                 modifier = Modifier
                                     .padding(4.dp)
-                                    .size(
-                                        if (pagerState.currentPage == index) 8.dp else 6.dp
-                                    )
+                                    .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
                                     .clip(CircleShape)
                                     .background(
                                         if (pagerState.currentPage == index)
@@ -146,10 +148,16 @@ fun ProductDetailScreen(
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
-
                         Text(
                             text = product!!.name,
                             style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Spacer(Modifier.height(8.dp))
+
+                        Text(
+                            text = "${currency.format(product!!.price)} đ",
+                            color = Color(0xFFEF4444),
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(Modifier.height(12.dp))
@@ -162,48 +170,91 @@ fun ProductDetailScreen(
                             Spacer(Modifier.width(12.dp))
 
                             Text(
-                                text =
-                                if (product!!.stock > 0)
+                                text = if (product!!.stock > 0)
                                     "Đang lưu hành"
                                 else
                                     "Ngưng lưu hành",
-
-                                color =
-                                if (product!!.stock > 0)
+                                color = if (product!!.stock > 0)
                                     Color(0xFF16A34A)
-                                else
-                                    Color.Gray,
-
+                                else Color.Gray,
                                 fontWeight = FontWeight.Medium
                             )
                         }
                         Spacer(Modifier.height(20.dp))
 
-                        Text(
-                            text = "Mô tả thuốc",
-                            fontWeight = FontWeight.Bold
-                        )
+                        Text("Mô tả thuốc", fontWeight = FontWeight.Bold)
                         Spacer(Modifier.height(6.dp))
 
                         Text(
-                            text = product!!.description.ifBlank {
-                                "Chưa có mô tả"
-                            }
+                            text = product!!.description.ifBlank { "Chưa có mô tả" },
+                            color = Color.Gray
                         )
                         Spacer(Modifier.height(20.dp))
 
+                        Text("Hướng dẫn sử dụng", fontWeight = FontWeight.Bold)
+                        Spacer(Modifier.height(6.dp))
                         Text(
-                            text = "Hướng dẫn sử dụng",
-                            fontWeight = FontWeight.Bold
+                            product!!.usage.ifBlank { "Chưa có hướng dẫn sử dụng" },
+                            color = Color.Gray
                         )
+                        Spacer(Modifier.height(20.dp))
+
+                        Text("Nhà sản xuất", fontWeight = FontWeight.Bold)
                         Spacer(Modifier.height(6.dp))
 
                         Text(
-                            text = product!!.usage.ifBlank {
-                                "Chưa có hướng dẫn sử dụng"
-                            },
-                            color = Color.DarkGray
+                            product!!.manufacturer.ifBlank { "Chưa có" },
+                            color = Color.Gray
                         )
+                        Spacer(Modifier.height(20.dp))
+
+                        Text("Thành phần", fontWeight = FontWeight.Bold)
+                        Spacer(Modifier.height(6.dp))
+
+                        Text(product!!.ingredients.ifBlank { "Chưa có" },
+                            color = Color.Gray
+                        )
+                        Spacer(Modifier.height(20.dp))
+
+                        Text("Tác dụng phụ", fontWeight = FontWeight.Bold)
+                        Spacer(Modifier.height(6.dp))
+
+                        Text(product!!.sideEffects.ifBlank { "Chưa có" },
+                            color = Color.Gray
+                        )
+                        Spacer(Modifier.height(20.dp))
+
+                        Text("Liều dùng theo đối tượng", fontWeight = FontWeight.Bold)
+                        Spacer(Modifier.height(6.dp))
+
+                        Text(product!!.dosageByAge.ifBlank { "Chưa có" },
+                            color = Color.Gray
+                        )
+                        Spacer(Modifier.height(20.dp))
+
+                        Text("Cảnh báo khi sử dụng", fontWeight = FontWeight.Bold)
+                        Spacer(Modifier.height(6.dp))
+
+                        Text(product!!.warnings.ifBlank { "Chưa có" },
+                            color = Color.Gray
+                        )
+                        Spacer(Modifier.height(20.dp))
+
+                        Text("Dạng bào chế", fontWeight = FontWeight.Bold)
+                        Spacer(Modifier.height(6.dp))
+
+                        Text(product!!.dosageForm.ifBlank { "Chưa có" },
+                            color = Color.Gray
+                        )
+                        Spacer(Modifier.height(20.dp))
+
+                        Text("Bảo quản", fontWeight = FontWeight.Bold)
+                        Spacer(Modifier.height(6.dp))
+
+                        Text(product!!.storage.ifBlank { "Chưa có" },
+                            color = Color.Gray
+                        )
+                        Spacer(Modifier.height(20.dp))
 
                         Spacer(Modifier.height(24.dp))
                     }

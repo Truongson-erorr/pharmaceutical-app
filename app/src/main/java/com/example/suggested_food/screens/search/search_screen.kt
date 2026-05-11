@@ -1,6 +1,10 @@
 package com.example.suggested_food.screens.search
 
+import android.graphics.BitmapFactory
 import android.os.Build
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -8,19 +12,22 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIos
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.QrCodeScanner
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.ProductViewModel
+import com.google.mlkit.vision.barcode.BarcodeScanning
+import com.google.mlkit.vision.common.InputImage
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -29,9 +36,64 @@ fun SearchScreen(
     navController: NavController,
     productViewModel: ProductViewModel = viewModel()
 ) {
+
     val products by productViewModel.products.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    val pickImageLauncher =
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.GetContent()
+        ) { uri ->
+
+            uri ?: return@rememberLauncherForActivityResult
+
+            val inputStream =
+                context.contentResolver.openInputStream(uri)
+
+            val bitmap = BitmapFactory.decodeStream(inputStream)
+            val image = InputImage.fromBitmap(bitmap, 0)
+            val scanner = BarcodeScanning.getClient()
+
+            scanner.process(image)
+                .addOnSuccessListener { barcodes ->
+
+                    if (barcodes.isEmpty()) {
+                        Log.d("QR_SCAN", "❌ Không tìm thấy QR")
+                        return@addOnSuccessListener
+                    }
+
+                    val value =
+                        barcodes.firstOrNull()?.rawValue
+                            ?: return@addOnSuccessListener
+
+                    Log.d("QR_SCAN", "QR VALUE = $value")
+                    if (value.startsWith("PRODUCT:")) {
+
+                        val productName =
+                            value.removePrefix("PRODUCT:")
+
+                        Log.d("QR_SCAN", "Product name = $productName")
+
+                        val product =
+                            products.firstOrNull {
+                                it.name.equals(productName, true)
+                            }
+
+                        if (product != null) {
+                            navController.navigate(
+                                "ProductDetail/${product.id}"
+                            )
+                        } else {
+                            Log.d("QR_SCAN", "Không tìm thấy sản phẩm")
+                        }
+                    }
+                }
+                .addOnFailureListener {
+                    Log.e("QR_SCAN", "Scan error", it)
+                }
+        }
 
     val suggestions = remember(searchQuery, products) {
         if (searchQuery.isBlank()) emptyList()
@@ -44,33 +106,22 @@ fun SearchScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = "Tìm kiếm",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
+                    Text("Tìm kiếm", fontWeight = FontWeight.Bold)
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        navController.popBackStack()
-                    }) {
-                        Icon(
-                            Icons.Default.ArrowBackIos,
-                            contentDescription = null,
-                            tint = Color.Black,
-                        )
+                    IconButton(
+                        onClick = { navController.popBackStack() }
+                    ) {
+                        Icon(Icons.Default.ArrowBackIos, null)
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black,
-                    navigationIconContentColor = Color.Black,
-                    actionIconContentColor = Color.Black
+                    containerColor = Color.White
                 )
             )
         }
-
     ) { padding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -88,16 +139,25 @@ fun SearchScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(55.dp),
-                placeholder = { Text("Nhập tên thuốc...") },
+                placeholder = {
+                    Text("Nhập tên thuốc hoặc quét QR...")
+                },
                 singleLine = true,
                 trailingIcon = {
-                    Icon(Icons.Default.Search, null)
+
+                    IconButton(
+                        onClick = {
+                            pickImageLauncher.launch("image/*")
+                        }
+                    ) {
+                        Icon(Icons.Default.QrCodeScanner, null)
+                    }
                 },
                 shape = RoundedCornerShape(30.dp),
                 colors = TextFieldDefaults.colors(
                     focusedContainerColor = Color.White,
                     unfocusedContainerColor = Color.White,
-                    focusedIndicatorColor = Color.White,
+                    focusedIndicatorColor = Color.Transparent,
                     unfocusedIndicatorColor = Color.Transparent
                 )
             )
@@ -111,6 +171,7 @@ fun SearchScreen(
             Spacer(Modifier.height(12.dp))
 
             if (expanded && suggestions.isNotEmpty()) {
+
                 Card(
                     shape = RoundedCornerShape(16.dp),
                     elevation = CardDefaults.cardElevation(6.dp)
@@ -118,6 +179,7 @@ fun SearchScreen(
 
                     Column {
                         suggestions.forEach { product ->
+
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -129,6 +191,7 @@ fun SearchScreen(
                                     .padding(12.dp),
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
+
                                 AsyncImage(
                                     model = product.images.firstOrNull(),
                                     contentDescription = null,
@@ -139,10 +202,7 @@ fun SearchScreen(
                                 Spacer(Modifier.width(12.dp))
 
                                 Column {
-                                    Text(
-                                        product.name,
-                                        fontWeight = FontWeight.Medium
-                                    )
+                                    Text(product.name)
                                     Text(
                                         "Xem chi tiết",
                                         style = MaterialTheme.typography.labelSmall,
