@@ -12,16 +12,22 @@ class NotificationViewModel : ViewModel() {
 
     private val _notifications = MutableStateFlow<List<AppNotification>>(emptyList())
     val notifications: StateFlow<List<AppNotification>> = _notifications
+    private val _notifCount = MutableStateFlow(0)
+    val notifCount: StateFlow<Int> = _notifCount
 
     fun loadNotifications() {
         db.collection("notifications")
             .orderBy("time", com.google.firebase.firestore.Query.Direction.DESCENDING)
             .addSnapshotListener { snapshot, _ ->
+
                 if (snapshot != null) {
-                    _notifications.value =
-                        snapshot.documents.mapNotNull {
-                            it.toObject(AppNotification::class.java)
-                        }
+
+                    val list = snapshot.documents.mapNotNull {
+                        it.toObject(AppNotification::class.java)
+                    }
+
+                    _notifications.value = list
+                    _notifCount.value = list.size
                 }
             }
     }

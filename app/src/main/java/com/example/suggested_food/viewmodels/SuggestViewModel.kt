@@ -137,7 +137,7 @@ class SuggestViewModel(
                     )
                 }
                 .sortedByDescending { it.score }
-                .take(5)
+                .take(10)
 
             // b9: cập nhật UI result
             _result.value = results

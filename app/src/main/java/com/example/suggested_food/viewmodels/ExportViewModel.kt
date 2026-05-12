@@ -1,5 +1,6 @@
 package com.example.suggested_food.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.suggested_food.models.ExportReceipt
 import com.example.suggested_food.models.Patient
@@ -39,10 +40,10 @@ class ExportViewModel : ViewModel() {
     fun loadAllExports() {
         db.collection("export_receipts")
             .addSnapshotListener { snapshot, _ ->
-                if (snapshot != null) {
+                snapshot?.documents?.let {
                     _exportList.value =
-                        snapshot.documents.mapNotNull {
-                            it.toObject(ExportReceipt::class.java)
+                        it.mapNotNull { doc ->
+                            doc.toObject(ExportReceipt::class.java)
                         }
                 }
             }
@@ -63,8 +64,7 @@ class ExportViewModel : ViewModel() {
 
             if (snapshot.exists()) {
 
-                val patient =
-                    snapshot.toObject(Patient::class.java)!!
+                val patient = snapshot.toObject(Patient::class.java)!!
 
                 transaction.update(
                     docRef,
@@ -112,18 +112,14 @@ class ExportViewModel : ViewModel() {
             return
         }
 
-        val productRef =
-            db.collection("products").document(receipt.productId)
-
-        val exportRef =
-            db.collection("export_receipts").document(receipt.id)
+        val productRef = db.collection("products").document(receipt.productId)
+        val exportRef = db.collection("export_receipts").document(receipt.id)
 
         db.runTransaction { transaction ->
 
             val snapshot = transaction.get(productRef)
 
-            val currentStock =
-                snapshot.getLong("stock")?.toInt() ?: 0
+            val currentStock = snapshot.getLong("stock")?.toInt() ?: 0
 
             if (receipt.quantity > currentStock) {
                 throw Exception("Không đủ tồn kho để xuất")
@@ -138,8 +134,11 @@ class ExportViewModel : ViewModel() {
         }
             .addOnSuccessListener { newStock ->
 
+                Log.d("EXPORT", "Transaction success, stock=$newStock")
+
                 _loading.value = false
                 _saveState.value = true
+
                 upsertPatient(receipt)
 
                 val exportNotifRef =
@@ -154,27 +153,66 @@ class ExportViewModel : ViewModel() {
                 )
 
                 exportNotifRef.set(exportNotification)
+                    .addOnSuccessListener {
 
-                if (newStock < 10) {
+                        Log.d("EXPORT", "EXPORT notification saved OK")
 
-                    val warningNotifRef =
-                        db.collection("notifications").document()
+                        if (newStock < 10) {
 
-                    val warningNotification = mapOf(
-                        "id" to warningNotifRef.id,
-                        "title" to "Cảnh báo tồn kho",
-                        "message" to "${receipt.productName} còn $newStock sản phẩm",
-                        "time" to System.currentTimeMillis(),
-                        "type" to "WARNING"
-                    )
+                            Log.d("EXPORT", "WARNING condition TRUE")
 
-                    warningNotifRef.set(warningNotification)
-                }
+                            val warningNotifRef =
+                                db.collection("notifications").document()
+
+                            val warningNotification = mapOf(
+                                "id" to warningNotifRef.id,
+                                "title" to "Cảnh báo tồn kho",
+                                "message" to "${receipt.productName} còn $newStock sản phẩm",
+                                "time" to System.currentTimeMillis(),
+                                "type" to "WARNING"
+                            )
+
+                            warningNotifRef.set(warningNotification)
+                                .addOnSuccessListener {
+                                    Log.d("EXPORT", "WARNING saved OK")
+                                }
+                                .addOnFailureListener {
+                                    Log.e("EXPORT", "WARNING FAIL: ${it.message}")
+                                }
+                        } else {
+                            Log.d("EXPORT", "No WARNING needed")
+                        }
+                    }
+                    .addOnFailureListener {
+                        Log.e("EXPORT", "EXPORT NOTIF FAIL: ${it.message}")
+                    }
             }
             .addOnFailureListener { e ->
+
                 _loading.value = false
                 _saveState.value = false
                 _errorMessage.value = e.message ?: "Có lỗi xảy ra"
+
+                Log.e("EXPORT", "TRANSACTION FAIL: ${e.message}")
+
+                val errorNotifRef =
+                    db.collection("notifications").document()
+
+                val errorNotification = mapOf<String, Any>(
+                    "id" to errorNotifRef.id,
+                    "title" to "Xuất kho thất bại",
+                    "message" to "Thuốc: ${receipt.productName} - ${e.message ?: "Không đủ tồn kho"}",
+                    "time" to System.currentTimeMillis(),
+                    "type" to "WARNING"
+                )
+
+                errorNotifRef.set(errorNotification)
+                    .addOnSuccessListener {
+                        Log.d("EXPORT", "ERROR notification saved")
+                    }
+                    .addOnFailureListener {
+                        Log.e("EXPORT", "ERROR notif FAIL: ${it.message}")
+                    }
             }
     }
 

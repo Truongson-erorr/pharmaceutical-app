@@ -5,5 +5,6 @@ data class AppNotification(
     val title: String = "",
     val message: String = "",
     val time: Long = System.currentTimeMillis(),
-    val type: String = ""
+    val type: String = "",
+    val isRead: Boolean = false
 )

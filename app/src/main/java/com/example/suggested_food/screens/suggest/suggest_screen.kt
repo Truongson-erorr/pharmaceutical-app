@@ -135,9 +135,8 @@ fun SuggestScreen(
             }
 
             if (result.isNotEmpty()) {
-
                 Text(
-                    "Top thuốc gợi ý",
+                    "Top 10 thuốc gợi ý",
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp
                 )

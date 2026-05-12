@@ -115,4 +115,3 @@ fun formatTime(time: Long): String {
         else -> "$days ngày trước"
     }
 }
-
