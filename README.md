@@ -2,7 +2,7 @@
 
 Hệ thống gợi ý thuốc được xây dựng dựa trên mô hình học máy, trong đó dữ liệu triệu chứng và thuốc được sử dụng để huấn luyện mô hình trí tuệ nhân tạo (AI). Sau quá trình huấn luyện, mô hình được chuyển đổi sang định dạng tương thích với thiết bị di động và tích hợp trực tiếp vào ứng dụng Android thông qua PyTorch Mobile.
 
-#⚙️ Quy trình xử lý trong hệ thống
+# ⚙️ Quy trình xử lý trong hệ thống
 
 - 📁 Dữ liệu thuốc và thông tin chi tiết được lưu trữ từ file CSV  
 - 🌐 Dữ liệu triệu chứng được chuẩn hóa và ánh xạ từ tiếng Việt sang tiếng Anh  
