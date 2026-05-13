@@ -24,9 +24,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.suggested_food.viewmodels.AuthViewModel
+import com.example.suggested_food.viewmodels.NotificationViewModel
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -44,6 +46,13 @@ fun MainScreen(
     val email = user?.email ?: "Chưa có email"
     val currentRoute =
         navController.currentBackStackEntryAsState().value?.destination?.route
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    val notificationViewModel: NotificationViewModel = viewModel()
+    val count by notificationViewModel.notifCount.collectAsState()
+    LaunchedEffect(Unit) {
+        notificationViewModel.loadNotifications()
+    }
 
     @Composable
     fun DrawerItem(
@@ -89,6 +98,64 @@ fun MainScreen(
                 )
             )
         }
+    }
+
+    if (showLogoutDialog) {
+        AlertDialog(
+            onDismissRequest = {
+                showLogoutDialog = false
+            },
+            shape = RoundedCornerShape(20.dp),
+            containerColor = Color.White,
+            title = {
+                Text(
+                    text = "Xác nhận đăng xuất",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+            },
+            text = {
+                Text(
+                    text = "Bạn có chắc muốn đăng xuất khỏi hệ thống không?",
+                    color = Color.Gray
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showLogoutDialog = false
+
+                        scope.launch { drawerState.close() }
+
+                        authViewModel.logout()
+
+                        Toast.makeText(
+                            context,
+                            "Đã đăng xuất",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                ) {
+                    Text(
+                        "Đăng xuất",
+                        color = Color(0xFFEC4899),
+                        fontWeight = FontWeight.Bold
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showLogoutDialog = false
+                    }
+                ) {
+                    Text(
+                        "Hủy",
+                        color = Color.Gray
+                    )
+                }
+            }
+        )
     }
 
     ModalNavigationDrawer(
@@ -161,14 +228,7 @@ fun MainScreen(
                             .fillMaxWidth()
                             .padding(horizontal = 20.dp)
                             .clickable {
-                                scope.launch { drawerState.close() }
-                                authViewModel.logout()
-
-                                Toast.makeText(
-                                    context,
-                                    "Đã đăng xuất",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                showLogoutDialog = true
                             }
                             .padding(vertical = 12.dp),
                         verticalAlignment = Alignment.CenterVertically
@@ -239,16 +299,39 @@ fun MainScreen(
                             verticalAlignment = Alignment.CenterVertically
                         ) {
 
-                            IconButton(
-                                onClick = {
-                                    navController.navigate("NotificationScreen")
+                            Box {
+                                IconButton(
+                                    onClick = {
+                                        navController.navigate("NotificationScreen")
+                                    }
+                                ) {
+                                    Icon(
+                                        Icons.Default.NotificationsNone,
+                                        contentDescription = null,
+                                        tint = Color.White
+                                    )
                                 }
-                            ) {
-                                Icon(
-                                    Icons.Default.NotificationsNone,
-                                    contentDescription = null,
-                                    tint = Color.White
-                                )
+
+                                if (count > 0) {
+                                    Box(
+                                        modifier = Modifier
+                                            .align(Alignment.TopEnd)
+                                            .offset(x = (-2).dp, y = 2.dp)
+                                            .size(23.dp)
+                                            .background(
+                                                color = Color(0xFFFF3B30),
+                                                shape = CircleShape
+                                            ),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = if (count > 99) "99+" else count.toString(),
+                                            color = Color.White,
+                                            fontWeight = FontWeight.Bold,
+                                            fontSize = 14.sp,
+                                        )
+                                    }
+                                }
                             }
 
                             IconButton(

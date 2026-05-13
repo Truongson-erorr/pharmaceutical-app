@@ -154,7 +154,6 @@ fun ExportStockScreen(
             Button(
                 enabled = !loading,
                 onClick = {
-
                     val receipt = ExportReceipt(
                         id = receiptCode,
                         date = exportDate.time,
@@ -169,7 +168,6 @@ fun ExportStockScreen(
                         customerPhone = customerPhone,
                         totalPrice = totalPrice
                     )
-
                     exportViewModel.saveExportReceipt(receipt)
                 },
                 colors = ButtonDefaults.buttonColors(

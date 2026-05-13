@@ -137,7 +137,6 @@ fun ReminderScreen(
                                         Text(
                                             text = "Nội dung: ${item.description ?: "Không có"}",
                                             color = Color.Gray,
-                                            fontWeight = FontWeight.Bold
                                         )
 
                                         Text(
@@ -149,13 +148,11 @@ fun ReminderScreen(
                                                 }
                                             }",
                                             color = Color.Gray,
-                                            fontWeight = FontWeight.Bold
                                         )
 
                                         Text(
                                             text = "Thuốc: ${item.medicineName ?: "Không có"}",
                                             color = Color.Gray,
-                                            fontWeight = FontWeight.Bold
                                         )
                                     }
                                     Spacer(Modifier.height(4.dp))
