@@ -107,71 +107,76 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
 - Tạo lịch nhắc xuất kho
 - Cảnh báo theo thời gian đã thiết lập
 - Đánh dấu hoàn thành công việc
-
 # 📸 Giao diện các màn hình ứng dụng
 
 ## 🔐 Xác thực người dùng
 
-<p align="center">
+<div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020507379_9640919ee2f397669222a4b3b757ead8_fafkmu.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656796/z7821020677427_24554351d4c36c75d8d06f5e5de6d584_vvivym.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020567625_4aedf3f5a42c6a38c8bab4cfe37e80f4_ennype.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020536581_2fc55daa2fd557a7d451d47a880ea36f_qh2nu8.jpg" width="23%"/>
-</p>
+</div>
 
 ## 🏠 Trang chủ và quản lý thông tin thuốc
 
-<p align="center">
+<div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021059837_07d3db75331016f4afc4e648e77b8ae8_ibhevw.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021026187_35bc9f3a3b8709175b6bdee1c8f2888a_tc31fu.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021141003_0582f8ab1a0aaed85f08f6bf181147f6_a8diiq.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021085914_f4fa4c8dbb20e72a09d7c26f25b895c2_or6jen.jpg" width="23%"/>
-</p>
+</div>
 
 ## 📷 Tra cứu thuốc bằng mã QR & 🤖 Gợi ý thuốc
 
-<p align="center">
+<div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020376551_a797f915433549de2f5e74bf0ca3603d_v2wtkv.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821020489095_bcfcf5717456729cb078d394a391bb19_p0ww7u.jpg" width="23%"/>
-    <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656796/z7821020766158_dda39e468adc1631d245d969e1d8840e_jfecnd.jpg" width="23%"/>
-</p>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656796/z7821020766158_dda39e468adc1631d245d969e1d8840e_jfecnd.jpg" width="23%"/>
+</div>
 
 ## 📦 Quản lý kho thuốc
 
-<p align="center">
+<div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020994604_99d2439c3bcf7bf8052b2393f6663d6b_tdylni.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778657646/z7821020359550_148ee07f541c6fb23ca95f3f5c68a42f_pgksbm.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778657646/z7821020376550_411170016ee64c4a51a2c1ae7fe1c0de_phm8o9.jpg" width="23%"/>
-</p>
+</div>
+
+## 📦 Quản lý tồn kho
+
+<div align="left">
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020964598_570ed927f8ff40e055fbe83c614c5b48_qlh0so.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778659201/z7821020460595_c104a17c10e7be5fd3f4876f672fc510_llyczy.jpg" width="23%"/>
+</div>
 
 ## 🧾 Quản lý hóa đơn
 
-<p align="center">
+<div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021085913_4cf814e135d2038d766dff277bf6353c_ke7bwu.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020376555_725239b4f9ff85cbbfa322795ce958ac_j1qzwl.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020826393_20e2d787a1fae6e4428dbce7ac8ec8ee_et1ela.jpg" width="23%"/>
-</p>
+</div>
 
-<p align="center">
+<div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020408944_59e61a46b6cbac6b881a0a2ccbbd0cc4_cgekgc.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020932127_ae922da1b5972bca8569370bc0063129_g2l4oa.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020871548_96c17c0376be0c810389dd2d34285694_vncna1.jpg" width="23%"/>
-</p>
+</div>
 
 ## 👤 Thông tin hồ sơ bệnh nhân
 
-<p align="center">
+<div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020629929_23e6cacd4e231943c8297d63ffbe24b7_lsatsm.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656796/z7821020748767_1abdbcdd5021b1b6c101b5abb10b07b7_jxn6in.jpg" width="23%"/>
-</p>
+</div>
 
 ## ⏰ Lịch nhắc nhở & 🎟️ Quản lý mã khuyến mãi
 
-<p align="center">
+<div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020931877_c9ec29c511e0d4cd0b9285e22e31994b_rvwf3v.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020715361_8c635994ea2698700553605606bf0668_mnb7cs.jpg" width="23%"/>
-</p>
-
+</div>
 
 # 📁 Cấu trúc thư mục chính
 ```
