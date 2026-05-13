@@ -1,16 +1,16 @@
-# 🤖 AI gợi ý thuốc theo triệu chứng
+# AI gợi ý thuốc theo triệu chứng
 
 Hệ thống gợi ý thuốc được xây dựng dựa trên mô hình học máy, trong đó dữ liệu triệu chứng và thuốc được sử dụng để huấn luyện mô hình trí tuệ nhân tạo (AI). Sau quá trình huấn luyện, mô hình được chuyển đổi sang định dạng tương thích với thiết bị di động và tích hợp trực tiếp vào ứng dụng Android thông qua PyTorch Mobile.
 
-# ⚙️ Quy trình xử lý trong hệ thống
+# Quy trình xử lý trong hệ thống
 
-- 📁 Dữ liệu thuốc và thông tin chi tiết được lưu trữ từ file CSV  
-- 🌐 Dữ liệu triệu chứng được chuẩn hóa và ánh xạ từ tiếng Việt sang tiếng Anh  
-- 🔤 Văn bản đầu vào được chuyển đổi thành vector đặc trưng dựa trên bộ từ vựng (vocab)  
-- 🧠 Vector này được đưa vào mô hình AI đã huấn luyện (.pt model)  
-- 📊 Mô hình trả về xác suất dự đoán cho từng loại thuốc  
-- 📈 Kết quả được xử lý bằng hàm softmax để chuẩn hóa xác suất  
-- 🔗 Hệ thống ánh xạ kết quả với cơ sở dữ liệu thuốc để hiển thị thông tin chi tiết  
+- Dữ liệu thuốc và thông tin chi tiết được lưu trữ từ file CSV  
+- Dữ liệu triệu chứng được chuẩn hóa và ánh xạ từ tiếng Việt sang tiếng Anh  
+- Văn bản đầu vào được chuyển đổi thành vector đặc trưng dựa trên bộ từ vựng (vocab)  
+- Vector này được đưa vào mô hình AI đã huấn luyện (.pt model)  
+- Mô hình trả về xác suất dự đoán cho từng loại thuốc  
+- Kết quả được xử lý bằng hàm softmax để chuẩn hóa xác suất  
+- Hệ thống ánh xạ kết quả với cơ sở dữ liệu thuốc để hiển thị thông tin chi tiết  
 
 Kết quả cuối cùng được hiển thị cho người dùng dưới dạng danh sách thuốc gợi ý, bao gồm:
 - Tên thuốc
@@ -20,7 +20,7 @@ Kết quả cuối cùng được hiển thị cho người dùng dưới dạng
 - Hình ảnh
 - Đánh giá liên quan
 
-## ⚙️ Pipeline xử lý AI
+## Pipeline xử lý AI
 
 - Input: triệu chứng người dùng nhập
 - Tiền xử lý: chuẩn hóa + dịch Việt → Anh
@@ -30,7 +30,7 @@ Kết quả cuối cùng được hiển thị cho người dùng dưới dạng
 - Mapping: ánh xạ với database CSV thuốc
 - UI: hiển thị top 5 kết quả phù hợp nhất
 
-## 📱 Tích hợp trên Mobile
+## Tích hợp trên Mobile
 
 Mô hình AI sau khi huấn luyện được convert sang định dạng TorchScript (`.pt`) và load trực tiếp trong ứng dụng Android thông qua PyTorch Mobile. Điều này giúp hệ thống:
 
@@ -39,77 +39,77 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
 - Giảm độ trễ khi gợi ý thuốc
 
 
-# 🎯 Đối tượng sử dụng
+# Đối tượng sử dụng
 - Chuyên gia / dược sĩ
 - Nhân viên quản lý kho thuốc
 - Cơ sở nhà thuốc
 - Người dùng cần tra cứu và gợi ý thuốc
 
-# 🚀 Các tính năng chính
+# Các tính năng chính
 
-## 🔍 Tra cứu thuốc
+## Tra cứu thuốc
 - Tìm kiếm thuốc theo tên
 - Tìm kiếm theo từ khóa
 - Hiển thị thông tin chi tiết: thành phần, công dụng, liều dùng, tác dụng phụ
 
-## 📷 Tra cứu thuốc bằng mã QR
+## Tra cứu thuốc bằng mã QR
 - Quét mã QR từ hóa đơn nhập/xuất
 - Hoặc chọn ảnh QR từ thư viện
 - Giải mã và truy xuất thông tin thuốc tương ứng
 - Hiển thị chi tiết thuốc sau khi tra cứu
 
-## 🤖 Gợi ý thuốc bằng AI
+## Gợi ý thuốc bằng AI
 - Nhập triệu chứng dạng văn bản
 - Chuẩn hóa và xử lý dữ liệu đầu vào
 - Chuyển đổi thành vector đặc trưng
 - Dự đoán bằng mô hình AI (PyTorch)
 - Hiển thị danh sách thuốc gợi ý
 
-## 📦 Quản lý kho thuốc
+## Quản lý kho thuốc
 - Xem danh sách thuốc trong kho
 - Theo dõi số lượng tồn kho
 - Theo dõi hạn sử dụng
 - Cảnh báo thuốc sắp hết hoặc hết hạn
 
-## 📥 Quản lý phiếu nhập kho
+## Quản lý phiếu nhập kho
 - Tạo phiếu nhập thuốc
 - Thêm số lượng thuốc nhập
 - Tự động tăng tồn kho sau khi nhập
 - Lưu lịch sử nhập kho
 
-## 📤 Quản lý phiếu xuất kho
+## Quản lý phiếu xuất kho
 - Tạo phiếu xuất thuốc
 - Kiểm tra số lượng tồn trước khi xuất
 - Cảnh báo khi tồn kho không đủ
 - Cảnh báo khi số lượng sau xuất < 10
 - Tự động tạo hồ sơ bệnh nhân khi xuất thành công
 
-## 👤 Quản lý hồ sơ bệnh nhân
+## Quản lý hồ sơ bệnh nhân
 - Tự động tạo bệnh nhân sau khi xuất kho
 - Lưu thông tin bệnh nhân
 - Xem lịch sử sử dụng thuốc
 - Theo dõi các lần xuất thuốc
 
-## 🔔 Hệ thống thông báo
+## Hệ thống thông báo
 - Thông báo nhập kho
 - Thông báo xuất kho
 - Thông báo cảnh báo tồn kho thấp
 - Thông báo thuốc hết hạn
 
-## 🎟️ Quản lý mã khuyến mãi
+## Quản lý mã khuyến mãi
 - Tạo mã khuyến mãi
 - Cập nhật và chỉnh sửa mã
 - Kích hoạt / vô hiệu hóa mã
 - Theo dõi trạng thái sử dụng
 
-## ⏰ Lịch nhắc nhở
+## Lịch nhắc nhở
 - Tạo lịch nhắc nhập kho
 - Tạo lịch nhắc xuất kho
 - Cảnh báo theo thời gian đã thiết lập
 - Đánh dấu hoàn thành công việc
-# 📸 Giao diện các màn hình ứng dụng
+# Giao diện các màn hình ứng dụng
 
-## 🔐 Xác thực người dùng
+## Xác thực người dùng
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020507379_9640919ee2f397669222a4b3b757ead8_fafkmu.jpg" width="23%"/>
@@ -118,7 +118,7 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020536581_2fc55daa2fd557a7d451d47a880ea36f_qh2nu8.jpg" width="23%"/>
 </div>
 
-## 🏠 Trang chủ và quản lý thông tin thuốc
+## Trang chủ và quản lý thông tin thuốc
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021059837_07d3db75331016f4afc4e648e77b8ae8_ibhevw.jpg" width="23%"/>
@@ -127,7 +127,7 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021085914_f4fa4c8dbb20e72a09d7c26f25b895c2_or6jen.jpg" width="23%"/>
 </div>
 
-## 📷 Tra cứu thuốc bằng mã QR & 🤖 Gợi ý thuốc
+## Tra cứu thuốc bằng mã QR & 🤖 Gợi ý thuốc
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020376551_a797f915433549de2f5e74bf0ca3603d_v2wtkv.jpg" width="23%"/>
@@ -135,7 +135,7 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656796/z7821020766158_dda39e468adc1631d245d969e1d8840e_jfecnd.jpg" width="23%"/>
 </div>
 
-## 📦 Quản lý kho thuốc
+## Quản lý kho thuốc
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020994604_99d2439c3bcf7bf8052b2393f6663d6b_tdylni.jpg" width="23%"/>
@@ -143,14 +143,14 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778657646/z7821020376550_411170016ee64c4a51a2c1ae7fe1c0de_phm8o9.jpg" width="23%"/>
 </div>
 
-## 📦 Quản lý tồn kho
+## Quản lý tồn kho
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020964598_570ed927f8ff40e055fbe83c614c5b48_qlh0so.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778659201/z7821020460595_c104a17c10e7be5fd3f4876f672fc510_llyczy.jpg" width="23%"/>
 </div>
 
-## 🧾 Quản lý hóa đơn
+## Quản lý hóa đơn
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021085913_4cf814e135d2038d766dff277bf6353c_ke7bwu.jpg" width="23%"/>
@@ -164,21 +164,21 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020871548_96c17c0376be0c810389dd2d34285694_vncna1.jpg" width="23%"/>
 </div>
 
-## 👤 Thông tin hồ sơ bệnh nhân
+## Thông tin hồ sơ bệnh nhân
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020629929_23e6cacd4e231943c8297d63ffbe24b7_lsatsm.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656796/z7821020748767_1abdbcdd5021b1b6c101b5abb10b07b7_jxn6in.jpg" width="23%"/>
 </div>
 
-## ⏰ Lịch nhắc nhở & 🎟️ Quản lý mã khuyến mãi
+## Lịch nhắc nhở & Quản lý mã khuyến mãi
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020931877_c9ec29c511e0d4cd0b9285e22e31994b_rvwf3v.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020715361_8c635994ea2698700553605606bf0668_mnb7cs.jpg" width="23%"/>
 </div>
 
-# 📁 Cấu trúc thư mục chính
+# Cấu trúc thư mục chính
 ```
 app/
 ├── authentication/
@@ -243,26 +243,55 @@ app/
 └── MainActivity.kt
 ```
 
-# 🛠️ Công nghệ sử dụng
+# Công nghệ sử dụng
 
-- 🟡 Kotlin (Android Native)
-- 🧩 MVVM Architecture
-- 🔥 Firebase Authentication
-- ☁️ Firebase Firestore Database
-- 🤖 PyTorch (Machine Learning – gợi ý thuốc theo triệu chứng)
-- 📷 QR Code Scanner (ML Kit / ZXing)
-- 🧠 Natural Language Processing (tiền xử lý triệu chứng)
-- 📦 ViewModel + LiveData / StateFlow
-- 🗂️ Clean Architecture (phân tầng rõ ràng)
-- 🎨 XML UI / Material Design Components
+- Kotlin (Android Native)
+- MVVM Architecture
+- Firebase Authentication
+- Firebase Firestore Database
+- PyTorch (Machine Learning – gợi ý thuốc theo triệu chứng)
+- QR Code Scanner (ML Kit / ZXing)
+- Natural Language Processing (tiền xử lý triệu chứng)
+- ViewModel + LiveData / StateFlow
+- Clean Architecture (phân tầng rõ ràng)
+- XML UI / Material Design Components
 
-# 💡 Hướng phát triển
+# Hướng phát triển
 
-- 🚀 Nâng cao độ chính xác mô hình AI gợi ý thuốc bằng cách mở rộng dataset triệu chứng và thuốc
-- 📊 Tích hợp hệ thống phân tích dữ liệu người dùng (analytics)
-- 🤖 Phát triển chatbot tư vấn thuốc thông minh theo thời gian thực
-- ☁️ Đồng bộ dữ liệu đa nền tảng (Android – Web – Admin Dashboard)
-- 🔔 Tối ưu hệ thống cảnh báo tồn kho bằng AI dự đoán nhu cầu nhập thuốc
-- 📱 Phát triển phiên bản iOS hoặc cross-platform
-- 🔐 Tăng cường bảo mật dữ liệu bệnh nhân và lịch sử sử dụng thuốc
+## Nâng cao AI gợi ý thuốc
+- Mở rộng dataset triệu chứng và danh sách thuốc
+- Tăng số lượng nhãn (labels) để mô hình học chi tiết hơn
+- Cải thiện thuật toán vector hóa và xử lý ngôn ngữ tự nhiên
+- Fine-tuning mô hình PyTorch để tăng độ chính xác dự đoán
+
+## Tích hợp phân tích dữ liệu người dùng (Analytics)
+- Theo dõi hành vi tìm kiếm thuốc của người dùng
+- Thống kê loại thuốc được truy vấn nhiều nhất
+- Phân tích xu hướng bệnh phổ biến theo thời gian
+- Hỗ trợ ra quyết định nhập kho thông minh
+
+## Phát triển chatbot tư vấn thuốc
+- Xây dựng chatbot hỗ trợ hỏi đáp theo triệu chứng
+- Tích hợp AI trả lời theo thời gian thực
+- Kết hợp dữ liệu thuốc để tư vấn chính xác hơn
+- Hỗ trợ đa ngôn ngữ trong tương lai
+
+## Đồng bộ đa nền tảng
+- Phát triển thêm Web Admin Dashboard
+- Đồng bộ dữ liệu giữa Android – Web – Server
+- Quản lý tập trung dữ liệu thuốc và bệnh nhân
+- Hỗ trợ phân quyền người dùng (admin, chuyên gia, bệnh nhân)
+
+## Tối ưu hệ thống kho bằng AI
+- Dự đoán nhu cầu nhập thuốc theo lịch sử sử dụng
+- Cảnh báo tồn kho thông minh theo ngưỡng động
+- Tự động đề xuất nhập hàng khi sắp hết thuốc
+- Giảm tình trạng thiếu hoặc dư tồn kho
+
+
+## Tăng cường bảo mật hệ thống
+- Mã hóa dữ liệu bệnh nhân và lịch sử giao dịch
+- Bảo vệ API bằng authentication nâng cao
+- Phân quyền truy cập theo vai trò người dùng
+- Sao lưu dữ liệu định kỳ trên cloud
 
