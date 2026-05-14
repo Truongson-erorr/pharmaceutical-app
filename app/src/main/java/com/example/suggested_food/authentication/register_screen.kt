@@ -12,13 +12,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodels.AuthViewModel
-import com.google.firebase.auth.FirebaseAuth
 
 @Composable
 fun RegisterScreen(
@@ -32,16 +30,28 @@ fun RegisterScreen(
     val loading by authViewModel.loading.collectAsState()
     val error by authViewModel.error.collectAsState()
 
+    val bgTop = Color(0xFF1B1B22)
+    val bgBottom = Color(0xFF121218)
+
+    val cardGray = Color(0xFF20202A)
+    val textWhite = Color.White
+    val textGray = Color.White.copy(alpha = 0.75f)
+
+    val blue = Color(0xFF38BDF8)
+    val deepBlue = Color(0xFF2563EB)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Brush.horizontalGradient(
-                    listOf(Color(0xFF7C3AED), Color(0xFFEC4899)),
+                Brush.verticalGradient(
+                    listOf(bgTop, bgBottom)
                 )
             )
     ) {
+
         Column(modifier = Modifier.fillMaxSize()) {
+
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -51,16 +61,17 @@ fun RegisterScreen(
 
                 Text(
                     "Đăng ký tài khoản",
-                    fontSize = 33.sp,
+                    fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = textWhite
                 )
+
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(
                     "Tạo tài khoản để bắt đầu sử dụng ứng dụng nhé",
                     fontSize = 14.sp,
-                    color = Color.White.copy(alpha = 0.9f)
+                    color = textGray
                 )
             }
 
@@ -69,7 +80,9 @@ fun RegisterScreen(
                     .fillMaxWidth()
                     .weight(3f),
                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(
+                    containerColor = cardGray
+                )
             ) {
 
                 Column(
@@ -81,52 +94,62 @@ fun RegisterScreen(
                     Text(
                         "Đăng ký",
                         fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Bold,
+                        color = textWhite
                     )
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    Text("Tên người dùng", color = Color.Gray)
+                    Text("Tên người dùng", color = Color(0xFF9CA3AF))
                     BasicTextField(
                         value = name,
                         onValueChange = { name = it },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black)
+                        textStyle = LocalTextStyle.current.copy(color = textWhite)
                     )
                     Divider(
-                        color = if (name.isNotEmpty()) Color(0xFFEC4899) else Color.LightGray,
+                        color = if (name.isNotEmpty())
+                            blue
+                        else
+                            Color(0xFF3A3A45),
                         thickness = 1.5.dp
                     )
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Text("Email", color = Color.Gray)
+                    Text("Email", color = Color(0xFF9CA3AF))
                     BasicTextField(
                         value = email,
                         onValueChange = { email = it },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black)
+                        textStyle = LocalTextStyle.current.copy(color = textWhite)
                     )
                     Divider(
-                        color = if (email.isNotEmpty()) Color(0xFFEC4899) else Color.LightGray,
+                        color = if (email.isNotEmpty())
+                            blue
+                        else
+                            Color(0xFF3A3A45),
                         thickness = 1.5.dp
                     )
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Text("Mật khẩu", color = Color.Gray)
+                    Text("Mật khẩu", color = Color(0xFF9CA3AF))
                     BasicTextField(
                         value = password,
                         onValueChange = { password = it },
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black)
+                        textStyle = LocalTextStyle.current.copy(color = textWhite)
                     )
                     Divider(
-                        color = if (password.isNotEmpty()) Color(0xFFEC4899) else Color.LightGray,
+                        color = if (password.isNotEmpty())
+                            blue
+                        else
+                            Color(0xFF3A3A45),
                         thickness = 1.5.dp
                     )
-                    Spacer(modifier = Modifier.height(42.dp))
+                    Spacer(modifier = Modifier.height(40.dp))
 
                     Button(
                         onClick = {
@@ -139,23 +162,40 @@ fun RegisterScreen(
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(50.dp),
+                            .height(52.dp),
                         enabled = !loading,
-                        shape = RoundedCornerShape(25.dp),
+                        shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFEC4899),
+                            containerColor = Color.Transparent,
                             contentColor = Color.White
-                        )
+                        ),
+                        contentPadding = PaddingValues()
                     ) {
 
-                        if (loading) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.size(24.dp),
-                                color = Color.White,
-                                strokeWidth = 2.dp
-                            )
-                        } else {
-                            Text("Tạo tài khoản", fontWeight = FontWeight.Bold)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.horizontalGradient(
+                                        listOf(deepBlue, blue)
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                            if (loading) {
+                                CircularProgressIndicator(
+                                    color = Color.White,
+                                    modifier = Modifier.size(22.dp),
+                                    strokeWidth = 2.dp
+                                )
+                            } else {
+                                Text(
+                                    "Tạo tài khoản",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            }
                         }
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -163,19 +203,20 @@ fun RegisterScreen(
                     if (error != null) {
                         Text(
                             text = error ?: "",
-                            color = Color.Red,
+                            color = Color(0xFFEF4444),
                             fontSize = 13.sp
                         )
                     }
 
                     TextButton(
-                        onClick = { navController.navigate("login") },
+                        onClick = {
+                            navController.navigate("login")
+                        },
                         modifier = Modifier.align(Alignment.CenterHorizontally)
                     ) {
                         Text(
                             "Đã có tài khoản? Đăng nhập",
-                            color = Color(0xFFEC4899),
-                            textAlign = TextAlign.Center
+                            color = blue
                         )
                     }
                 }

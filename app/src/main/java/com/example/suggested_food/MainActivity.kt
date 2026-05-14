@@ -26,6 +26,7 @@ import androidx.navigation.navArgument
 import com.example.suggested_food.authentication.ForgotPasswordScreen
 import com.example.suggested_food.authentication.LoginScreen
 import com.example.suggested_food.authentication.RegisterScreen
+import com.example.suggested_food.authentication.WelcomeScreen
 import com.example.suggested_food.screens.ai.AISearchScreen
 import com.example.suggested_food.screens.category.AllCategoriesScreen
 import com.example.suggested_food.screens.category.CategoryProductsScreen
@@ -105,7 +106,7 @@ fun AppNavigation(
     }
 
     val startDestination = when {
-        !isLoggedIn -> "login"
+        !isLoggedIn -> "welcome"
         role == "admin" -> "admin_home"
         else -> "MainScreen"
     }
@@ -126,6 +127,9 @@ fun AppNavigation(
             slideOutHorizontally(targetOffsetX = { 1000 }, animationSpec = tween(300))
         }
     ) {
+        composable("welcome") {
+            WelcomeScreen(navController = navController)
+        }
         composable("MainScreen") {
             MainScreen(
                 navController = navController,

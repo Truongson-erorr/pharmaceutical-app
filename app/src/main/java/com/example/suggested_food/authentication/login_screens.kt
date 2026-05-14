@@ -36,13 +36,6 @@ fun LoginScreen(
     val loading by authViewModel.loading.collectAsState()
     val error by authViewModel.error.collectAsState()
 
-    LaunchedEffect(authViewModel.getCurrentUser()) {
-        if (authViewModel.getCurrentUser() != null) {
-            navController.navigate("MainScreen") {
-                popUpTo("login") { inclusive = true }
-            }
-        }
-    }
     val context = LocalContext.current
 
     val googleSignInClient = remember {
@@ -59,7 +52,6 @@ fun LoginScreen(
             contract = ActivityResultContracts.StartActivityForResult()
         ) { result ->
             val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-
             try {
                 val account = task.getResult(ApiException::class.java)
                 authViewModel.firebaseAuthWithGoogle(account.idToken!!)
@@ -68,24 +60,27 @@ fun LoginScreen(
             }
         }
 
+    val bgTop = Color(0xFF1B1B22)
+    val bgBottom = Color(0xFF121218)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                Brush.horizontalGradient(
-                    listOf(Color(0xFF7C3AED), Color(0xFFEC4899)),
+                Brush.verticalGradient(
+                    listOf(bgTop, bgBottom)
                 )
             )
     ) {
-        Column(
-            modifier = Modifier.fillMaxSize()
-        ) {
+
+        Column(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .weight(1f)
                     .padding(35.dp),
                 verticalArrangement = Arrangement.Center
             ) {
+
                 Text(
                     "Pharmaceutical",
                     fontSize = 36.sp,
@@ -93,10 +88,11 @@ fun LoginScreen(
                     color = Color.White
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Text(
                     "Hỗ trợ tra cứu, gợi ý và tìm kiếm thông tin thuốc một cách nhanh chóng ^^",
                     fontSize = 14.sp,
-                    color = Color.White.copy(alpha = 0.9f)
+                    color = Color.White.copy(alpha = 0.75f)
                 )
             }
 
@@ -105,48 +101,64 @@ fun LoginScreen(
                     .fillMaxWidth()
                     .weight(2f),
                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White)
+                colors = CardDefaults.cardColors(
+                    containerColor = Color(0xFF20202A)
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 10.dp
+                )
             ) {
+
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(35.dp)
                 ) {
+
                     Text(
                         "Đăng nhập",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color.Black
+                        color = Color.White
                     )
                     Spacer(modifier = Modifier.height(24.dp))
 
-                    Text("Email", color = Color.Gray)
+                    Text("Email", color = Color(0xFF9CA3AF))
                     BasicTextField(
                         value = email,
                         onValueChange = { email = it },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black)
+                        textStyle = LocalTextStyle.current.copy(color = Color.White)
                     )
                     Divider(
-                        color = if (email.isNotEmpty()) Color(0xFFEC4899) else Color.LightGray,
+                        color = if (email.isNotEmpty())
+                            Color(0xFF38BDF8)
+                        else
+                            Color(0xFF3A3A45),
                         thickness = 1.5.dp
                     )
+
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    Text("Mật khẩu", color = Color.Gray)
+                    // PASSWORD
+                    Text("Mật khẩu", color = Color(0xFF9CA3AF))
                     BasicTextField(
                         value = password,
                         onValueChange = { password = it },
                         visualTransformation = PasswordVisualTransformation(),
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(color = Color.Black)
+                        textStyle = LocalTextStyle.current.copy(color = Color.White)
                     )
                     Divider(
-                        color = if (password.isNotEmpty()) Color(0xFFEC4899) else Color.LightGray,
+                        color = if (password.isNotEmpty())
+                            Color(0xFF38BDF8)
+                        else
+                            Color(0xFF3A3A45),
                         thickness = 1.5.dp
                     )
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
@@ -158,7 +170,7 @@ fun LoginScreen(
                         ) {
                             Text(
                                 "Quên mật khẩu?",
-                                color = Color(0xFFEC4899),
+                                color = Color(0xFF38BDF8),
                                 fontSize = 13.sp
                             )
                         }
@@ -167,52 +179,77 @@ fun LoginScreen(
 
                     Button(
                         onClick = {
-                            authViewModel.login(
-                                email.trim(),
-                                password
-                            )
+                            authViewModel.login(email.trim(), password)
                         },
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(50.dp),
-                        enabled = !loading,
-                        shape = RoundedCornerShape(25.dp),
+                            .height(52.dp),
+                        shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFEC4899),
+                            containerColor = Color.Transparent,
                             contentColor = Color.White
-                        )
+                        ),
+                        contentPadding = PaddingValues()
                     ) {
-                        if (loading) {
-                            CircularProgressIndicator(
-                                color = Color.White,
-                                modifier = Modifier.size(24.dp),
-                                strokeWidth = 2.dp
-                            )
-                        } else {
-                            Text("Đăng nhập", fontWeight = FontWeight.Bold)
+
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.horizontalGradient(
+                                        listOf(
+                                            Color(0xFF2563EB),
+                                            Color(0xFF38BDF8)
+                                        )
+                                    )
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+
+                            if (loading) {
+                                CircularProgressIndicator(
+                                    color = Color.White,
+                                    modifier = Modifier.size(22.dp),
+                                    strokeWidth = 2.dp
+                                )
+                            } else {
+                                Text(
+                                    text = "Đăng nhập",
+                                    fontWeight = FontWeight.Bold,
+                                    color = Color.White
+                                )
+                            }
                         }
                     }
+
                     Spacer(modifier = Modifier.height(16.dp))
 
                     if (error != null) {
                         Text(
                             text = error ?: "",
-                            color = Color.Red,
+                            color = Color(0xFFEF4444),
                             fontSize = 13.sp
                         )
                     }
+
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Divider(modifier = Modifier.weight(1f), color = Color.LightGray)
-                        Text("  Hoặc  ", color = Color.Gray, fontSize = 12.sp)
-                        Divider(modifier = Modifier.weight(1f), color = Color.LightGray)
+                        Divider(modifier = Modifier.weight(1f), color = Color(0xFF3A3A45))
+                        Text(
+                            "  Hoặc  ",
+                            color = Color(0xFF9CA3AF),
+                            fontSize = 12.sp
+                        )
+                        Divider(modifier = Modifier.weight(1f), color = Color(0xFF3A3A45))
                     }
+
                     Spacer(modifier = Modifier.height(12.dp))
 
+                    // GOOGLE BUTTON
                     Button(
                         onClick = {
                             googleSignInClient.signOut().addOnCompleteListener {
@@ -224,12 +261,12 @@ fun LoginScreen(
                             .height(50.dp),
                         shape = RoundedCornerShape(15.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFFF5F5F5),
-                            contentColor = Color.Black
+                            containerColor = Color(0xFF2A2A35),
+                            contentColor = Color.White
                         )
                     ) {
                         AsyncImage(
-                            model = "https://developers.google.com/identity/images/g-logo.png",
+                            model = "https://cdn.iconscout.com/icon/free/png-256/free-google-icon-svg-download-png-1507807.png",
                             contentDescription = null,
                             modifier = Modifier.size(24.dp)
                         )
@@ -241,6 +278,7 @@ fun LoginScreen(
                             fontWeight = FontWeight.Medium
                         )
                     }
+
                     Spacer(modifier = Modifier.height(12.dp))
 
                     TextButton(
@@ -251,7 +289,7 @@ fun LoginScreen(
                     ) {
                         Text(
                             "Chưa có tài khoản? Đăng ký",
-                            color = Color(0xFFEC4899)
+                            color = Color(0xFF38BDF8)
                         )
                     }
                 }
@@ -259,4 +297,3 @@ fun LoginScreen(
         }
     }
 }
-
