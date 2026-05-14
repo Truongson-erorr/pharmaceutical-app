@@ -112,70 +112,74 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
 ## Xác thực người dùng
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020507379_9640919ee2f397669222a4b3b757ead8_fafkmu.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656796/z7821020677427_24554351d4c36c75d8d06f5e5de6d584_vvivym.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020567625_4aedf3f5a42c6a38c8bab4cfe37e80f4_ennype.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020536581_2fc55daa2fd557a7d451d47a880ea36f_qh2nu8.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729311/z7823866510991_b1327c3333873c6133fbcf53ac1135ff_w3dien.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823866498281_204f5445039bab0605b7248326e98fd2_x9ngyj.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823866372418_0e592f0f5a8e8c80fe9391f67a709b93_jwubop.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823866268590_4d4ed6665007715a2ac4697bf8908358_uw3dio.jpg" width="23%"/>
 </div>
 
 ## Trang chủ và quản lý thông tin thuốc
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021059837_07d3db75331016f4afc4e648e77b8ae8_ibhevw.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021026187_35bc9f3a3b8709175b6bdee1c8f2888a_tc31fu.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021141003_0582f8ab1a0aaed85f08f6bf181147f6_a8diiq.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021085914_f4fa4c8dbb20e72a09d7c26f25b895c2_or6jen.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729309/z7823867124443_e19f659a10275e970e0dcd6312f0353d_ef0wzw.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823867199169_8d16476c7ac7547c5a7ad1363f97bc9b_oips47.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823867409476_710a55fe72c4d456aedc84830d3c364e_mrck8j.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823867350111_05a3a16a7bff64ce1dad5eb48f3191f8_brwjfa.jpg" width="23%"/>
 </div>
 
-## Tra cứu thuốc bằng mã QR & 🤖 Gợi ý thuốc
+## Tra cứu thuốc offline & mã QR & AI Gợi ý thuốc
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020376551_a797f915433549de2f5e74bf0ca3603d_v2wtkv.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821020489095_bcfcf5717456729cb078d394a391bb19_p0ww7u.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656796/z7821020766158_dda39e468adc1631d245d969e1d8840e_jfecnd.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823866197221_1e3074e1f8bf7df39e2eea5cacf08f9e_scn4cd.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823866197220_76a9ea1b8971694c6ba06820b90d8557_rjjbs4.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823867381621_aef75aebd1e19548101adffae6cb116a_wkrsod.jpg" width="23%"/>
 </div>
 
 ## Quản lý kho thuốc
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020994604_99d2439c3bcf7bf8052b2393f6663d6b_tdylni.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778657646/z7821020359550_148ee07f541c6fb23ca95f3f5c68a42f_pgksbm.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778657646/z7821020376550_411170016ee64c4a51a2c1ae7fe1c0de_phm8o9.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729309/z7823867319322_03514053225b304ed1a34b49f294f6ea_m9weji.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729308/z7823867229389_9d13121d0fe6fa9f58584fcf596c9090_dmvxs7.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823866197222_3c73acc7367ae99cb11ff4c2d7d8069a_diay8u.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729308/z7823867253726_8555510da3d5101ce05973680fcd95df_rwe1lh.jpg" width="23%"/>
 </div>
 
 ## Quản lý tồn kho
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020964598_570ed927f8ff40e055fbe83c614c5b48_qlh0so.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778659201/z7821020460595_c104a17c10e7be5fd3f4876f672fc510_llyczy.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729309/z7823867079243_f138fb5811a4aff483282f3d524eed4d_tbfz8s.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729309/z7823867140856_2956b5e671a517a7e29deb7c9cceff93_ezxahu.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823866324644_5336d6e9b0eefc9f3e08d3fb76a03355_dzj7ol.jpg" width="23%"/>
 </div>
 
 ## Quản lý hóa đơn
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656794/z7821021085913_4cf814e135d2038d766dff277bf6353c_ke7bwu.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020376555_725239b4f9ff85cbbfa322795ce958ac_j1qzwl.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020826393_20e2d787a1fae6e4428dbce7ac8ec8ee_et1ela.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729309/z7823867287919_9ece62341d4e155e370392ca84f98e5e_a0v1up.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823866357494_d42b6a4e08f80cf52fbd7a2066424881_k1vqwf.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729308/z7823866860578_aeef900f2164b8e64b3f1cf26edb3b44_cdnqne.jpg" width="23%"/>
 </div>
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020408944_59e61a46b6cbac6b881a0a2ccbbd0cc4_cgekgc.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020932127_ae922da1b5972bca8569370bc0063129_g2l4oa.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020871548_96c17c0376be0c810389dd2d34285694_vncna1.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729311/z7823866696775_feafd8605f346db9ba0a832631faae09_knhthb.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729308/z7823866997170_15e20d13eb9d748fe678e5a709745300_twpuig.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729308/z7823866919526_430f94114e1682d904b302e20ad65e3c_nbh02f.jpg" width="23%"/>
 </div>
 
 ## Thông tin hồ sơ bệnh nhân
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020629929_23e6cacd4e231943c8297d63ffbe24b7_lsatsm.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656796/z7821020748767_1abdbcdd5021b1b6c101b5abb10b07b7_jxn6in.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729309/z7823867036185_2436475f1a947c03192788ea610812be_f1bbbx.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729311/z7823866767477_907f17bca57274b78a446d873e6ca909_jsexdo.jpg" width="23%"/>
 </div>
 
 ## Lịch nhắc nhở & Quản lý mã khuyến mãi
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656793/z7821020931877_c9ec29c511e0d4cd0b9285e22e31994b_rvwf3v.jpg" width="23%"/>
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778656795/z7821020715361_8c635994ea2698700553605606bf0668_mnb7cs.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729308/z7823866890907_f49818b5cdbb387d54b778d1977ab2c8_atefij.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729311/z7823866601021_b1ad8f392bc72cdf02904483894ab687_itlezm.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729311/z7823866614521_8ba4cce3bb34e0f65e0ae68beb94f1a6_yh6qmt.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729311/z7823866813721_abee998d5b2de0b4061299322c50c206_wrumsl.jpg" width="23%"/>
 </div>
 
 # Cấu trúc thư mục chính
