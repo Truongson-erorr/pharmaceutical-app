@@ -15,9 +15,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.suggested_food.viewmodels.NotificationViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.suggested_food.models.AppNotification
+import com.example.suggested_food.viewmodels.NotificationViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,9 +26,7 @@ fun NotificationScreen(
     viewModel: NotificationViewModel = viewModel()
 ) {
     val notifications by viewModel.notifications.collectAsState()
-    var selectedNotification by remember {
-        mutableStateOf<AppNotification?>(null)
-    }
+    var expandedIds by remember { mutableStateOf(setOf<String>()) }
 
     LaunchedEffect(Unit) {
         viewModel.loadNotifications()
@@ -72,12 +70,14 @@ fun NotificationScreen(
             }
         }
     ) { padding ->
+
         Box(
             modifier = Modifier
                 .padding(padding)
                 .fillMaxSize()
                 .background(Color(0xFFF5F5F5))
         ) {
+
             if (notifications.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -86,29 +86,29 @@ fun NotificationScreen(
                     Text("Chưa có thông báo")
                 }
             } else {
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 12.dp, vertical = 8.dp),
                     verticalArrangement = Arrangement.spacedBy(6.dp)
                 ) {
-                    items(notifications) { item ->
+
+                    items(notifications, key = { it.id }) { item ->
                         NotificationItem(
                             item = item,
-                            onClick = {
-                                selectedNotification = it
+                            isExpanded = expandedIds.contains(item.id),
+                            onToggle = {
+                                expandedIds = if (expandedIds.contains(item.id)) {
+                                    expandedIds - item.id
+                                } else {
+                                    expandedIds + item.id
+                                }
                             }
                         )
                     }
                 }
             }
-        }
-
-        selectedNotification?.let {
-            NotificationDetailDialog(
-                item = it,
-                onDismiss = { selectedNotification = null }
-            )
         }
     }
 }
