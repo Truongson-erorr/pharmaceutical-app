@@ -107,8 +107,20 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
 - Tạo lịch nhắc xuất kho
 - Cảnh báo theo thời gian đã thiết lập
 - Đánh dấu hoàn thành công việc
-# Giao diện các màn hình ứng dụng
+  
+# Thiết kế cơ sở dữ liệu
+## 1. Sơ đồ ERD
 
+<div align="left">
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778812754/z7827349606226_84c74d3d73e19de247cd34b35a7d5931_mzqtny.jpg" width="70%"/>
+</div>
+
+## 2. Sơ đồ Class Diagram
+<div align="left">
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778812755/z7827349606245_5bdc311fc829b6dd40573e0d22688f4b_ajdtud.jpg" width="70%"/>
+</div>
+
+# Giao diện các màn hình ứng dụng
 ## Xác thực người dùng
 
 <div align="left">
@@ -118,7 +130,7 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823866268590_4d4ed6665007715a2ac4697bf8908358_uw3dio.jpg" width="23%"/>
 </div>
 
-## Trang chủ và quản lý thông tin thuốc
+## Trang chủ & Thông tin chi tiết thuốc
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729309/z7823867124443_e19f659a10275e970e0dcd6312f0353d_ef0wzw.jpg" width="23%"/>
@@ -144,7 +156,7 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729308/z7823867253726_8555510da3d5101ce05973680fcd95df_rwe1lh.jpg" width="23%"/>
 </div>
 
-## Quản lý tồn kho
+## Quản lý tồn kho & giám sát tồn kho
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729309/z7823867079243_f138fb5811a4aff483282f3d524eed4d_tbfz8s.jpg" width="23%"/>
@@ -152,7 +164,7 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729310/z7823866324644_5336d6e9b0eefc9f3e08d3fb76a03355_dzj7ol.jpg" width="23%"/>
 </div>
 
-## Quản lý hóa đơn
+## Quản lý & tạo hóa đơn 
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778729309/z7823867287919_9ece62341d4e155e370392ca84f98e5e_a0v1up.jpg" width="23%"/>
