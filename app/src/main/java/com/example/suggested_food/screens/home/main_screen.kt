@@ -80,20 +80,20 @@ fun MainScreen(
                     Icon(
                         icon,
                         contentDescription = title,
-                        tint = if (selected) Color(0xFFEC4899) else Color.Gray
+                        tint = if (selected) Color(0xFF38BDF8) else Color.Gray
                     )
                 },
                 label = {
                     Text(
                         title,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (selected) Color(0xFFEC4899) else Color.Black
+                        color = if (selected) Color(0xFF38BDF8) else Color.Black
                     )
                 },
                 shape = RoundedCornerShape(12.dp),
                 modifier = Modifier.fillMaxWidth(0.98f),
                 colors = NavigationDrawerItemDefaults.colors(
-                    selectedContainerColor = Color(0xFFEC4899).copy(alpha = 0.15f),
+                    selectedContainerColor = Color(0xFF38BDF8).copy(alpha = 0.15f),
                     unselectedContainerColor = Color.Transparent
                 )
             )
@@ -138,7 +138,7 @@ fun MainScreen(
                 ) {
                     Text(
                         "Đăng xuất",
-                        color = Color(0xFFEC4899),
+                        color = Color(0xFF38BDF8),
                         fontWeight = FontWeight.Bold
                     )
                 }
@@ -172,8 +172,8 @@ fun MainScreen(
                         .background(
                             Brush.horizontalGradient(
                                 listOf(
-                                    Color(0xFF7C3AED),
-                                    Color(0xFFEC4899)
+                                    Color(0xFF2563EB),
+                                    Color(0xFF38BDF8)
                                 )
                             )
                         )
@@ -188,7 +188,7 @@ fun MainScreen(
                         Icon(
                             Icons.Default.Person,
                             contentDescription = null,
-                            tint = Color(0xFFEC4899),
+                            tint = Color(0xFF38BDF8),
                             modifier = Modifier.padding(16.dp)
                         )
                     }
@@ -260,8 +260,8 @@ fun MainScreen(
                         .background(
                             Brush.horizontalGradient(
                                 listOf(
-                                    Color(0xFF7C3AED),
-                                    Color(0xFFEC4899)
+                                    Color(0xFF2563EB),
+                                    Color(0xFF38BDF8)
                                 )
                             )
                         )

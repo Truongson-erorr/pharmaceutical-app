@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.ArrowBack
@@ -45,23 +46,40 @@ fun SuggestScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = {
-                    Text(
-                        "AI gợi ý thuốc",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
+                        )
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Outlined.ArrowBack, null, tint = Color.Black)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Gợi ý thuốc - AI",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                Icons.Default.ArrowBackIosNew,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent
+                    )
                 )
-            )
+            }
         }
     ) { padding ->
 
@@ -109,7 +127,10 @@ fun SuggestScreen(
                         modifier = Modifier
                             .background(
                                 Brush.horizontalGradient(
-                                    listOf(Color(0xFF7C3AED), Color(0xFFEC4899))
+                                    listOf(
+                                        Color(0xFF2563EB),
+                                        Color(0xFF38BDF8)
+                                    )
                                 ),
                                 RoundedCornerShape(14.dp)
                             )
@@ -157,7 +178,7 @@ fun SuggestScreen(
                             Text(
                                 text = "${index + 1}. ${drug.name}",
                                 fontWeight = FontWeight.Bold,
-                                color = Color(0xFF7C3AED),
+                                color = Color(0xFF38BDF8),
                                 style = MaterialTheme.typography.titleMedium
                             )
 
@@ -254,12 +275,12 @@ fun SuggestScreen(
                         label = {
                             Text(
                                 text = item,
-                                color = Color(0xFFEC4899),
+                                color = Color(0xFF38BDF8),
                                 fontWeight = FontWeight.Medium
                             )
                         },
                         colors = AssistChipDefaults.assistChipColors(
-                            containerColor = Color(0xFFFFE4EC)
+                            containerColor = Color(0xFFE0F2FE)
                         ),
                         border = null
                     )

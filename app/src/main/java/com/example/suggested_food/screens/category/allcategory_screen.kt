@@ -38,27 +38,40 @@ fun AllCategoriesScreen(
 
     Scaffold(
         topBar = {
-            SmallTopAppBar(
-                title = {
-                    Text(
-                        text = "Phân loại điều trị",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            imageVector = Icons.Default.ArrowBackIos,
-                            contentDescription = "Quay lại",
-                            tint = Color.Black
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
                         )
-                    }
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = Color.White
+                    )
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Phân loại điều trị",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                Icons.Default.ArrowBackIosNew,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent
+                    )
                 )
-            )
+            }
         },
         modifier = Modifier.background(
             Color(0xFFF5F5F5)

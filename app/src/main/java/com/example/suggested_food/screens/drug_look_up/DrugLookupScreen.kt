@@ -7,6 +7,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowBackIosNew
@@ -38,15 +39,40 @@ fun DrugLookupScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Tra cứu thuốc", fontWeight = FontWeight.Bold, color = Color.Black) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Outlined.ArrowBackIosNew, contentDescription = null, tint = Color.Black)
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(containerColor = Color.White)
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
+                        )
+                    )
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Tra cứu thuốc offline",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                Icons.Default.ArrowBackIosNew,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent
+                    )
+                )
+            }
         },
     ) { innerPadding ->
         Box(

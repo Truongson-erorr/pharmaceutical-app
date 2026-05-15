@@ -3,9 +3,10 @@ package com.example.suggested_food.authentication
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.NavigateNext
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -15,19 +16,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.example.suggested_food.viewmodels.AuthViewModel
 
 @Composable
-fun ForgotPasswordScreen(
-    navController: NavController,
-    authViewModel: AuthViewModel
+fun WelcomeScreen(
+    navController: NavController
 ) {
 
-    var email by remember { mutableStateOf("") }
-
-    val loading by authViewModel.loading.collectAsState()
-    val error by authViewModel.error.collectAsState()
-
+    // SAME THEME AS LOGIN
     val bgTop = Color(0xFF1B1B22)
     val bgBottom = Color(0xFF121218)
 
@@ -47,29 +42,34 @@ fun ForgotPasswordScreen(
                 )
             )
     ) {
+
         Column(modifier = Modifier.fillMaxSize()) {
+
+            // TOP SECTION (same login vibe)
             Column(
                 modifier = Modifier
-                    .weight(2f)
+                    .weight(4f)
                     .padding(35.dp),
                 verticalArrangement = Arrangement.Center
             ) {
 
                 Text(
-                    "Quên mật khẩu",
+                    text = "Pharmaceutical-App",
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
                     color = textWhite
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+
+                Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
-                    "Nhập email để nhận liên kết đặt lại mật khẩu",
+                    text = "Hệ thống quản lý nhà thuốc tích hợp AI hỗ trợ tra cứu, quản lý tồn kho, hóa đơn và vận hành hiệu quả.",
                     fontSize = 14.sp,
                     color = textGray
                 )
             }
 
+            // BOTTOM CARD (same login card style)
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -77,49 +77,44 @@ fun ForgotPasswordScreen(
                 shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = cardGray
+                ),
+                elevation = CardDefaults.cardElevation(
+                    defaultElevation = 10.dp
                 )
             ) {
 
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .padding(35.dp)
+                        .padding(35.dp),
+                    verticalArrangement = Arrangement.Center
                 ) {
 
                     Text(
-                        "Đặt lại mật khẩu",
+                        text = "Bắt đầu sử dụng",
                         fontSize = 24.sp,
                         fontWeight = FontWeight.Bold,
                         color = textWhite
                     )
-                    Spacer(modifier = Modifier.height(24.dp))
 
-                    Text("Email", color = Color(0xFF9CA3AF))
-                    BasicTextField(
-                        value = email,
-                        onValueChange = { email = it },
-                        modifier = Modifier.fillMaxWidth(),
-                        singleLine = true,
-                        textStyle = LocalTextStyle.current.copy(color = textWhite)
-                    )
+                    Spacer(modifier = Modifier.height(20.dp))
 
-                    Divider(
-                        color = if (email.isNotEmpty())
-                            blue
-                        else
-                            Color(0xFF3A3A45),
-                        thickness = 1.5.dp
+                    Text(
+                        text = "Tạo tài khoản để trải nghiệm đầy đủ các chức năng quản lý nhà thuốc.",
+                        fontSize = 14.sp,
+                        color = Color.White.copy(alpha = 0.65f),
+                        textAlign = TextAlign.Start,
+                        modifier = Modifier.fillMaxWidth()
                     )
                     Spacer(modifier = Modifier.height(40.dp))
 
                     Button(
                         onClick = {
-                            authViewModel.resetPassword(email.trim())
+                            navController.navigate("login")
                         },
                         modifier = Modifier
                             .fillMaxWidth()
                             .height(52.dp),
-                        enabled = !loading,
                         shape = RoundedCornerShape(14.dp),
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color.Transparent,
@@ -139,43 +134,27 @@ fun ForgotPasswordScreen(
                             contentAlignment = Alignment.Center
                         ) {
 
-                            if (loading) {
-                                CircularProgressIndicator(
-                                    color = Color.White,
-                                    modifier = Modifier.size(22.dp),
-                                    strokeWidth = 2.dp
-                                )
-                            } else {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center
+                            ) {
+
                                 Text(
-                                    "Gửi email đặt lại mật khẩu",
+                                    text = "Bắt đầu trải nghiệm",
                                     fontWeight = FontWeight.Bold,
-                                    color = Color.White,
-                                    textAlign = TextAlign.Center
+                                    fontSize = 16.sp,
+                                    color = Color.White
+                                )
+
+                                Spacer(modifier = Modifier.width(6.dp))
+
+                                Icon(
+                                    imageVector = Icons.Default.NavigateNext,
+                                    contentDescription = null,
+                                    tint = Color.White
                                 )
                             }
                         }
-                    }
-                    Spacer(modifier = Modifier.height(12.dp))
-
-                    if (error != null) {
-                        Text(
-                            text = error ?: "",
-                            color = Color(0xFFEF4444),
-                            fontSize = 13.sp
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    TextButton(
-                        onClick = {
-                            navController.popBackStack()
-                        },
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    ) {
-                        Text(
-                            "Quay lại",
-                            color = blue
-                        )
                     }
                 }
             }

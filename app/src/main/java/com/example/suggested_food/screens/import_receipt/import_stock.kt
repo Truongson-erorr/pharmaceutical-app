@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -133,25 +134,40 @@ fun ImportStockScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Nhập kho", fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(
-                        onClick = {
-                            navController.popBackStack()
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
+                        )
+                    )
+            ) {
+                TopAppBar(
+                    title = {
+                        Text(
+                            "Tạo phiếu nhập kho",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                Icons.Default.ArrowBackIosNew,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
                         }
-                    ) {
-                        Icon(Icons.Default.ArrowBackIosNew, contentDescription = null)
-                    }
-                },
-
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black,
-                    navigationIconContentColor = Color.Black,
-                    actionIconContentColor = Color.Black
+                    },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent
+                    )
                 )
-            )
+            }
         },
 
         bottomBar = {

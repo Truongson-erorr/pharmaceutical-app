@@ -7,12 +7,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -45,60 +45,74 @@ fun ImportDetailScreen(
     Scaffold(
         containerColor = Color.White,
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White
-                ),
-                title = {
-                    Text(
-                        "Chi tiết hóa đơn",
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
+                        )
                     )
-                },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(
-                            Icons.Default.ArrowBackIosNew,
-                            contentDescription = null,
-                            tint = Color.Black
-                        )
-                    }
-                },
-                actions = {
-                    TextButton(
-                        onClick = {
-                            receipt?.let { data ->
-                                ImportReceiptImageExporter.export(context, data)
-                                showDialog = true
-                            }
-                        },
-                        colors = ButtonDefaults.textButtonColors(
-                            contentColor = Color(0xFF1565C0)
-                        )
-                    ) {
+            ) {
+                TopAppBar(
+                    colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color.Transparent
+                    ),
+                    title = {
                         Text(
-                            "Xuất hóa đơn nhập",
-                            fontWeight = FontWeight.Bold
+                            "Chi tiết hóa đơn",
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
                         )
-                    }
+                    },
+                    navigationIcon = {
+                        IconButton(onClick = { navController.popBackStack() }) {
+                            Icon(
+                                Icons.Default.ArrowBackIosNew,
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    actions = {
 
-                    if (showDialog) {
-                        AlertDialog(
-                            onDismissRequest = { showDialog = false },
-                            confirmButton = {
-                                TextButton(onClick = { showDialog = false }) {
-                                    Text("OK")
+                        TextButton(
+                            onClick = {
+                                receipt?.let { data ->
+                                    ImportReceiptImageExporter.export(context, data)
+                                    showDialog = true
                                 }
                             },
-                            title = {
-                                Text("Xuất hóa đơn thành công")
-                            },
-                            containerColor = Color.White
-                        )
+                            colors = ButtonDefaults.textButtonColors(
+                                contentColor = Color.White
+                            )
+                        ) {
+                            Text(
+                                "Xuất hóa đơn nhập",
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        if (showDialog) {
+                            AlertDialog(
+                                onDismissRequest = { showDialog = false },
+                                confirmButton = {
+                                    TextButton(onClick = { showDialog = false }) {
+                                        Text("OK", color = Color(0xFF2563EB))
+                                    }
+                                },
+                                title = {
+                                    Text("Xuất hóa đơn thành công")
+                                },
+                                containerColor = Color.White
+                            )
+                        }
                     }
-                }
-            )
+                )
+            }
         }
     ) { padding ->
 
