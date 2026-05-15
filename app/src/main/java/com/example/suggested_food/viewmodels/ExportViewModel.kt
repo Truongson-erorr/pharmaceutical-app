@@ -201,7 +201,7 @@ class ExportViewModel : ViewModel() {
                 val errorNotification = mapOf<String, Any>(
                     "id" to errorNotifRef.id,
                     "title" to "Xuất kho thất bại",
-                    "message" to "Thuốc: ${receipt.productName} - ${e.message ?: "Không đủ tồn kho"}",
+                    "message" to "${receipt.productName} - ${e.message ?: "Không đủ tồn kho"}",
                     "time" to System.currentTimeMillis(),
                     "type" to "WARNING"
                 )

@@ -1,5 +1,6 @@
 package com.example.suggested_food.screens.notifications
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -7,21 +8,26 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.suggested_food.models.AppNotification
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 @Composable
 fun NotificationItem(
     item: AppNotification,
-    onClick: (AppNotification) -> Unit
+    isExpanded: Boolean,
+    onToggle: () -> Unit
 ) {
     val color = when (item.type) {
         "IMPORT" -> Color(0xFF2196F3)
@@ -34,7 +40,7 @@ fun NotificationItem(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 6.dp)
-            .clickable { onClick(item) },
+            .animateContentSize(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.White
@@ -42,68 +48,159 @@ fun NotificationItem(
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
 
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { onToggle() }
+                .padding(16.dp)
         ) {
 
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .background(
-                        color.copy(alpha = 0.12f),
-                        CircleShape
-                    ),
-                contentAlignment = Alignment.Center
+            Row(
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = Icons.Default.NotificationsNone,
-                    contentDescription = null,
-                    tint = color
-                )
-            }
-            Spacer(Modifier.width(14.dp))
-
-            Column(modifier = Modifier.weight(1f)) {
-
-                Text(
-                    text = item.title,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF1C1C1C),
-                    style = MaterialTheme.typography.bodyLarge
-                )
-                Spacer(Modifier.height(4.dp))
-
-                Text(
-                    text = item.message,
-                    color = Color(0xFF6B6B6B),
-                    style = MaterialTheme.typography.bodyMedium
-                )
-                Spacer(Modifier.height(10.dp))
 
                 Box(
                     modifier = Modifier
+                        .size(44.dp)
                         .background(
-                            Color(0xFFE8F8EF),
-                            RoundedCornerShape(8.dp)
-                        )
-                        .padding(horizontal = 8.dp, vertical = 4.dp)
+                            color.copy(alpha = 0.12f),
+                            CircleShape
+                        ),
+                    contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = formatTime(item.time),
-                        color = Color(0xFF22C55E),
-                        fontWeight = FontWeight.Medium,
-                        style = MaterialTheme.typography.labelSmall
+                    Icon(
+                        imageVector = Icons.Default.NotificationsNone,
+                        contentDescription = null,
+                        tint = color
                     )
                 }
-            }
-            Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(14.dp))
 
-            Icon(
-                Icons.Default.ChevronRight,
-                contentDescription = null,
-                tint = Color(0xFFBDBDBD)
-            )
+                Column(modifier = Modifier.weight(1f)) {
+
+                    Text(
+                        text = item.title,
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFF1C1C1C),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
+                    Spacer(Modifier.height(8.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .background(
+                                Color(0xFFE8F8EF),
+                                RoundedCornerShape(8.dp)
+                            )
+                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                    ) {
+                        Text(
+                            text = formatTime(item.time),
+                            color = Color(0xFF22C55E),
+                            fontWeight = FontWeight.Medium,
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                }
+                Spacer(Modifier.width(8.dp))
+
+                Icon(
+                    imageVector = Icons.Default.ChevronRight,
+                    contentDescription = null,
+                    tint = Color(0xFFBDBDBD),
+                    modifier = Modifier.rotate(if (isExpanded) 90f else 0f)
+                )
+            }
+
+            if (isExpanded) {
+                Spacer(Modifier.height(20.dp))
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            Color.White,
+                            RoundedCornerShape(12.dp)
+                        )
+                        .padding(14.dp)
+                ) {
+
+                    Text(
+                        text = "Chi tiết thông báo",
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF1C1C1C)
+                    )
+                    Text(
+                        text = "----------------------------------------------------------------",
+                        color = Color(0xFFBDBDBD)
+                    )
+                    Spacer(Modifier.height(10.dp))
+
+                    Text(
+                        text = "Vấn đề",
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = item.title,
+                        color = Color.Gray
+                    )
+                    Spacer(Modifier.height(10.dp))
+
+                    Text(
+                        text = "Nội dung",
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = item.message,
+                        color = Color.Gray
+                    )
+                    Spacer(Modifier.height(12.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    color.copy(alpha = 0.15f),
+                                    RoundedCornerShape(30.dp)
+                                )
+                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = item.type,
+                                color = color,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp
+                            )
+                        }
+
+                        Box(
+                            modifier = Modifier
+                                .background(
+                                    Color(0xFFECEFF1),
+                                    RoundedCornerShape(30.dp)
+                                )
+                                .padding(horizontal = 10.dp, vertical = 6.dp)
+                        ) {
+                            Text(
+                                text = formatDate(item.time),
+                                color = Color(0xFF37474F),
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
+                }
+            }
         }
     }
+}
+
+fun formatDate(time: Long): String {
+    val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return sdf.format(Date(time))
 }

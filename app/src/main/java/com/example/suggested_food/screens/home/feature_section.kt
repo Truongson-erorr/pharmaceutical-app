@@ -73,7 +73,7 @@ fun FeatureSection(
                     "Gợi ý thuốc",
                     Icons.Default.MedicalServices,
                     "SuggestScreen",
-                    Color(0xFF10B981)
+                    Color(0xFF22C55E)
                 ),
                 FeatureItem(
                     "Gợi ý AI",
