@@ -109,15 +109,16 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
 - Đánh dấu hoàn thành công việc
   
 # Thiết kế cơ sở dữ liệu
-## 1. Sơ đồ ERD
+## 1. ERD (Entity Relationship Diagram)
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778812754/z7827349606226_84c74d3d73e19de247cd34b35a7d5931_mzqtny.jpg" width="70%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778813573/Untitled_2_ag5xet.png" width="70%"/>
 </div>
 
-## 2. Sơ đồ Class Diagram
+## 2. Class Diagram
+
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778812755/z7827349606245_5bdc311fc829b6dd40573e0d22688f4b_ajdtud.jpg" width="70%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1778813690/z7827427451734_6928703f8c92eafb8582cf9a0b88728d_yxeprc.jpg" width="70%"/>
 </div>
 
 # Giao diện các màn hình ứng dụng
