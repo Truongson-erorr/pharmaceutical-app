@@ -163,7 +163,7 @@ fun MainScreen(
         drawerContent = {
 
             ModalDrawerSheet(
-                modifier = Modifier.fillMaxWidth(0.7f),
+                modifier = Modifier.fillMaxWidth(0.8f),
                 drawerContainerColor = Color.White
             ) {
                 Column(

@@ -136,6 +136,8 @@ class SuggestViewModel(
                         poor = detail.poorReview
                     )
                 }
+
+                // .filter { it.uses.split(" ").size > 10 }
                 .sortedByDescending { it.score }
                 .take(10)
 

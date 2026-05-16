@@ -73,6 +73,7 @@ android {
 }
 
 dependencies {
+    implementation ("com.valentinilk.shimmer:compose-shimmer:1.2.0")
     implementation("com.google.zxing:core:3.5.3")
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
     implementation("org.pytorch:pytorch_android:2.1.0")
