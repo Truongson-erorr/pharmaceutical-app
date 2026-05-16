@@ -72,23 +72,31 @@ class DrugLookupViewModel(
     fun searchDrug(query: String) {
         if (query.isBlank() || _isLoading.value) return
 
-        _isLoading.value = true
-        _result.value = null
+        viewModelScope.launch {
 
-        viewModelScope.launch(Dispatchers.Default) {
+            _isLoading.value = true
+            _result.value = null
+
+            kotlinx.coroutines.delay(900)
+
             val keyword = query.trim().lowercase()
             Log.d(TAG, "Searching for: '$keyword'")
 
-            val matched = medicineList.filter { it.name.trim().lowercase().contains(keyword) }
+            val matched =
+                medicineList.filter {
+                    it.name.trim().lowercase().contains(keyword)
+                }
+
             Log.d(TAG, "Found ${matched.size} matches")
 
             if (matched.isEmpty()) {
                 _result.value = "Xin lỗi, thuốc này chưa có trong hệ thống."
             } else {
+
                 val drug = matched.first()
 
                 val response = buildString {
-                    appendLine(drug.imageUrl) // đường dẫn hình ảnh
+                    appendLine(drug.imageUrl)
                     appendLine("## Tên thuốc")
                     appendLine(drug.name)
                     appendLine()
@@ -105,7 +113,11 @@ class DrugLookupViewModel(
                     appendLine(drug.manufacturer)
                     appendLine()
                     appendLine("## Đánh giá")
-                    appendLine("Excellent: ${drug.excellentReview}, Average: ${drug.averageReview}, Poor: ${drug.poorReview}")
+                    appendLine(
+                        "Excellent: ${drug.excellentReview}, " +
+                                "Average: ${drug.averageReview}, " +
+                                "Poor: ${drug.poorReview}"
+                    )
                 }
 
                 _result.value = response

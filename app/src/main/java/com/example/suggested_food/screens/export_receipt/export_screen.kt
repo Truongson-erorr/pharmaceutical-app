@@ -41,7 +41,6 @@ fun ExportStockScreen(
     val user = authViewModel.getCurrentUser()
 
     val receiptCode = remember { "PX${System.currentTimeMillis()}" }
-
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
 
     var exportDate by remember { mutableStateOf(Date()) }
@@ -280,11 +279,6 @@ fun ExportStockScreen(
                     Modifier.weight(1f)
                 )
             }
-
-            DateField(
-                "Hạn sử dụng",
-                dateFormat.format(expiryDate)
-            ) { showExpiryPicker = true }
 
             FormField("Khách hàng", customer, { customer = it }, "")
             FormField(
