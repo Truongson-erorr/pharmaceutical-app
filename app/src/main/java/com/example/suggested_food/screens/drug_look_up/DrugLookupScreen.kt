@@ -1,5 +1,8 @@
 package com.example.suggested_food.screens.drug_look_up
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -16,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -26,6 +30,7 @@ import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.suggested_food.viewmodels.DrugLookupViewModel
 import com.valentinilk.shimmer.shimmer
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,6 +41,37 @@ fun DrugLookupScreen(
     var query by remember { mutableStateOf("") }
     val result by viewModel.result.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+
+    var visible by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(Unit) {
+        delay(80)
+        visible = true
+    }
+
+    val alpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+
+        label = ""
+    )
+
+    val translationY by animateFloatAsState(
+        targetValue = if (visible) 0f else 30f,
+
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+
+        label = ""
+    )
 
     Scaffold(
         topBar = {
@@ -88,6 +124,10 @@ fun DrugLookupScreen(
                     .fillMaxSize()
                     .padding(horizontal = 20.dp, vertical = 24.dp)
                     .verticalScroll(rememberScrollState())
+                    .graphicsLayer {
+                        this.alpha = alpha
+                        this.translationY = translationY
+                    }
             ) {
 
                 TextField(
@@ -192,10 +232,11 @@ fun DrugLookupScreen(
 
                 else {
                     Text(
-                        text = "Nhập tên thuốc và nhấn tìm kiếm để xem thông tin đầy đủ.",
-                        color = Color.DarkGray,
-                        fontSize = 13.sp,
-                        textAlign = TextAlign.Center,
+                        text = "Nhập tên thuốc để tra cứu nhanh thông tin chi tiết ^^",
+                        color = Color.Black,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Start,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }

@@ -1,10 +1,14 @@
 package com.example.suggested_food.screens.patient
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -18,12 +22,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.suggested_food.models.Patient
 import com.example.suggested_food.viewmodels.PatientViewModel
+import kotlinx.coroutines.delay
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -90,14 +96,57 @@ fun PatientScreen(
                 .padding(horizontal = 16.dp)
         ) {
             Spacer(Modifier.height(15.dp))
+
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(filteredPatients) { patient ->
-                    PatientCard(
-                        patient = patient,
-                        navController = navController
+
+                itemsIndexed(filteredPatients) { index, patient ->
+
+                    var visible by remember(index, filteredPatients.size) {
+                        mutableStateOf(false)
+                    }
+
+                    LaunchedEffect(index, filteredPatients.size) {
+                        visible = false
+                        delay(index * 55L)
+                        visible = true
+                    }
+
+                    val alpha by animateFloatAsState(
+                        targetValue = if (visible) 1f else 0f,
+
+                        animationSpec = tween(
+                            durationMillis = 650,
+                            easing = FastOutSlowInEasing
+                        ),
+
+                        label = ""
                     )
+
+                    val translationY by animateFloatAsState(
+                        targetValue = if (visible) 0f else 28f,
+
+                        animationSpec = tween(
+                            durationMillis = 650,
+                            easing = FastOutSlowInEasing
+                        ),
+
+                        label = ""
+                    )
+
+                    Box(
+                        modifier = Modifier.graphicsLayer {
+                            this.alpha = alpha
+                            this.translationY = translationY
+                        }
+                    ) {
+
+                        PatientCard(
+                            patient = patient,
+                            navController = navController
+                        )
+                    }
                 }
             }
         }
