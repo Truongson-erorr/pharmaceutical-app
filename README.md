@@ -166,7 +166,7 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1779349915/z7849671895521_363ad9afcbbc25a7a3b6493278844c2a_tnkbk6.jpg" width="23%"/>
 </div>
 
-### Quản lý & cảnh báo tồn kho
+## Dashboard quản lí & cảnh báo tồn kho
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1779350694/z7849769132355_181ae1ff32da9099f4de7fcbbddf6e10_urqcza.jpg" width="23%"/>
@@ -174,7 +174,7 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1779350694/z7849769132354_658d993c64a585b510cd42bfb107badb_ee99r2.jpg" width="23%"/>
 </div>
 
-## Quản lý & tạo hóa đơn 
+## Dashboard quản lý & hóa đơn – lịch sử nhập xuất kho
 
 <div align="left">
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1779349913/z7849686511203_0f9b73b0c65f030dd7a4b5cfc5d01aa0_jdl5hr.jpg" width="23%"/>
