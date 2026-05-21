@@ -1,22 +1,31 @@
 package com.example.suggested_food.screens.category
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBackIos
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -106,13 +115,54 @@ fun CategoryProductsScreen(
                 verticalArrangement = Arrangement.spacedBy(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                items(categoryProducts) { product ->
-                    ProductGridItem(
-                        product = product,
-                        onClick = {
-                            navController.navigate("ProductDetail/${product.id}")
-                        }
+                itemsIndexed(categoryProducts) { index, product ->
+
+                    var visible by remember {
+                        mutableStateOf(false)
+                    }
+
+                    LaunchedEffect(Unit) {
+                        kotlinx.coroutines.delay(index * 55L)
+                        visible = true
+                    }
+
+                    val alpha by animateFloatAsState(
+                        targetValue = if (visible) 1f else 0f,
+
+                        animationSpec = tween(
+                            durationMillis = 650
+                        ),
+
+                        label = ""
                     )
+
+                    val translationY by animateFloatAsState(
+                        targetValue = if (visible) 0f else 25f,
+
+                        animationSpec = tween(
+                            durationMillis = 650,
+                            easing = FastOutSlowInEasing
+                        ),
+
+                        label = ""
+                    )
+
+                    Box(
+                        modifier = Modifier.graphicsLayer {
+                            this.alpha = alpha
+                            this.translationY = translationY
+                        }
+                    ) {
+
+                        ProductGridItem(
+                            product = product,
+                            onClick = {
+                                navController.navigate(
+                                    "ProductDetail/${product.id}"
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }

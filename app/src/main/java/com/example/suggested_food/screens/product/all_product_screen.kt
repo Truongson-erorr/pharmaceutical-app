@@ -1,5 +1,6 @@
 package com.example.suggested_food.screens.drug
 
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
@@ -17,6 +18,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.suggested_food.screens.product.ProductGridItem
 import com.example.suggested_food.viewmodels.ProductViewModel
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.ui.graphics.graphicsLayer
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -91,14 +95,56 @@ fun AllProductScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
 
-                items(products) { product ->
+                itemsIndexed(products) { index, product ->
 
-                    ProductGridItem(
-                        product = product,
-                        onClick = {
-                            navController.navigate("ProductDetail/${product.id}")
-                        }
+                    var visible by remember {
+                        mutableStateOf(false)
+                    }
+
+                    LaunchedEffect(Unit) {
+                        kotlinx.coroutines.delay(index * 55L)
+                        visible = true
+                    }
+
+                    val alpha by animateFloatAsState(
+                        targetValue = if (visible) 1f else 0f,
+
+                        animationSpec = tween(
+                            durationMillis = 650,
+                            easing = FastOutSlowInEasing
+                        ),
+
+                        label = ""
                     )
+
+                    val translationY by animateFloatAsState(
+                        targetValue = if (visible) 0f else 25f,
+
+                        animationSpec = tween(
+                            durationMillis = 650,
+                            easing = FastOutSlowInEasing
+                        ),
+
+                        label = ""
+                    )
+
+                    Box(
+                        modifier = Modifier.graphicsLayer {
+                            this.alpha = alpha
+                            this.translationY = translationY
+                        }
+                    ) {
+
+                        ProductGridItem(
+                            product = product,
+
+                            onClick = {
+                                navController.navigate(
+                                    "ProductDetail/${product.id}"
+                                )
+                            }
+                        )
+                    }
                 }
             }
         }

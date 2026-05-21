@@ -271,7 +271,6 @@ class SuggestViewModel(
     ): String {
 
         val file = File(context.filesDir, assetName)
-
         if (file.exists()) return file.absolutePath
 
         file.parentFile?.mkdirs()

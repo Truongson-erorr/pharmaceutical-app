@@ -1,5 +1,8 @@
 package com.example.suggested_food.screens.product
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -25,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.ProductViewModel
+import kotlinx.coroutines.delay
 import java.text.NumberFormat
 import java.util.*
 
@@ -38,6 +43,7 @@ fun ProductDetailScreen(
     val product by productViewModel.productDetail.collectAsState()
     val loading by productViewModel.detailLoading.collectAsState()
     val scrollState = rememberScrollState()
+    var showExportDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(productId) {
         productViewModel.fetchProductById(productId)
@@ -86,7 +92,14 @@ fun ProductDetailScreen(
                         containerColor = Color.Transparent,
                         titleContentColor = Color.White,
                         navigationIconContentColor = Color.White
-                    )
+                    ),
+                    actions = {
+                        TextButton(onClick = {
+                            showExportDialog = true
+                        }) {
+                            Text("Xuất thuốc", color = Color.White, fontWeight = FontWeight.Bold)
+                        }
+                    }
                 )
             }
         }
@@ -124,158 +137,317 @@ fun ProductDetailScreen(
                         .verticalScroll(scrollState)
                 ) {
 
-                    HorizontalPager(
-                        state = pagerState,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(240.dp)
-                    ) { page ->
-
-                        AsyncImage(
-                            model = images[page],
-                            contentDescription = product!!.name,
-                            contentScale = ContentScale.Crop,
+                    AnimatedItem(index = 0) {
+                        HorizontalPager(
+                            state = pagerState,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
-                        )
+                                .height(240.dp)
+                        ) { page ->
+
+                            AsyncImage(
+                                model = images[page],
+                                contentDescription = product!!.name,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .clip(RoundedCornerShape(16.dp))
+                            )
+                        }
                     }
                     Spacer(Modifier.height(8.dp))
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        repeat(images.size) { index ->
-                            Box(
-                                modifier = Modifier
-                                    .padding(4.dp)
-                                    .size(if (pagerState.currentPage == index) 8.dp else 6.dp)
-                                    .clip(CircleShape)
-                                    .background(
-                                        if (pagerState.currentPage == index)
-                                            Color.Black
-                                        else Color.LightGray
-                                    )
-                            )
+                    AnimatedItem(index = 1) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+
+                            repeat(images.size) { index ->
+
+                                Box(
+                                    modifier = Modifier
+                                        .padding(4.dp)
+                                        .size(
+                                            if (pagerState.currentPage == index)
+                                                8.dp
+                                            else
+                                                6.dp
+                                        )
+                                        .clip(CircleShape)
+                                        .background(
+                                            if (pagerState.currentPage == index)
+                                                Color.Black
+                                            else
+                                                Color.LightGray
+                                        )
+                                )
+                            }
                         }
                     }
 
                     Column(
                         modifier = Modifier.padding(16.dp)
                     ) {
-                        Text(
-                            text = product!!.name,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(Modifier.height(8.dp))
 
-                        Text(
-                            text = "${currency.format(product!!.price)} đ",
-                            color = Color(0xFFEF4444),
-                            fontWeight = FontWeight.Bold
-                        )
-                        Spacer(Modifier.height(12.dp))
-
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                        AnimatedItem(index = 2) {
                             Text(
-                                text = "⭐ ${product!!.rating}",
+                                text = product!!.name,
+                                style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold
                             )
-                            Spacer(Modifier.width(12.dp))
+                        }
+                        Spacer(Modifier.height(8.dp))
 
+                        AnimatedItem(index = 3) {
                             Text(
-                                text = if (product!!.stock > 0)
-                                    "Đang lưu hành"
-                                else
-                                    "Ngưng lưu hành",
-                                color = if (product!!.stock > 0)
-                                    Color(0xFF16A34A)
-                                else Color.Gray,
-                                fontWeight = FontWeight.Medium
+                                text = "${currency.format(product!!.price)} đ",
+                                color = Color(0xFFEF4444),
+                                fontWeight = FontWeight.Bold
                             )
+                        }
+                        Spacer(Modifier.height(12.dp))
+
+                        AnimatedItem(index = 4) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+
+                                Text(
+                                    text = "⭐ ${product!!.rating}",
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.width(12.dp))
+
+                                Text(
+                                    text = if (product!!.stock > 0)
+                                        "Đang lưu hành"
+                                    else
+                                        "Ngưng lưu hành",
+
+                                    color = if (product!!.stock > 0)
+                                        Color(0xFF16A34A)
+                                    else
+                                        Color.Gray,
+
+                                    fontWeight = FontWeight.Medium
+                                )
+                            }
                         }
                         Spacer(Modifier.height(20.dp))
 
-                        Text("Mô tả thuốc", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(6.dp))
+                        AnimatedItem(index = 5) {
+                            Column {
 
-                        Text(
-                            text = product!!.description.ifBlank { "Chưa có mô tả" },
-                            color = Color.Gray
-                        )
+                                Text(
+                                    "Mô tả thuốc",
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(6.dp))
+
+                                Text(
+                                    text = product!!.description.ifBlank {
+                                        "Chưa có mô tả"
+                                    },
+
+                                    color = Color.Gray
+                                )
+                            }
+                        }
                         Spacer(Modifier.height(20.dp))
 
-                        Text("Hướng dẫn sử dụng", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(6.dp))
-                        Text(
-                            product!!.usage.ifBlank { "Chưa có hướng dẫn sử dụng" },
-                            color = Color.Gray
-                        )
+                        AnimatedItem(index = 6) {
+                            Column {
+
+                                Text(
+                                    "Hướng dẫn sử dụng",
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(6.dp))
+
+                                Text(
+                                    product!!.usage.ifBlank {
+                                        "Chưa có hướng dẫn sử dụng"
+                                    },
+
+                                    color = Color.Gray
+                                )
+                            }
+                        }
                         Spacer(Modifier.height(20.dp))
 
-                        Text("Nhà sản xuất", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(6.dp))
+                        AnimatedItem(index = 7) {
+                            Column {
 
-                        Text(
-                            product!!.manufacturer.ifBlank { "Chưa có" },
-                            color = Color.Gray
-                        )
+                                Text(
+                                    "Nhà sản xuất",
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(6.dp))
+
+                                Text(
+                                    product!!.manufacturer.ifBlank {
+                                        "Chưa có"
+                                    },
+
+                                    color = Color.Gray
+                                )
+                            }
+                        }
                         Spacer(Modifier.height(20.dp))
 
-                        Text("Thành phần", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(6.dp))
+                        AnimatedItem(index = 8) {
+                            Column {
 
-                        Text(product!!.ingredients.ifBlank { "Chưa có" },
-                            color = Color.Gray
-                        )
+                                Text(
+                                    "Thành phần",
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(6.dp))
+
+                                Text(
+                                    product!!.ingredients.ifBlank {
+                                        "Chưa có"
+                                    },
+
+                                    color = Color.Gray
+                                )
+                            }
+                        }
                         Spacer(Modifier.height(20.dp))
 
-                        Text("Tác dụng phụ", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(6.dp))
+                        AnimatedItem(index = 9) {
+                            Column {
 
-                        Text(product!!.sideEffects.ifBlank { "Chưa có" },
-                            color = Color.Gray
-                        )
+                                Text(
+                                    "Tác dụng phụ",
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(6.dp))
+
+                                Text(
+                                    product!!.sideEffects.ifBlank {
+                                        "Chưa có"
+                                    },
+
+                                    color = Color.Gray
+                                )
+                            }
+                        }
                         Spacer(Modifier.height(20.dp))
 
-                        Text("Liều dùng theo đối tượng", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(6.dp))
+                        AnimatedItem(index = 10) {
+                            Column {
 
-                        Text(product!!.dosageByAge.ifBlank { "Chưa có" },
-                            color = Color.Gray
-                        )
+                                Text(
+                                    "Liều dùng theo đối tượng",
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(6.dp))
+
+                                Text(
+                                    product!!.dosageByAge.ifBlank {
+                                        "Chưa có"
+                                    },
+
+                                    color = Color.Gray
+                                )
+                            }
+                        }
                         Spacer(Modifier.height(20.dp))
 
-                        Text("Cảnh báo khi sử dụng", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(6.dp))
+                        AnimatedItem(index = 11) {
+                            Column {
+                                Text(
+                                    "Cảnh báo khi sử dụng",
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(6.dp))
 
-                        Text(product!!.warnings.ifBlank { "Chưa có" },
-                            color = Color.Gray
-                        )
+                                Text(
+                                    product!!.warnings.ifBlank {
+                                        "Chưa có"
+                                    },
+
+                                    color = Color.Gray
+                                )
+                            }
+                        }
                         Spacer(Modifier.height(20.dp))
 
-                        Text("Dạng bào chế", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(6.dp))
+                        AnimatedItem(index = 12) {
+                            Column {
+                                Text(
+                                    "Dạng bào chế",
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(6.dp))
 
-                        Text(product!!.dosageForm.ifBlank { "Chưa có" },
-                            color = Color.Gray
-                        )
+                                Text(
+                                    product!!.dosageForm.ifBlank {
+                                        "Chưa có"
+                                    },
+
+                                    color = Color.Gray
+                                )
+                            }
+                        }
                         Spacer(Modifier.height(20.dp))
 
-                        Text("Bảo quản", fontWeight = FontWeight.Bold)
-                        Spacer(Modifier.height(6.dp))
+                        AnimatedItem(index = 13) {
+                            Column {
+                                Text(
+                                    "Bảo quản",
+                                    fontWeight = FontWeight.Bold
+                                )
+                                Spacer(Modifier.height(6.dp))
 
-                        Text(product!!.storage.ifBlank { "Chưa có" },
-                            color = Color.Gray
-                        )
-                        Spacer(Modifier.height(20.dp))
+                                Text(
+                                    product!!.storage.ifBlank {
+                                        "Chưa có"
+                                    },
 
+                                    color = Color.Gray
+                                )
+                            }
+                        }
                         Spacer(Modifier.height(24.dp))
                     }
                 }
             }
         }
+    }
+
+    if (showExportDialog) {
+        AlertDialog(
+            onDismissRequest = { showExportDialog = false },
+            containerColor = Color.White,
+
+            title = { Text("Xác nhận xuất thuốc") },
+            text = {
+                Text("Bạn có muốn xuất thuốc: ${product?.name} không?")
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    showExportDialog = false
+
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("productName", product?.name ?: "")
+                    navController.currentBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("productId", productId)
+
+                    navController.navigate("ExportStockScreen")
+                }) {
+                    Text("Xác nhận")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showExportDialog = false }) {
+                    Text("Hủy")
+                }
+            }
+        )
     }
 }

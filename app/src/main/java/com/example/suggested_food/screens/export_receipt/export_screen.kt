@@ -63,6 +63,19 @@ fun ExportStockScreen(
                 (price.toIntOrNull() ?: 0)
 
     val errorMessage by exportViewModel.errorMessage.collectAsState()
+    val backStackEntry = navController.previousBackStackEntry
+    val productNameFromDetail = backStackEntry?.savedStateHandle?.get<String>("productName")
+    val productIdFromDetail = backStackEntry?.savedStateHandle?.get<String>("productId")
+
+    LaunchedEffect(productNameFromDetail, productIdFromDetail) {
+        if (!productNameFromDetail.isNullOrEmpty()) {
+            selectedProductName = productNameFromDetail
+        }
+
+        if (!productIdFromDetail.isNullOrEmpty()) {
+            selectedProductId = productIdFromDetail
+        }
+    }
 
     LaunchedEffect(saveState) {
         if (saveState == true) {
