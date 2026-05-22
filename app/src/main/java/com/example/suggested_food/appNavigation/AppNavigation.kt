@@ -22,6 +22,7 @@ import com.example.suggested_food.authentication.ForgotPasswordScreen
 import com.example.suggested_food.authentication.LoginScreen
 import com.example.suggested_food.authentication.RegisterScreen
 import com.example.suggested_food.authentication.WelcomeScreen
+import com.example.suggested_food.screens.activitylog.ActivityLogScreen
 import com.example.suggested_food.screens.ai.AISearchScreen
 import com.example.suggested_food.screens.category.AllCategoriesScreen
 import com.example.suggested_food.screens.category.CategoryProductsScreen
@@ -262,6 +263,9 @@ fun AppNavigation(
                 navController = navController,
                 phone = phone
             )
+        }
+        composable("ActivityLogScreen") {
+            ActivityLogScreen(navController)
         }
     }
 }

@@ -24,6 +24,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.models.ProductModel
 import com.example.suggested_food.viewmodels.InventoryViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,6 +50,9 @@ fun InventoryAddScreen(
     ) { uri ->
         imageUri = uri
     }
+    val user = FirebaseAuth.getInstance().currentUser
+    val currentUserId = user?.uid ?: "unknown"
+    val currentUserName = user?.displayName ?: "Unknown"
 
     Scaffold(
         topBar = {
@@ -160,6 +164,7 @@ fun InventoryAddScreen(
             ) {
                 Button(
                     onClick = {
+
                         val isInvalid =
                             name.isBlank() ||
                                     description.isBlank() ||
@@ -189,7 +194,11 @@ fun InventoryAddScreen(
                             images = listOf(imageUri.toString())
                         )
 
-                        inventoryViewModel.addProduct(newProduct) {
+                        inventoryViewModel.addProduct(
+                            product = newProduct,
+                            userId = currentUserId,
+                            userName = currentUserName
+                        ) {
                             navController.popBackStack()
                         }
                     },

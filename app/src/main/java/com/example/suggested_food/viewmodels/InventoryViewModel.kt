@@ -1,6 +1,7 @@
 package com.example.suggested_food.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.example.suggested_food.models.ActivityLog
 import com.example.suggested_food.models.ProductModel
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -9,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 class InventoryViewModel : ViewModel() {
 
     private val firestore = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
 
     private val _products = MutableStateFlow<List<ProductModel>>(emptyList())
     val products: StateFlow<List<ProductModel>> = _products
@@ -28,24 +30,86 @@ class InventoryViewModel : ViewModel() {
             }
     }
 
-    fun addProduct(product: ProductModel, onDone: () -> Unit = {}) {
-        firestore.collection("products")
-            .add(product)
-            .addOnSuccessListener { onDone() }
+    private fun logActivity(log: ActivityLog) {
+        db.collection("activity_logs")
+            .add(log)
     }
 
-    fun updateProduct(product: ProductModel, onDone: () -> Unit = {}) {
+    fun addProduct(
+        product: ProductModel,
+        userId: String,
+        userName: String,
+        onDone: () -> Unit = {}
+    ) {
+        firestore.collection("products")
+            .add(product)
+            .addOnSuccessListener { doc ->
+
+                logActivity(
+                    ActivityLog(
+                        type = "PRODUCT_ADD",
+                        title = "Thêm thuốc",
+                        message = "Đã thêm thuốc: ${product.name}",
+                        productId = doc.id,
+                        productName = product.name,
+                        userId = userId,
+                        userName = userName
+                    )
+                )
+                onDone()
+            }
+    }
+
+    fun updateProduct(
+        product: ProductModel,
+        userId: String,
+        userName: String,
+        onDone: () -> Unit = {}
+    ) {
         firestore.collection("products")
             .document(product.id)
             .set(product)
-            .addOnSuccessListener { onDone() }
+            .addOnSuccessListener {
+
+                logActivity(
+                    ActivityLog(
+                        type = "PRODUCT_UPDATE",
+                        title = "Cập nhật thuốc",
+                        message = "Đã cập nhật thuốc: ${product.name}",
+                        productId = product.id,
+                        productName = product.name,
+                        userId = userId,
+                        userName = userName
+                    )
+                )
+                onDone()
+            }
     }
 
-    fun deleteProduct(productId: String, onDone: () -> Unit = {}) {
+    fun deleteProduct(
+        product: ProductModel,
+        userId: String,
+        userName: String,
+        onDone: () -> Unit = {}
+    ) {
         firestore.collection("products")
-            .document(productId)
+            .document(product.id)
             .delete()
-            .addOnSuccessListener { onDone() }
+            .addOnSuccessListener {
+
+                logActivity(
+                    ActivityLog(
+                        type = "PRODUCT_DELETE",
+                        title = "Xóa thuốc",
+                        message = "Đã xóa thuốc: ${product.name}",
+                        productId = product.id,
+                        productName = product.name,
+                        userId = userId,
+                        userName = userName
+                    )
+                )
+                onDone()
+            }
     }
 
     fun search(query: String): List<ProductModel> {

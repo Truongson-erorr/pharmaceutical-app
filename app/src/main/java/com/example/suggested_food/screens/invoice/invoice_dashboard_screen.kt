@@ -52,9 +52,10 @@ fun InvoiceDashboardScreen(
     val today = System.currentTimeMillis()
     val oneDay = 24 * 60 * 60 * 1000
 
-    val todayCount = exports.count {
-        it.date >= today - oneDay
-    }.toString()
+    val todayCount = (
+            exports.count { it.date >= today - oneDay } +
+                    imports.count { it.date >= today - oneDay }
+            ).toString()
 
     val totalMoney = currency.format(
         (exports.sumOf { it.totalPrice } +

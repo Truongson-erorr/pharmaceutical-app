@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.InventoryViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +46,9 @@ fun InventoryEditScreen(
     var usage by remember { mutableStateOf(product.usage) }
     var ingredients by remember { mutableStateOf(product.ingredients) }
     var expiryDate by remember { mutableStateOf(product.expiryDate) }
+    val user = FirebaseAuth.getInstance().currentUser
+    val currentUserId = user?.uid ?: "unknown"
+    val currentUserName = user?.displayName ?: "Unknown"
 
     Scaffold(
         topBar = {
@@ -129,7 +133,6 @@ fun InventoryEditScreen(
 
                 Button(
                     onClick = {
-
                         val updated = product.copy(
                             name = name,
                             description = description,
@@ -140,8 +143,11 @@ fun InventoryEditScreen(
                             ingredients = ingredients,
                             expiryDate = expiryDate
                         )
-
-                        inventoryViewModel.updateProduct(updated) {
+                        inventoryViewModel.updateProduct(
+                            product = updated,
+                            userId = currentUserId,
+                            userName = currentUserName
+                        ) {
                             navController.popBackStack()
                         }
                     },
