@@ -283,7 +283,7 @@ fun MainScreen(
 
                             Text(
                                 "Hello, $displayName",
-                                fontSize = 30.sp,
+                                fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White
                             )

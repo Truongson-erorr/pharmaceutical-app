@@ -65,7 +65,6 @@ fun RegisterScreen(
                     fontWeight = FontWeight.Bold,
                     color = textWhite
                 )
-
                 Spacer(modifier = Modifier.height(8.dp))
 
                 Text(

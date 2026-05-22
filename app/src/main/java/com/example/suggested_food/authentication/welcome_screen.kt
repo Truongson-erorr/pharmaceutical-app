@@ -21,8 +21,6 @@ import androidx.navigation.NavController
 fun WelcomeScreen(
     navController: NavController
 ) {
-
-    // SAME THEME AS LOGIN
     val bgTop = Color(0xFF1B1B22)
     val bgBottom = Color(0xFF121218)
 
@@ -42,10 +40,8 @@ fun WelcomeScreen(
                 )
             )
     ) {
-
         Column(modifier = Modifier.fillMaxSize()) {
 
-            // TOP SECTION (same login vibe)
             Column(
                 modifier = Modifier
                     .weight(4f)
@@ -59,7 +55,6 @@ fun WelcomeScreen(
                     fontWeight = FontWeight.Bold,
                     color = textWhite
                 )
-
                 Spacer(modifier = Modifier.height(10.dp))
 
                 Text(
@@ -69,7 +64,6 @@ fun WelcomeScreen(
                 )
             }
 
-            // BOTTOM CARD (same login card style)
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,7 +90,6 @@ fun WelcomeScreen(
                         fontWeight = FontWeight.Bold,
                         color = textWhite
                     )
-
                     Spacer(modifier = Modifier.height(20.dp))
 
                     Text(
@@ -145,7 +138,6 @@ fun WelcomeScreen(
                                     fontSize = 16.sp,
                                     color = Color.White
                                 )
-
                                 Spacer(modifier = Modifier.width(6.dp))
 
                                 Icon(

@@ -138,10 +138,8 @@ fun LoginScreen(
                             Color(0xFF3A3A45),
                         thickness = 1.5.dp
                     )
-
                     Spacer(modifier = Modifier.height(20.dp))
 
-                    // PASSWORD
                     Text("Mật khẩu", color = Color(0xFF9CA3AF))
                     BasicTextField(
                         value = password,
@@ -221,7 +219,6 @@ fun LoginScreen(
                             }
                         }
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
 
                     if (error != null) {
@@ -231,7 +228,6 @@ fun LoginScreen(
                             fontSize = 13.sp
                         )
                     }
-
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Row(
@@ -246,10 +242,8 @@ fun LoginScreen(
                         )
                         Divider(modifier = Modifier.weight(1f), color = Color(0xFF3A3A45))
                     }
-
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // GOOGLE BUTTON
                     Button(
                         onClick = {
                             googleSignInClient.signOut().addOnCompleteListener {

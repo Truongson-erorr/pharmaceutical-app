@@ -82,8 +82,8 @@ fun HomeContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Nhập tên thuốc...",
-                        color = Color(0xFF6B7280),
+                        text = "Nhập tên thuốc để tìm kiếm...",
+                        color = Color.DarkGray,
                         modifier = Modifier.weight(1f)
                     )
                     Icon(
