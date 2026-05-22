@@ -198,7 +198,7 @@ Mô hình AI sau khi huấn luyện được convert sang định dạng TorchSc
 ## Lịch nhắc nhở & Quản lý mã khuyến mãi
 
 <div align="left">
-  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1779349913/z7849693094539_e57c63163d503bc41d3688787ca272c9_zokiht.jpg" width="23%"/>
+  <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1779415725/z7852113067854_35a201c9b570e4001f9e57a1faeb8d53_sglf9k.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1779349914/z7849693094540_aa617768609f9ce537c486d4fcbcc169_tzsgne.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1779349914/z7849693094541_04723829238a5363c20a65b865c0c4a8_nc5yce.jpg" width="23%"/>
   <img src="https://res.cloudinary.com/dq64aidpx/image/upload/v1779349914/z7849693106233_a640d9c1c523e15f9fea737fa653d3a4_nmvtoo.jpg" width="23%"/>
