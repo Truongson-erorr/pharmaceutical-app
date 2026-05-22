@@ -221,6 +221,11 @@ fun MainScreen(
                     DrawerItem("Quản lý kho thuốc", Icons.Default.Cable, "InventoryScreen")
                     DrawerItem("Quản lý tồn kho", Icons.Default.Storefront, "StockScreen")
                     DrawerItem("Hóa đơn", Icons.Default.ReceiptLong, "InvoiceDashboardScreen")
+                    DrawerItem(
+                        "Nhật ký hoạt động",
+                        Icons.Default.History,
+                        "ActivityLogScreen"
+                    )
                     Spacer(Modifier.height(24.dp))
 
                     Row(

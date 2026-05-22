@@ -109,16 +109,29 @@ fun AddReminderScreen(
         bottomBar = {
             Button(
                 onClick = {
-                    if (title.isNotBlank() && selectedProduct != null) {
+                    if (
+                        title.isNotBlank() &&
+                        selectedProduct != null
+                    ) {
                         viewModel.addReminder(
+                            context,
                             ReminderEntity(
                                 title = title,
                                 description = description,
                                 actionType = actionType,
-                                medicineId = selectedProduct!!.id.toLongOrNull(),
-                                medicineName = selectedProduct!!.name,
+                                medicineId =
+                                selectedProduct!!
+                                    .id
+                                    .toLongOrNull(),
+                                medicineName =
+                                selectedProduct!!.name,
                                 triggerTime = triggerTime,
-                                repeatInterval = repeatInterval
+                                repeatInterval =
+                                repeatInterval,
+                                isDone = false,
+                                isEnabled = true,
+                                createdAt =
+                                System.currentTimeMillis()
                             )
                         )
                         navController.popBackStack()

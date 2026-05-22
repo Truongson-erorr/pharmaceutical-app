@@ -31,12 +31,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.suggested_food.models.ReminderEntity
-import com.example.suggested_food.screens.notifications.formatDate
 import java.time.LocalDate
 
 @Composable
@@ -51,11 +51,7 @@ fun ReminderCard(
     val now = System.currentTimeMillis()
     val diff = ((reminder.triggerTime - now) / (1000 * 60 * 60 * 24)).toInt()
 
-    val timeText = when {
-        diff > 0 -> "Còn $diff ngày"
-        diff < 0 -> "Trễ ${-diff} ngày"
-        else -> "Hôm nay"
-    }
+    val timeText = getReminderStatus(reminder.triggerTime)
 
     Card(
         shape = RoundedCornerShape(16.dp),
@@ -97,7 +93,7 @@ fun ReminderCard(
                 }
 
                 Text(
-                    text = "Hạn: ${formatDate(reminder.triggerTime)}",
+                    text = "Hạn: ${formatDt(reminder.triggerTime)}",
                     fontSize = 12.sp,
                     color = Color.Black
                 )
@@ -143,6 +139,49 @@ fun ReminderCard(
                 )
             }
         }
+    }
+}
+
+fun formatDt(time: Long): String {
+
+    val formatter =
+        java.text.SimpleDateFormat(
+            "dd/MM/yyyy • HH:mm",
+            java.util.Locale.getDefault()
+        )
+
+    return formatter.format(java.util.Date(time))
+}
+
+fun getReminderStatus(triggerTime: Long): String {
+
+    val now = System.currentTimeMillis()
+
+    val diffMillis = triggerTime - now
+
+    val minutes = diffMillis / (1000 * 60)
+    val hours = diffMillis / (1000 * 60 * 60)
+    val days = diffMillis / (1000 * 60 * 60 * 24)
+
+    return when {
+
+        diffMillis > 0 && minutes < 60 ->
+            "Còn $minutes phút"
+
+        diffMillis > 0 && hours < 24 ->
+            "Còn $hours giờ"
+
+        diffMillis > 0 ->
+            "Còn $days ngày"
+
+        diffMillis < 0 && minutes > -60 ->
+            "Trễ ${-minutes} phút"
+
+        diffMillis < 0 && hours > -24 ->
+            "Trễ ${-hours} giờ"
+
+        else ->
+            "Trễ ${-days} ngày"
     }
 }
 
@@ -201,9 +240,19 @@ fun WeekCalendar(
                     .clip(RoundedCornerShape(12.dp))
                     .background(
                         if (selected)
-                            Color.Black
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    Color(0xFF2563EB),
+                                    Color(0xFF38BDF8)
+                                )
+                            )
                         else
-                            Color.White
+                            Brush.horizontalGradient(
+                                colors = listOf(
+                                    Color.White,
+                                    Color.White
+                                )
+                            )
                     )
                     .clickable {
                         onDateSelected(date)
