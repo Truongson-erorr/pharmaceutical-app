@@ -49,7 +49,6 @@ fun ActivityLogItem(
                     fontWeight = FontWeight.Bold,
                     color = Color.Black
                 )
-
                 Spacer(modifier = Modifier.height(2.dp))
 
                 Text(
