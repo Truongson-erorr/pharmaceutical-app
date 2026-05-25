@@ -1,34 +1,38 @@
 package com.example.suggested_food.screens.reminder
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowBackIos
-import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.MoreHoriz
-import androidx.compose.material.icons.filled.NotificationsActive
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalProvider
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodels.ReminderViewModel
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import kotlin.math.abs
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import kotlinx.coroutines.delay
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ReminderScreen(
@@ -36,19 +40,53 @@ fun ReminderScreen(
     viewModel: ReminderViewModel
 ) {
     val reminders by viewModel.reminders.collectAsState()
-    val primary = Color(0xFFF9A825)
-    val red = Color(0xFFDC2626)
-    val green = Color(0xFF22C55E)
-    val cyan = Color(0xFF06B6D4)
-    var selectedReminderId by remember { mutableStateOf<String?>(null) }
+
+    var selectedId by remember { mutableStateOf<String?>(null) }
     var showDoneDialog by remember { mutableStateOf(false) }
     var showDeleteDialog by remember { mutableStateOf(false) }
-    var expandedMenuId by remember { mutableStateOf<String?>(null) }
+    var menuId by remember { mutableStateOf<String?>(null) }
+
+    var selectedDate by remember {
+        mutableStateOf(LocalDate.now())
+    }
+
+    val filteredReminders = reminders.filter {
+
+        Instant.ofEpochMilli(it.triggerTime)
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate() == selectedDate
+    }
+
+    var visible by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(Unit) {
+        delay(100)
+        visible = true
+    }
+
+    val screenAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+        label = ""
+    )
+
+    val screenTranslationY by animateFloatAsState(
+        targetValue = if (visible) 0f else 35f,
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+        label = ""
+    )
 
     Scaffold(
-        containerColor = Color(0xFFF5F5F5),
-
-        topBar = {
+        containerColor = Color.White,
+        topBar = @androidx.compose.runtime.Composable {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -84,245 +122,150 @@ fun ReminderScreen(
                 )
             }
         },
-
         floatingActionButton = {
             ExtendedFloatingActionButton(
-                onClick = { navController.navigate("AddReminderScreen") },
+                onClick = {
+                    navController.navigate("AddReminderScreen")
+                },
                 containerColor = Color.Black,
                 contentColor = Color.White,
                 shape = RoundedCornerShape(16.dp)
             ) {
-                Icon(Icons.Default.Add, null)
-                Spacer(Modifier.width(6.dp))
-                Text("Tạo lịch nhắc")
+                Icon(Icons.Default.Add, contentDescription = null)
+                Spacer(modifier = Modifier.width(6.dp))
+
+                Text(
+                    text = "Tạo lịch nhắc",
+                    fontWeight = FontWeight.SemiBold
+                )
             }
         }
     ) { padding ->
 
-        LazyColumn(
+        Column(
             modifier = Modifier
-                .padding(padding)
                 .fillMaxSize()
-                .padding(12.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-
-            items(reminders) { item ->
-                val now = System.currentTimeMillis()
-                val diffDays =
-                    ((item.triggerTime - now) / (1000 * 60 * 60 * 24)).toInt()
-
-                val timeText = when {
-                    diffDays > 0 -> "Nhắc nhở sau $diffDays ngày"
-                    diffDays < 0 -> "Đã trễ ${abs(diffDays)} ngày"
-                    else -> "Nhắc hôm nay"
+                .background(Color(0xFFF5F5F5))
+                .padding(padding)
+                .graphicsLayer {
+                    alpha = screenAlpha
+                    translationY = screenTranslationY
                 }
+        ) {
+            Spacer(modifier = Modifier.height(12.dp))
 
-                val statusColor = if (item.isDone) green else red
-                val statusBg = if (item.isDone)
-                    green.copy(alpha = 0.15f)
-                else
-                    red.copy(alpha = 0.15f)
+            WeekCalendar(
+                selectedDate = selectedDate,
+                onDateSelected = {
+                    selectedDate = it
+                }
+            )
+            Spacer(modifier = Modifier.height(14.dp))
 
-                val statusText = if (item.isDone)
-                    "Đã hoàn thành"
-                else
-                    "Chưa hoàn thành"
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                if (filteredReminders.isEmpty()) {
+                    item {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 80.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
 
-                Box {
+                            Icon(
+                                Icons.Default.EventBusy,
+                                contentDescription = null,
+                                tint = Color.LightGray,
+                                modifier = Modifier.size(60.dp)
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
 
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(Color.White)
-                    ) {
-                        Column(modifier = Modifier.padding(vertical = 10.dp)) {
+                            Text(
+                                text = "Không có lịch nhắc",
+                                color = Color.Gray,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Medium
+                            )
 
-                            Row(
-                                modifier = Modifier
-                                    .padding(horizontal = 14.dp, vertical = 10.dp),
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-
-                                Column(Modifier.weight(1f)) {
-                                    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
-
-                                        Text(
-                                            text = "Tiêu đề: ${item.title}",
-                                            color = Color.Black,
-                                            fontWeight = FontWeight.Bold
-                                        )
-
-                                        Text(
-                                            text = "Nội dung: ${item.description ?: "Không có"}",
-                                            color = Color.Gray,
-                                        )
-
-                                        Text(
-                                            text = "Loại nhắc nhở: ${
-                                                when (item.actionType) {
-                                                    "STOCK_IN" -> "Nhập thuốc"
-                                                    "STOCK_OUT" -> "Xuất thuốc"
-                                                    else -> "Khác"
-                                                }
-                                            }",
-                                            color = Color.Gray,
-                                        )
-
-                                        Text(
-                                            text = "Thuốc: ${item.medicineName ?: "Không có"}",
-                                            color = Color.Gray,
-                                        )
-                                    }
-                                    Spacer(Modifier.height(4.dp))
-
-                                    Box(
-                                        modifier = Modifier
-                                            .background(
-                                                color = cyan.copy(alpha = 0.15f),
-                                                shape = RoundedCornerShape(30.dp)
-                                            )
-                                            .padding(horizontal = 8.dp, vertical = 4.dp)
-                                    ) {
-                                        Text(
-                                            text = timeText,
-                                            color = cyan,
-                                            fontWeight = FontWeight.Medium,
-                                            fontSize = MaterialTheme.typography.labelMedium.fontSize
-                                        )
-                                    }
-                                }
-
-                                Box(
-                                    modifier = Modifier
-                                        .size(38.dp)
-                                        .offset(y = 4.dp)
-                                        .clip(CircleShape)
-                                        .background(primary.copy(alpha = 0.15f)),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    Icon(
-                                        Icons.Default.NotificationsActive,
-                                        null,
-                                        tint = primary
-                                    )
-                                }
-                            }
-
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 14.dp, vertical = 8.dp)
-                                    .clickable {
-                                        if (!item.isDone) {
-                                            selectedReminderId = item.id
-                                            showDoneDialog = true
-                                        }
-                                    },
-                                horizontalArrangement = Arrangement.End,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-
-                                Box(
-                                    modifier = Modifier
-                                        .background(statusBg, RoundedCornerShape(30.dp))
-                                        .padding(horizontal = 8.dp, vertical = 4.dp)
-                                ) {
-                                    Text(
-                                        text = statusText,
-                                        fontSize = 13.sp,
-                                        color = statusColor,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                }
-
-                                if (!item.isDone) {
-                                    Spacer(Modifier.width(4.dp))
-                                    Icon(Icons.Default.ChevronRight, null, tint = red)
-                                }
-                            }
+                            Text(
+                                text = "Hãy tạo lịch mới cho ngày này",
+                                color = Color.LightGray,
+                                fontSize = 12.sp
+                            )
                         }
                     }
 
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(8.dp)
-                    ) {
-                        IconButton(onClick = {
-                            expandedMenuId = item.id
-                        }) {
-                            Icon(
-                                imageVector = Icons.Default.MoreHoriz,
-                                contentDescription = null
-                            )
-                        }
+                } else {
 
-                        DropdownMenu(
-                            expanded = expandedMenuId == item.id,
-                            onDismissRequest = { expandedMenuId = null },
-                            modifier = Modifier
-                                .background(Color.White)
-                                .clip(RoundedCornerShape(50.dp))
-                        ) {
-                            DropdownMenuItem(
-                                text = {
-                                    Text("Xóa", color = Color.Black)
-                                },
-                                onClick = {
-                                    expandedMenuId = null
-                                    selectedReminderId = item.id
+                    items(filteredReminders, key = { it.id }) { r ->
+
+                        val state = rememberSwipeToDismissBoxState(
+                            confirmValueChange = { value ->
+                                if (value == SwipeToDismissBoxValue.EndToStart) {
+                                    selectedId = r.id
                                     showDeleteDialog = true
                                 }
-                            )
-                        }
+                                false
+                            }
+                        )
+
+                        SwipeToDismissBox(
+                            state = state,
+                            backgroundContent = {
+                                DeleteBackground()
+                            },
+                            content = {
+                                ReminderCard(
+                                    reminder = r,
+                                    isMenuOpen = menuId == r.id,
+                                    onMenuClick = { menuId = r.id },
+                                    onDoneClick = {
+                                        selectedId = r.id
+                                        showDoneDialog = true
+                                    },
+                                    onDeleteClick = {
+                                        selectedId = r.id
+                                        showDeleteDialog = true
+                                    },
+                                    onDismissMenu = { menuId = null }
+                                )
+                            }
+                        )
                     }
                 }
             }
         }
+    }
 
-        if (showDoneDialog) {
-            AlertDialog(
-                onDismissRequest = { showDoneDialog = false },
-                containerColor = Color.White,
-                title = { Text("Xác nhận") },
-                text = { Text("Bạn có chắc muốn đánh dấu hoàn thành?") },
-                confirmButton = {
-                    TextButton(onClick = {
-                        selectedReminderId?.let { viewModel.markDone(it) }
-                        showDoneDialog = false
-                    }) {
-                        Text("Đồng ý")
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showDoneDialog = false }) {
-                        Text("Hủy")
-                    }
-                }
-            )
-        }
+    if (showDoneDialog) {
+        SimpleDialog(
+            title = "Hoàn thành?",
+            text = "Đánh dấu đã hoàn thành nhắc nhở này?",
+            confirmText = "Xác nhận",
+            onConfirm = {
+                selectedId?.let { viewModel.markDone(it) }
+                showDoneDialog = false
+            },
+            onDismiss = { showDoneDialog = false }
+        )
+    }
 
-        if (showDeleteDialog) {
-            AlertDialog(
-                onDismissRequest = { showDeleteDialog = false },
-                containerColor = Color.White,
-                title = { Text("Xóa nhắc nhở") },
-                text = { Text("Bạn có chắc muốn xóa nhắc nhở này không?") },
-                confirmButton = {
-                    TextButton(onClick = {
-                        selectedReminderId?.let { viewModel.deleteReminder(it) }
-                        showDeleteDialog = false
-                    }) {
-                        Text("Xóa", color = Color.Red)
-                    }
-                },
-                dismissButton = {
-                    TextButton(onClick = { showDeleteDialog = false }) {
-                        Text("Hủy")
-                    }
-                }
-            )
-        }
+    if (showDeleteDialog) {
+        SimpleDialog(
+            title = "Xóa nhắc nhở?",
+            text = "Hành động không thể khôi phục.",
+            confirmText = "Xóa",
+            confirmColor = Color.Red,
+            onConfirm = {
+                selectedId?.let { viewModel.deleteReminder(it) }
+                showDeleteDialog = false
+            },
+            onDismiss = { showDeleteDialog = false }
+        )
     }
 }

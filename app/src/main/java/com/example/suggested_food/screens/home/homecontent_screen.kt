@@ -16,9 +16,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.ShoppingBag
-import androidx.compose.material.icons.filled.SmartToy
-import androidx.compose.material.icons.outlined.FilterAlt
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -82,8 +79,8 @@ fun HomeContent(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Nhập tên thuốc...",
-                        color = Color(0xFF6B7280),
+                        text = "Nhập tên thuốc để tìm kiếm...",
+                        color = Color.DarkGray,
                         modifier = Modifier.weight(1f)
                     )
                     Icon(

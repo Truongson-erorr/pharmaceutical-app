@@ -22,7 +22,6 @@ fun ForgotPasswordScreen(
     navController: NavController,
     authViewModel: AuthViewModel
 ) {
-
     var email by remember { mutableStateOf("") }
 
     val loading by authViewModel.loading.collectAsState()

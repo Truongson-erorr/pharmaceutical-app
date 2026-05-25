@@ -17,20 +17,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodels.AuthViewModel
-import com.google.firebase.auth.FirebaseAuth
 
 data class FeatureItem(
     val title: String,
     val icon: ImageVector,
     val route: String,
-    val color: Color
+    val gradient: List<Color>
 )
 
 data class FeatureGroup(
@@ -47,40 +49,21 @@ fun FeatureSection(
     val context = navController.context
 
     val featureGroups = listOf(
-
         FeatureGroup(
-            "Tra cứu",
+            "Tiện ích",
             listOf(
                 FeatureItem(
                     "Tra cứu offline",
                     Icons.Default.Search,
                     "drug_lookup",
-                    Color(0xFFF59E0B)
+                    listOf(Color(0xFF2563EB), Color(0xFF38BDF8))
                 ),
-                FeatureItem(
-                    "Tra cứu AI",
-                    Icons.Default.SmartToy,
-                    "AISearchScreen",
-                    Color(0xFF6366F1)
-                )
-            )
-        ),
-
-        FeatureGroup(
-            "Gợi ý thuốc",
-            listOf(
                 FeatureItem(
                     "Gợi ý thuốc",
                     Icons.Default.MedicalServices,
                     "SuggestScreen",
-                    Color(0xFF22C55E)
+                    listOf(Color(0xFF2563EB), Color(0xFF38BDF8))
                 ),
-                FeatureItem(
-                    "Gợi ý AI",
-                    Icons.Default.AutoAwesome,
-                    "chat",
-                    Color(0xFFEF4444)
-                )
             )
         ),
     )
@@ -91,12 +74,14 @@ fun FeatureSection(
         featureGroups.forEach { group ->
             Text(
                 text = group.title,
-                fontSize = 18.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(
                     top = 8.dp,
                     bottom = 12.dp
-                )
+                ),
+                fontSize = 18.sp,
+                color = Color(0xFF1E293B),
+                letterSpacing = 0.5.sp
             )
 
             LazyVerticalGrid(
@@ -115,57 +100,87 @@ fun FeatureSection(
                         modifier = Modifier
                             .size(110.dp)
                             .clickable {
-
                                 if (!isLoggedIn) {
                                     Toast.makeText(
                                         context,
                                         "Vui lòng đăng nhập",
                                         Toast.LENGTH_SHORT
                                     ).show()
-
                                     navController.navigate("LoginScreen")
                                     return@clickable
                                 }
-
                                 navigateFeature(feature, navController)
                             },
-                        shape = RoundedCornerShape(16.dp),
+                        shape = RoundedCornerShape(20.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = Color.White
                         ),
-                        elevation = CardDefaults.cardElevation(0.dp)
+                        elevation = CardDefaults.cardElevation(
+                            defaultElevation = 1.dp,
+                            pressedElevation = 2.dp
+                        )
                     ) {
-
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-
-                            Box(
-                                modifier = Modifier
-                                    .size(52.dp)
-                                    .background(
-                                        feature.color.copy(alpha = 0.12f),
-                                        CircleShape
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Icon(
-                                    imageVector = feature.icon,
-                                    contentDescription = null,
-                                    tint = feature.color,
-                                    modifier = Modifier.size(32.dp)
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(
+                                    Brush.verticalGradient(
+                                        colors = listOf(
+                                            Color.White,
+                                            Color(0xFF2563EB).copy(alpha = 0.03f)
+                                        )
+                                    )
                                 )
-                            }
-                            Spacer(Modifier.height(8.dp))
+                        ) {
+                            Column(
+                                modifier = Modifier.fillMaxSize(),
+                                verticalArrangement = Arrangement.Center,
+                                horizontalAlignment = Alignment.CenterHorizontally
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(52.dp)
+                                        .clip(CircleShape)
+                                        .background(
+                                            Brush.linearGradient(
+                                                colors = feature.gradient
+                                            )
+                                        ),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Icon(
+                                        imageVector = feature.icon,
+                                        contentDescription = null,
+                                        tint = Color.White,
+                                        modifier = Modifier.size(28.dp)
+                                    )
+                                }
+                                Spacer(Modifier.height(8.dp))
 
-                            Text(
-                                text = feature.title,
-                                fontSize = 13.sp,
-                                fontWeight = FontWeight.Medium,
-                                color = Color(0xFF0F172A)
-                            )
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.Center,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+
+                                    Text(
+                                        text = feature.title,
+                                        fontSize = 13.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = Color(0xFF0F172A),
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                    Spacer(modifier = Modifier.width(4.dp))
+
+                                    Icon(
+                                        imageVector = Icons.Default.ChevronRight,
+                                        contentDescription = null,
+                                        tint = Color(0xFF94A3B8),
+                                        modifier = Modifier.size(18.dp)
+                                    )
+                                }
+                            }
                         }
                     }
                 }
@@ -179,19 +194,7 @@ fun navigateFeature(
     navController: NavController
 ) {
     when (feature.route) {
-        "UserChatScreen" -> {
-            val userId = FirebaseAuth.getInstance().currentUser?.uid
-            if (userId != null) {
-                navController.navigate("UserChatScreen/$userId")
-            }
-        }
-
         "SuggestScreen" -> navController.navigate("SuggestScreen")
-
         "drug_lookup" -> navController.navigate("drug_lookup")
-
-        "AISearchScreen" -> navController.navigate("AISearchScreen")
-
-        "chat" -> navController.navigate("chat")
     }
 }

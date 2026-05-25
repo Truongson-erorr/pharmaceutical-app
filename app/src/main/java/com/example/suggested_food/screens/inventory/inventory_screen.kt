@@ -1,10 +1,14 @@
 package com.example.suggested_food.screens.inventory
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -12,12 +16,17 @@ import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -25,6 +34,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.InventoryViewModel
+import kotlinx.coroutines.delay
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -101,75 +111,119 @@ fun InventoryScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            items(products) { product ->
+            itemsIndexed(products) { index, product ->
+
+                var visible by remember {
+                    mutableStateOf(false)
+                }
+
+                LaunchedEffect(Unit) {
+                    delay(index * 55L)
+                    visible = true
+                }
+
+                val alpha by animateFloatAsState(
+                    targetValue = if (visible) 1f else 0f,
+
+                    animationSpec = tween(
+                        durationMillis = 650,
+                        easing = FastOutSlowInEasing
+                    ),
+
+                    label = ""
+                )
+
+                val translationY by animateFloatAsState(
+                    targetValue = if (visible) 0f else 28f,
+
+                    animationSpec = tween(
+                        durationMillis = 650,
+                        easing = FastOutSlowInEasing
+                    ),
+
+                    label = ""
+                )
 
                 val expiryColor = getExpiryColor(product.expiryDate)
 
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            navController.navigate("product_detail/${product.id}")
-                        },
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White),
-                    elevation = CardDefaults.cardElevation(0.dp)
+                Box(
+                    modifier = Modifier.graphicsLayer {
+                        this.alpha = alpha
+                        this.translationY = translationY
+                    }
                 ) {
 
-                    Row(
-                        modifier = Modifier.padding(14.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                navController.navigate("product_detail/${product.id}")
+                            },
+                        shape = RoundedCornerShape(16.dp),
+                        colors = CardDefaults.cardColors(
+                            containerColor = Color.White
+                        ),
+                        elevation = CardDefaults.cardElevation(0.dp)
                     ) {
 
-                        AsyncImage(
-                            model = product.images.firstOrNull(),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(64.dp)
-                                .padding(end = 12.dp)
-                        )
-
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
+                        Row(
+                            modifier = Modifier.padding(14.dp),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
 
-                            Text(
-                                text = product.name,
-                                fontWeight = FontWeight.Bold,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
-
-                            Text(
-                                text = "Giá: ${currency.format(product.price)} đ",
-                                color = Color.Black,
-                                fontWeight = FontWeight.Medium
-                            )
-
-                            Box(
+                            AsyncImage(
+                                model = product.images.firstOrNull(),
+                                contentDescription = null,
                                 modifier = Modifier
-                                    .align(Alignment.End)
-                                    .background(
-                                        color = expiryColor.copy(alpha = 0.15f),
-                                        shape = RoundedCornerShape(12.dp)
-                                    )
-                                    .padding(horizontal = 10.dp, vertical = 4.dp)
-                            ) {
-                                Text(
-                                    text = "HSD: ${product.expiryDate}",
-                                    color = expiryColor,
-                                    style = MaterialTheme.typography.bodySmall,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            }
-                        }
+                                    .size(64.dp)
+                                    .padding(end = 12.dp)
+                            )
 
-                        Icon(
-                            imageVector = Icons.Default.ChevronRight,
-                            contentDescription = null,
-                            tint = Color.Gray
-                        )
+                            Column(
+                                modifier = Modifier.weight(1f),
+                                verticalArrangement = Arrangement.spacedBy(6.dp)
+                            ) {
+
+                                Text(
+                                    text = product.name,
+                                    fontWeight = FontWeight.Bold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+
+                                Text(
+                                    text = "Giá: ${currency.format(product.price)} đ",
+                                    color = Color.Black,
+                                    fontWeight = FontWeight.Medium
+                                )
+
+                                Box(
+                                    modifier = Modifier
+                                        .align(Alignment.End)
+                                        .background(
+                                            color = expiryColor.copy(alpha = 0.15f),
+                                            shape = RoundedCornerShape(12.dp)
+                                        )
+                                        .padding(
+                                            horizontal = 10.dp,
+                                            vertical = 4.dp
+                                        )
+                                ) {
+                                    Text(
+                                        text = "HSD: ${product.expiryDate}",
+                                        color = expiryColor,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        fontWeight = FontWeight.SemiBold
+                                    )
+                                }
+                            }
+
+                            Icon(
+                                imageVector = Icons.Default.ChevronRight,
+                                contentDescription = null,
+                                tint = Color.Gray
+                            )
+                        }
                     }
                 }
             }

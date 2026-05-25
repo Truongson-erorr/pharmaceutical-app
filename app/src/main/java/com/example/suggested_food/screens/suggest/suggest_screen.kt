@@ -1,5 +1,8 @@
 package com.example.suggested_food.screens.suggest
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.FlowRow
@@ -17,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.SuggestViewModel
 import com.valentinilk.shimmer.shimmer
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -35,6 +40,37 @@ fun SuggestScreen(
     val symptom = remember { mutableStateOf("") }
     val result by viewModel.result.collectAsState()
     val loading by viewModel.loading.collectAsState()
+
+    var visible by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(Unit) {
+        delay(80)
+        visible = true
+    }
+
+    val alpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+
+        label = ""
+    )
+
+    val translationY by animateFloatAsState(
+        targetValue = if (visible) 0f else 30f,
+
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+
+        label = ""
+    )
 
     val commonSymptoms = listOf(
         "Sổ mũi","Nghẹt mũi","Đau họng",
@@ -87,12 +123,13 @@ fun SuggestScreen(
                 .fillMaxSize()
                 .background(Color(0xFFF5F5F5))
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .padding(16.dp)
+                .graphicsLayer {
+                    this.alpha = alpha
+                    this.translationY = translationY
+                },
         ) {
-
             Box(Modifier.fillMaxWidth()) {
-
                 OutlinedTextField(
                     value = symptom.value,
                     onValueChange = { symptom.value = it },
@@ -218,12 +255,14 @@ fun SuggestScreen(
                 }
             }
 
+            Spacer( modifier = Modifier.height(15.dp))
             Text(
                 "Triệu chứng thường gặp",
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
 
+            Spacer( modifier = Modifier.height(10.dp))
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
                 verticalArrangement = Arrangement.spacedBy(4.dp)

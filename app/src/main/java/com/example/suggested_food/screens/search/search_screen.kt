@@ -6,6 +6,9 @@ import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -21,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,6 +34,7 @@ import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.delay
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -43,6 +48,37 @@ fun SearchScreen(
     var searchQuery by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     val context = LocalContext.current
+
+    var visible by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(Unit) {
+        delay(100)
+        visible = true
+    }
+
+    val screenAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+
+        label = ""
+    )
+
+    val screenTranslationY by animateFloatAsState(
+        targetValue = if (visible) 0f else 35f,
+
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+
+        label = ""
+    )
 
     val pickImageLauncher =
         rememberLauncherForActivityResult(
@@ -146,6 +182,10 @@ fun SearchScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .graphicsLayer {
+                    alpha = screenAlpha
+                    translationY = screenTranslationY
+                }
                 .background(Color(0xFFF5F5F5))
                 .padding(padding)
                 .padding(16.dp)

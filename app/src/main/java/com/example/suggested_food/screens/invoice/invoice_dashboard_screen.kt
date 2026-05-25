@@ -1,5 +1,8 @@
 package com.example.suggested_food.screens.invoice
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,6 +15,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -20,6 +24,7 @@ import androidx.navigation.NavController
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.suggested_food.viewmodel.ExportViewModel
 import com.example.suggested_food.viewmodel.ImportViewModel
+import kotlinx.coroutines.delay
 import java.text.NumberFormat
 import java.util.*
 
@@ -47,9 +52,10 @@ fun InvoiceDashboardScreen(
     val today = System.currentTimeMillis()
     val oneDay = 24 * 60 * 60 * 1000
 
-    val todayCount = exports.count {
-        it.date >= today - oneDay
-    }.toString()
+    val todayCount = (
+            exports.count { it.date >= today - oneDay } +
+                    imports.count { it.date >= today - oneDay }
+            ).toString()
 
     val totalMoney = currency.format(
         (exports.sumOf { it.totalPrice } +
@@ -70,6 +76,37 @@ fun InvoiceDashboardScreen(
             .sortedByDescending { it.second }
             .map { it.first }
     }
+
+    var visible by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(Unit) {
+        delay(120)
+        visible = true
+    }
+
+    val alpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+
+        label = ""
+    )
+
+    val translationY by animateFloatAsState(
+        targetValue = if (visible) 0f else 40f,
+
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+
+        label = ""
+    )
 
     Scaffold(
         topBar = {
@@ -120,140 +157,253 @@ fun InvoiceDashboardScreen(
                 ) {
                     Icon(Icons.Default.Add, null, tint = Color.White)
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text("Tạo hóa đơn", color = Color.White, fontWeight = FontWeight.Bold)
+
+                    Text(
+                        "Tạo hóa đơn",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
     ) { padding ->
-        Column(
+
+        Box(
             modifier = Modifier
-                .padding(padding)
                 .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
-                .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+                .graphicsLayer {
+                    this.alpha = alpha
+                    this.translationY = translationY
+                }
         ) {
 
-            Text(
-                text = "Tổng quan hệ thống",
-                style = MaterialTheme.typography.titleLarge,
-                fontWeight = FontWeight.Bold,
-                fontSize = 15.sp,
-                color = Color(0xFF111827)
-            )
-
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                DashboardCard(
-                    "Phiếu nhập", importCount, Icons.Default.Inventory,
-                    listOf(Color(0xFFFEE140), Color(0xFFFA709A)),
-                    Modifier.weight(1f)
-                )
-
-                DashboardCard(
-                    "Phiếu xuất", exportCount, Icons.Default.LocalShipping,
-                    listOf(Color(0xFFF093FB), Color(0xFFF5576C)),
-                    Modifier.weight(1f)
-                )
-            }
-
-            Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                DashboardCard(
-                    "Hôm nay", todayCount, Icons.Default.Today,
-                    listOf(Color(0xFF00F2FE), Color(0xFF4FACFE)),
-                    Modifier.weight(1f)
-                )
-
-                DashboardCard(
-                    "Tổng tiền", totalMoney, Icons.Default.AttachMoney,
-                    listOf(Color(0xFF4FACFE), Color(0xFF6A11CB)),
-                    Modifier.weight(1f)
-                )
-            }
-
-            Text(
-                "Hoạt động gần đây",
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF111827)
-            )
-
             Column(
-                verticalArrangement = Arrangement.spacedBy(10.dp)
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+                    .background(Color(0xFFF5F5F5))
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                recentActivity.forEach { (type, name, qty) ->
 
-                    val (icon, color) = if (type == "EXPORT") {
-                        Icons.Default.LocalShipping to Color(0xFF4FC3F7) // xanh nước nhạt
-                    } else {
-                        Icons.Default.Inventory to Color(0xFF4FC3F7) // cùng màu cho đồng bộ
-                    }
+                Text(
+                    text = "Tổng quan hệ thống",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 15.sp,
+                    color = Color(0xFF111827)
+                )
 
-                    Card(
-                        shape = RoundedCornerShape(16.dp),
-                        colors = CardDefaults.cardColors(containerColor = Color.White),
-                        elevation = CardDefaults.cardElevation(0.dp),
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(14.dp),
-                            verticalAlignment = Alignment.CenterVertically
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+
+                    DashboardCard(
+                        "Phiếu nhập",
+                        importCount,
+                        Icons.Default.Inventory,
+
+                        listOf(
+                            Color(0xFFFEE140),
+                            Color(0xFFFA709A)
+                        ),
+
+                        Modifier.weight(1f)
+                    )
+
+                    DashboardCard(
+                        "Phiếu xuất",
+                        exportCount,
+                        Icons.Default.LocalShipping,
+
+                        listOf(
+                            Color(0xFFF093FB),
+                            Color(0xFFF5576C)
+                        ),
+
+                        Modifier.weight(1f)
+                    )
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+
+                    DashboardCard(
+                        "Hôm nay",
+                        todayCount,
+                        Icons.Default.Today,
+
+                        listOf(
+                            Color(0xFF00F2FE),
+                            Color(0xFF4FACFE)
+                        ),
+
+                        Modifier.weight(1f)
+                    )
+
+                    DashboardCard(
+                        "Tổng tiền",
+                        totalMoney,
+                        Icons.Default.AttachMoney,
+
+                        listOf(
+                            Color(0xFF4FACFE),
+                            Color(0xFF6A11CB)
+                        ),
+
+                        Modifier.weight(1f)
+                    )
+                }
+
+                Text(
+                    "Hoạt động gần đây",
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF111827)
+                )
+
+                Column(
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
+                ) {
+
+                    recentActivity.forEachIndexed { index, (type, name, qty) ->
+
+                        var itemVisible by remember(index) {
+                            mutableStateOf(false)
+                        }
+
+                        LaunchedEffect(index) {
+                            delay(index * 55L)
+                            itemVisible = true
+                        }
+
+                        val itemAlpha by animateFloatAsState(
+                            targetValue = if (itemVisible) 1f else 0f,
+
+                            animationSpec = tween(
+                                durationMillis = 650,
+                                easing = FastOutSlowInEasing
+                            ),
+
+                            label = ""
+                        )
+
+                        val itemTranslationY by animateFloatAsState(
+                            targetValue = if (itemVisible) 0f else 28f,
+
+                            animationSpec = tween(
+                                durationMillis = 650,
+                                easing = FastOutSlowInEasing
+                            ),
+
+                            label = ""
+                        )
+
+                        val (icon, color) =
+                            if (type == "EXPORT") {
+                                Icons.Default.LocalShipping to Color(0xFF4FC3F7)
+                            } else {
+                                Icons.Default.Inventory to Color(0xFF4FC3F7)
+                            }
+
+                        Box(
+                            modifier = Modifier.graphicsLayer {
+                                this.alpha = itemAlpha
+                                this.translationY = itemTranslationY
+                            }
                         ) {
 
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = name,
-                                    fontWeight = FontWeight.SemiBold,
-                                    color = Color(0xFF111827)
-                                )
+                            Card(
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color.White
+                                ),
+
+                                elevation = CardDefaults.cardElevation(0.dp),
+
+                                modifier = Modifier.fillMaxWidth()
+                            ) {
 
                                 Row(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(14.dp),
+
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
 
-                                    val (statusText, textColor, bgColor) =
-                                        if (type == "EXPORT") {
-                                            Triple(
-                                                "Xuất kho",
-                                                Color(0xFFF59E0B),
-                                                Color(0xFFFFF7D6)
-                                            )
-                                        } else {
-                                            Triple(
-                                                "Nhập kho",
-                                                Color(0xFF7C3AED),
-                                                Color(0xFFEDE9FE)
-                                            )
-                                        }
-
-                                    Box(
-                                        modifier = Modifier
-                                            .background(bgColor, RoundedCornerShape(8.dp))
-                                            .padding(horizontal = 8.dp, vertical = 4.dp)
+                                    Column(
+                                        modifier = Modifier.weight(1f)
                                     ) {
                                         Text(
-                                            text = statusText,
-                                            color = textColor,
-                                            fontWeight = FontWeight.Medium,
-                                            style = MaterialTheme.typography.bodySmall
+                                            text = name,
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = Color(0xFF111827)
                                         )
-                                    }
-                                    Spacer(modifier = Modifier.width(8.dp))
 
-                                    Text(
-                                        text = "Số lượng: $qty",
-                                        color = Color.Black,
-                                        style = MaterialTheme.typography.bodySmall
+                                        Row(
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            val (
+                                                statusText,
+                                                textColor,
+                                                bgColor
+                                            ) = if (type == "EXPORT") {
+
+                                                Triple(
+                                                    "Xuất kho",
+                                                    Color(0xFFF59E0B),
+                                                    Color(0xFFFFF7D6)
+                                                )
+
+                                            } else {
+
+                                                Triple(
+                                                    "Nhập kho",
+                                                    Color(0xFF7C3AED),
+                                                    Color(0xFFEDE9FE)
+                                                )
+                                            }
+
+                                            Box(
+                                                modifier = Modifier
+                                                    .background(
+                                                        bgColor,
+                                                        RoundedCornerShape(8.dp)
+                                                    )
+                                                    .padding(
+                                                        horizontal = 8.dp,
+                                                        vertical = 4.dp
+                                                    )
+                                            ) {
+
+                                                Text(
+                                                    text = statusText,
+                                                    color = textColor,
+                                                    fontWeight = FontWeight.Medium,
+                                                    style = MaterialTheme.typography.bodySmall
+                                                )
+                                            }
+                                            Spacer(
+                                                modifier = Modifier.width(8.dp)
+                                            )
+
+                                            Text(
+                                                text = "Số lượng: $qty",
+                                                color = Color.Black,
+                                                style = MaterialTheme.typography.bodySmall
+                                            )
+                                        }
+                                    }
+                                    Icon(
+                                        Icons.Default.ChevronRight,
+                                        contentDescription = null,
+                                        tint = Color.LightGray
                                     )
                                 }
                             }
-
-                            Icon(
-                                Icons.Default.ChevronRight,
-                                contentDescription = null,
-                                tint = Color.LightGray
-                            )
                         }
                     }
                 }

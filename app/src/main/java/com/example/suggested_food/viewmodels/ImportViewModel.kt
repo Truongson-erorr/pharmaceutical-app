@@ -14,8 +14,6 @@ class ImportViewModel : ViewModel() {
     val saveState: StateFlow<Boolean?> = _saveState
 
     private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage
-
     private val _loading = MutableStateFlow(false)
     val loading: StateFlow<Boolean> = _loading
 
@@ -82,6 +80,25 @@ class ImportViewModel : ViewModel() {
                 )
 
                 notifRef.set(notification)
+
+                val user = com.google.firebase.auth.FirebaseAuth.getInstance().currentUser
+                val userId = user?.uid ?: "unknown"
+                val userName = user?.displayName ?: "Unknown"
+
+                db.collection("activity_logs")
+                    .add(
+                        mapOf(
+                            "type" to "IMPORT",
+                            "title" to "Nhập kho",
+                            "message" to "Nhập ${receipt.quantity} ${receipt.productName}",
+                            "productId" to receipt.productId,
+                            "productName" to receipt.productName,
+                            "quantity" to receipt.quantity,
+                            "userId" to userId,
+                            "userName" to userName,
+                            "timestamp" to System.currentTimeMillis()
+                        )
+                    )
             }
             .addOnFailureListener {
                 _loading.value = false
@@ -90,7 +107,6 @@ class ImportViewModel : ViewModel() {
     }
 
     fun loadImportReceipt(receiptId: String) {
-
         _loading.value = true
 
         db.collection("import_receipts")
@@ -108,6 +124,7 @@ class ImportViewModel : ViewModel() {
                 _errorMessage.value = it.message
             }
     }
+
 
     fun clearState() {
         _saveState.value = null

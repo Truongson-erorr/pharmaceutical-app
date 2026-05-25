@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.suggested_food.models.ExportReceipt
 import com.example.suggested_food.models.Patient
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -151,6 +152,25 @@ class ExportViewModel : ViewModel() {
                     "time" to System.currentTimeMillis(),
                     "type" to "EXPORT"
                 )
+
+                val user = FirebaseAuth.getInstance().currentUser
+                val userId = user?.uid ?: ""
+                val userName = user?.displayName ?: ""
+
+                db.collection("activity_logs")
+                    .add(
+                        mapOf(
+                            "type" to "EXPORT",
+                            "title" to "Xuất kho",
+                            "message" to "Xuất ${receipt.quantity} ${receipt.productName}",
+                            "productId" to receipt.productId,
+                            "productName" to receipt.productName,
+                            "quantity" to receipt.quantity,
+                            "userId" to userId,
+                            "userName" to userName,
+                            "timestamp" to System.currentTimeMillis()
+                        )
+                    )
 
                 exportNotifRef.set(exportNotification)
                     .addOnSuccessListener {

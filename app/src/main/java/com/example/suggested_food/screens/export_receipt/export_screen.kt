@@ -7,8 +7,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.Error
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -23,6 +26,7 @@ import com.example.suggested_food.viewmodels.ProductViewModel
 import com.example.suggested_food.viewmodel.ExportViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.ui.unit.sp
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -63,6 +67,19 @@ fun ExportStockScreen(
                 (price.toIntOrNull() ?: 0)
 
     val errorMessage by exportViewModel.errorMessage.collectAsState()
+    val backStackEntry = navController.previousBackStackEntry
+    val productNameFromDetail = backStackEntry?.savedStateHandle?.get<String>("productName")
+    val productIdFromDetail = backStackEntry?.savedStateHandle?.get<String>("productId")
+
+    LaunchedEffect(productNameFromDetail, productIdFromDetail) {
+        if (!productNameFromDetail.isNullOrEmpty()) {
+            selectedProductName = productNameFromDetail
+        }
+
+        if (!productIdFromDetail.isNullOrEmpty()) {
+            selectedProductId = productIdFromDetail
+        }
+    }
 
     LaunchedEffect(saveState) {
         if (saveState == true) {
@@ -297,11 +314,59 @@ fun ExportStockScreen(
         }
 
         if (!errorMessage.isNullOrBlank()) {
+
             AlertDialog(
                 onDismissRequest = {
                     exportViewModel.clearError()
                 },
                 containerColor = Color.White,
+                title = @androidx.compose.runtime.Composable {
+
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        Box(
+                            modifier = Modifier
+                                .size(90.dp)
+                                .background(
+                                    color = Color(0xFFFEE2E2),
+                                    shape = RoundedCornerShape(50)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.Error,
+                                contentDescription = null,
+                                tint = Color(0xFFDC2626),
+                                modifier = Modifier.size(50.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Thất bại",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 17.sp,
+                            color = Color(0xFFDC2626)
+                        )
+                    }
+                },
+
+                text = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 0.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = errorMessage ?: "",
+                            color = Color.Black
+                        )
+                    }
+                },
 
                 confirmButton = {
                     TextButton(
@@ -309,26 +374,71 @@ fun ExportStockScreen(
                             exportViewModel.clearError()
                         }
                     ) {
-                        Text("OK")
+                        Text(
+                            "OK",
+                            color = Color.Black,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     }
-                },
-
-                title = {
-                    Text("Không thể xuất kho")
-                },
-
-                text = {
-                    Text(errorMessage ?: "")
                 }
             )
         }
 
         if (saveState == true) {
+
             AlertDialog(
                 onDismissRequest = {
                     exportViewModel.clearState()
                 },
                 containerColor = Color.White,
+
+                title = @androidx.compose.runtime.Composable {
+
+                    Column(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+
+                        Box(
+                            modifier = Modifier
+                                .size(90.dp)
+                                .background(
+                                    color = Color(0xFFD1FAE5),
+                                    shape = RoundedCornerShape(50)
+                                ),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CheckCircle,
+                                contentDescription = null,
+                                tint = Color(0xFF22C55E),
+                                modifier = Modifier.size(50.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(8.dp))
+
+                        Text(
+                            text = "Success",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 17.sp,
+                            color = Color.Black
+                        )
+                    }
+                },
+
+                text = {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 0.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = "Xuất kho thành công!!",
+                            color = Color.Black
+                        )
+                    }
+                },
 
                 confirmButton = {
                     TextButton(
@@ -336,16 +446,12 @@ fun ExportStockScreen(
                             exportViewModel.clearState()
                         }
                     ) {
-                        Text("OK")
+                        Text(
+                            "OK",
+                            color = Color.Black,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     }
-                },
-
-                title = {
-                    Text("Xuất kho thành công")
-                },
-
-                text = {
-                    Text("Phiếu xuất đã được lưu và cập nhật tồn kho.")
                 }
             )
         }

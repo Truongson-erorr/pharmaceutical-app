@@ -1,5 +1,8 @@
 package com.example.suggested_food.screens.stock
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -25,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.example.suggested_food.viewmodels.StockViewModel
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +50,37 @@ fun StockScreen(
                 it.expiryDate < today
     }
 
+    var visible by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(Unit) {
+        delay(80)
+        visible = true
+    }
+
+    val alpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+
+        label = ""
+    )
+
+    val translationY by animateFloatAsState(
+        targetValue = if (visible) 0f else 35f,
+
+        animationSpec = tween(
+            durationMillis = 700,
+            easing = FastOutSlowInEasing
+        ),
+
+        label = ""
+    )
+
     Scaffold(
         topBar = {
             Box(
@@ -62,7 +98,7 @@ fun StockScreen(
                 TopAppBar(
                     title = {
                         Text(
-                            "Quản lý tôn kho",
+                            "Quản lý tồn kho",
                             fontWeight = FontWeight.Bold,
                             color = Color.White
                         )
@@ -86,15 +122,19 @@ fun StockScreen(
 
         Column(
             modifier = Modifier
+                .graphicsLayer {
+                    this.alpha = alpha
+                    this.translationY = translationY
+                }
                 .padding(padding)
                 .fillMaxSize()
                 .background(Color(0xFFF5F5F5))
                 .padding(16.dp),
+
             verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
 
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-
                 Row(
                     Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)

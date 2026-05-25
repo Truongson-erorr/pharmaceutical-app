@@ -1,9 +1,13 @@
 package com.example.suggested_food.screens.notifications
 
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -14,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -118,19 +123,63 @@ fun NotificationScreen(
                         verticalArrangement = Arrangement.spacedBy(1.dp)
                     ) {
 
-                        items(notifications, key = { it.id }) { item ->
-                            NotificationItem(
-                                item = item,
-                                isExpanded = expandedIds.contains(item.id),
-                                onToggle = {
-                                    expandedIds =
-                                        if (expandedIds.contains(item.id)) {
-                                            expandedIds - item.id
-                                        } else {
-                                            expandedIds + item.id
-                                        }
-                                }
+                        itemsIndexed(
+                            notifications,
+                            key = { _, item -> item.id }
+                        ) { index, item ->
+
+                            var visible by remember {
+                                mutableStateOf(false)
+                            }
+
+                            LaunchedEffect(Unit) {
+                                delay(index * 55L)
+                                visible = true
+                            }
+
+                            val alpha by animateFloatAsState(
+                                targetValue = if (visible) 1f else 0f,
+
+                                animationSpec = tween(
+                                    durationMillis = 650,
+                                    easing = FastOutSlowInEasing
+                                ),
+
+                                label = ""
                             )
+
+                            val translationY by animateFloatAsState(
+                                targetValue = if (visible) 0f else 28f,
+
+                                animationSpec = tween(
+                                    durationMillis = 650,
+                                    easing = FastOutSlowInEasing
+                                ),
+
+                                label = ""
+                            )
+
+                            Box(
+                                modifier = Modifier.graphicsLayer {
+                                    this.alpha = alpha
+                                    this.translationY = translationY
+                                }
+                            ) {
+
+                                NotificationItem(
+                                    item = item,
+                                    isExpanded = expandedIds.contains(item.id),
+                                    onToggle = {
+
+                                        expandedIds =
+                                            if (expandedIds.contains(item.id)) {
+                                                expandedIds - item.id
+                                            } else {
+                                                expandedIds + item.id
+                                            }
+                                    }
+                                )
+                            }
                         }
                     }
                 }

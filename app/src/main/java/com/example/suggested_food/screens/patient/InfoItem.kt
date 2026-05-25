@@ -27,7 +27,6 @@ fun InfoItem(
     modifier: Modifier = Modifier,
     valueColor: Color
 ) {
-
     val lightBackground = lerp(valueColor, Color.White, 0.85f)
 
     Surface(

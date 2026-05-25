@@ -21,6 +21,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.InventoryViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +38,9 @@ fun InventoryDetailScreen(
         Text("Không tìm thấy thuốc")
         return
     }
+    val user = FirebaseAuth.getInstance().currentUser
+    val currentUserId = user?.uid ?: "unknown"
+    val currentUserName = user?.displayName ?: "Unknown"
 
     Scaffold(
         topBar = {
@@ -183,7 +187,12 @@ fun InventoryDetailScreen(
                 confirmButton = {
                     Button(
                         onClick = {
-                            inventoryViewModel.deleteProduct(product.id) {
+
+                            inventoryViewModel.deleteProduct(
+                                product = product,
+                                userId = currentUserId,
+                                userName = currentUserName
+                            ) {
                                 showDeleteDialog = false
                                 navController.popBackStack()
                             }
