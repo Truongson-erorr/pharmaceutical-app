@@ -12,6 +12,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.History
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.LocalOffer
+import androidx.compose.material.icons.outlined.Logout
+import androidx.compose.material.icons.outlined.MedicalServices
+import androidx.compose.material.icons.outlined.NotificationsActive
+import androidx.compose.material.icons.outlined.PeopleAlt
+import androidx.compose.material.icons.outlined.ReceiptLong
+import androidx.compose.material.icons.outlined.Storefront
 import androidx.compose.material3.*
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.runtime.*
@@ -214,16 +223,47 @@ fun MainScreen(
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                 ) {
-                    DrawerItem("Trang chủ", Icons.Default.Home, "MainScreen")
-                    DrawerItem("Hồ sơ khách hàng", Icons.Default.PeopleAlt, "PatientScreen")
-                    DrawerItem("Lịch nhắc nhở", Icons.Default.NotificationsActive, "ReminderScreen")
-                    DrawerItem("Mã khuyến mãi", Icons.Default.LocalOffer, "PromoCodeScreen")
-                    DrawerItem("Quản lý kho thuốc", Icons.Default.Cable, "InventoryScreen")
-                    DrawerItem("Quản lý tồn kho", Icons.Default.Storefront, "StockScreen")
-                    DrawerItem("Hóa đơn", Icons.Default.ReceiptLong, "InvoiceDashboardScreen")
+                    DrawerItem("Trang chủ", Icons.Outlined.Home, "MainScreen")
+
+                    DrawerItem(
+                        "Hồ sơ khách hàng",
+                        Icons.Outlined.PeopleAlt,
+                        "PatientScreen"
+                    )
+
+                    DrawerItem(
+                        "Lịch nhắc nhở",
+                        Icons.Outlined.NotificationsActive,
+                        "ReminderScreen"
+                    )
+
+                    DrawerItem(
+                        "Mã khuyến mãi",
+                        Icons.Outlined.LocalOffer,
+                        "PromoCodeScreen"
+                    )
+
+                    DrawerItem(
+                        "Quản lý kho thuốc",
+                        Icons.Outlined.MedicalServices,
+                        "InventoryScreen"
+                    )
+
+                    DrawerItem(
+                        "Quản lý tồn kho",
+                        Icons.Outlined.Storefront,
+                        "StockScreen"
+                    )
+
+                    DrawerItem(
+                        "Hóa đơn",
+                        Icons.Outlined.ReceiptLong,
+                        "InvoiceDashboardScreen"
+                    )
+
                     DrawerItem(
                         "Nhật ký hoạt động",
-                        Icons.Default.History,
+                        Icons.Outlined.History,
                         "ActivityLogScreen"
                     )
                     Spacer(Modifier.height(24.dp))
@@ -239,7 +279,7 @@ fun MainScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Icon(
-                            Icons.Default.Logout,
+                            Icons.Outlined.Logout,
                             contentDescription = null,
                             tint = Color.Red
                         )

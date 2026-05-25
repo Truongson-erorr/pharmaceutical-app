@@ -225,7 +225,6 @@ fun PatientDetailScreen(
                 }
 
                 item {
-
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {

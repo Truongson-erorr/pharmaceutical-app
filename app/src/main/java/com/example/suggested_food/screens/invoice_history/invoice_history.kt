@@ -247,7 +247,6 @@ fun InvoiceHistoryScreen(
                                     )
                         }
                     },
-
                     label = ""
 
                 ) { targetTab ->

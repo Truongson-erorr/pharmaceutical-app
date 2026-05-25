@@ -134,7 +134,6 @@ fun ActivityLogScreen(
                     },
 
                     navigationIcon = {
-
                         IconButton(
                             onClick = {
                                 navController.popBackStack()
@@ -173,15 +172,11 @@ fun ActivityLogScreen(
                 modifier = Modifier.fillMaxSize()
             ) {
 
-                Spacer(
-                    modifier = Modifier.height(10.dp)
-                )
-
+                Spacer(modifier = Modifier.height(10.dp))
                 Card(
                     modifier = Modifier
                         .padding(horizontal = 12.dp)
                         .fillMaxWidth(),
-
                     shape = RoundedCornerShape(30.dp),
 
                     colors = CardDefaults.cardColors(
@@ -228,37 +223,24 @@ fun ActivityLogScreen(
                                 onClick = {
                                     selectedTab = index
                                 },
-
                                 selectedContentColor = Color.White,
-
                                 unselectedContentColor = Color.Black,
-
                                 modifier = Modifier
                                     .height(46.dp)
                                     .padding(horizontal = 4.dp),
 
                                 text = {
-
                                     Text(
                                         text = when (title) {
-
                                             "IMPORT" -> "Nhập kho"
-
                                             "EXPORT" -> "Xuất kho"
-
-                                            "PRODUCT_ADD" -> "Thêm thuốc"
-
-                                            "PRODUCT_UPDATE" -> "Cập nhật"
-
-                                            "PRODUCT_DELETE" -> "Xóa thuốc"
-
+                                            "PRODUCT_ADD" -> "Thuốc đã thêm"
+                                            "PRODUCT_UPDATE" -> "Thuốc đã cập nhật"
+                                            "PRODUCT_DELETE" -> "Thuốc đã bị xóa"
                                             else -> title
                                         },
-
                                         fontWeight = FontWeight.SemiBold,
-
                                         maxLines = 1,
-
                                         overflow = TextOverflow.Visible
                                     )
                                 }

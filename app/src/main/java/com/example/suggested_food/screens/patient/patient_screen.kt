@@ -13,8 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,9 +29,6 @@ import androidx.navigation.NavController
 import com.example.suggested_food.models.Patient
 import com.example.suggested_food.viewmodels.PatientViewModel
 import kotlinx.coroutines.delay
-import java.text.NumberFormat
-import java.text.SimpleDateFormat
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -41,11 +37,18 @@ fun PatientScreen(
 ) {
     val viewModel: PatientViewModel = viewModel()
     val patients by viewModel.patients.collectAsState()
-    val keyword by remember { mutableStateOf("") }
-
+    var keyword by remember { mutableStateOf("") }
     val filteredPatients = patients.filter {
         it.name.contains(keyword, true) ||
                 it.phone.contains(keyword)
+    }
+    var isLoading by remember {
+        mutableStateOf(true)
+    }
+
+    LaunchedEffect(Unit) {
+        delay(1500)
+        isLoading = false
     }
 
     Scaffold(
@@ -97,196 +100,109 @@ fun PatientScreen(
         ) {
             Spacer(Modifier.height(15.dp))
 
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
+            TextField(
+                value = keyword,
+                onValueChange = {
+                    keyword = it
+                },
 
-                itemsIndexed(filteredPatients) { index, patient ->
+                modifier = Modifier.fillMaxWidth(),
 
-                    var visible by remember(index, filteredPatients.size) {
-                        mutableStateOf(false)
-                    }
+                placeholder = {
+                    Text("Tìm theo tên hoặc số điện thoại...")
+                },
 
-                    LaunchedEffect(index, filteredPatients.size) {
-                        visible = false
-                        delay(index * 55L)
-                        visible = true
-                    }
-
-                    val alpha by animateFloatAsState(
-                        targetValue = if (visible) 1f else 0f,
-
-                        animationSpec = tween(
-                            durationMillis = 650,
-                            easing = FastOutSlowInEasing
-                        ),
-
-                        label = ""
+                leadingIcon = {
+                    Icon(
+                        Icons.Default.Search,
+                        contentDescription = null
                     )
+                },
 
-                    val translationY by animateFloatAsState(
-                        targetValue = if (visible) 0f else 28f,
+                singleLine = true,
+                shape = RoundedCornerShape(16.dp),
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent
+                )
+            )
 
-                        animationSpec = tween(
-                            durationMillis = 650,
-                            easing = FastOutSlowInEasing
-                        ),
+            Spacer(Modifier.height(10.dp))
+            if (isLoading) {
 
-                        label = ""
-                    )
-
-                    Box(
-                        modifier = Modifier.graphicsLayer {
-                            this.alpha = alpha
-                            this.translationY = translationY
-                        }
-                    ) {
-
-                        PatientCard(
-                            patient = patient,
-                            navController = navController
-                        )
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(6) {
+                        PatientShimmerItem()
                     }
                 }
-            }
-        }
-    }
-}
 
-@Composable
-fun PatientCard(
-    patient: Patient,
-    navController: NavController
-) {
-    val currency = NumberFormat.getInstance(Locale("vi", "VN"))
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            } else {
 
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(20.dp))
-            .clickable {
-                navController.navigate("PatientDetail/${patient.phone}")
-            },
-        color = Color.White,
-        tonalElevation = 0.dp,
-        shadowElevation = 0.dp
-    ) {
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White)
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(48.dp)
-                    .clip(CircleShape)
-                    .background(Color(0xFFE3F2FD)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    Icons.Default.Person,
-                    contentDescription = null,
-                    tint = Color(0xFF2196F3)
-                )
-            }
-            Spacer(Modifier.width(14.dp))
-
-            Column(
-                modifier = Modifier.weight(1f)
-            ) {
-
-                Text(
-                    text = patient.name,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold
-                )
-                Spacer(Modifier.height(2.dp))
-
-                Text(
-                    text = patient.phone,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
-                )
-                Spacer(Modifier.height(8.dp))
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
 
-                    Column {
-                        Text(
-                            "Đơn hàng",
-                            color = Color.Gray,
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                        Text(
-                            "${patient.totalOrders}",
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
-
-                    Column {
-                        Text(
-                            "Tổng chi",
-                            color = Color.Gray,
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                        Box(
-                            modifier = Modifier
-                                .background(
-                                    color = Color(0xFFE8F5E9),
-                                    shape = RoundedCornerShape(50)
-                                )
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                    itemsIndexed(filteredPatients) { index, patient ->
+                        var visible by remember(
+                            index,
+                            filteredPatients.size
                         ) {
-                            Text(
-                                text = "${currency.format(patient.totalSpent)} đ",
-                                color = Color(0xFF22C55E),
-                                fontWeight = FontWeight.SemiBold,
-                                style = MaterialTheme.typography.labelMedium
-                            )
+                            mutableStateOf(false)
                         }
-                    }
 
-                    Column {
-                        Text(
-                            "Lần cuối mua",
-                            color = Color.Gray,
-                            style = MaterialTheme.typography.labelSmall
-                        )
-                        Box(
-                            modifier = Modifier
-                                .background(
-                                    color = Color(0xFFE3F2FD),
-                                    shape = RoundedCornerShape(50)
-                                )
-                                .padding(horizontal = 10.dp, vertical = 4.dp)
+                        LaunchedEffect(
+                            index,
+                            filteredPatients.size
                         ) {
-                            Text(
-                                text =
-                                if (patient.lastVisit != 0L)
-                                    dateFormat.format(Date(patient.lastVisit))
-                                else "--",
-                                color = Color(0xFF1E88E5),
-                                fontWeight = FontWeight.SemiBold,
-                                style = MaterialTheme.typography.labelMedium
+
+                            visible = false
+                            delay(index * 55L)
+                            visible = true
+                        }
+
+                        val alpha by animateFloatAsState(
+                            targetValue = if (visible) 1f else 0f,
+
+                            animationSpec = tween(
+                                durationMillis = 650,
+                                easing = FastOutSlowInEasing
+                            ),
+
+                            label = ""
+                        )
+
+                        val translationY by animateFloatAsState(
+                            targetValue = if (visible) 0f else 28f,
+
+                            animationSpec = tween(
+                                durationMillis = 650,
+                                easing = FastOutSlowInEasing
+                            ),
+
+                            label = ""
+                        )
+
+                        Box(
+                            modifier = Modifier.graphicsLayer {
+                                this.alpha = alpha
+                                this.translationY = translationY
+                            }
+                        ) {
+
+                            PatientCard(
+                                patient = patient,
+                                navController = navController
                             )
                         }
                     }
                 }
             }
-
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = "Xem chi tiết",
-                tint = Color(0xFF9CA3AF),
-                modifier = Modifier.size(22.dp)
-            )
         }
     }
 }
