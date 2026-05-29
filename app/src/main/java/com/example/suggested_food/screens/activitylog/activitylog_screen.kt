@@ -106,9 +106,7 @@ fun ActivityLogScreen(
     }
 
     Scaffold(
-
         topBar = {
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -124,7 +122,6 @@ fun ActivityLogScreen(
 
                 TopAppBar(
                     title = {
-
                         Text(
                             text = "Nhật ký hoạt động",
                             fontWeight = FontWeight.Bold,
@@ -157,161 +154,143 @@ fun ActivityLogScreen(
 
     ) { padding ->
 
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(padding)
                 .graphicsLayer {
                     alpha = screenAlpha
                     translationY = screenTranslationY
                 }
                 .background(Color(0xFFF5F5F5))
-                .padding(padding)
         ) {
+            Spacer(modifier = Modifier.height(10.dp))
 
-            Column(
-                modifier = Modifier.fillMaxSize()
+            ScrollableTabRow(
+                selectedTabIndex = selectedTab,
+                modifier = Modifier.fillMaxWidth(),
+                edgePadding = 12.dp,
+                containerColor = Color.Transparent,
+                divider = {},
+                indicator = { tabPositions ->
+
+                    Box(
+                        modifier = Modifier
+                            .tabIndicatorOffset(
+                                tabPositions[selectedTab]
+                            )
+                            .padding(horizontal = 16.dp)
+                            .height(3.dp)
+                            .background(
+                                Color(0xFF2563EB),
+                                RoundedCornerShape(50)
+                            )
+                    )
+                }
             ) {
 
-                Spacer(modifier = Modifier.height(10.dp))
-                Card(
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp)
-                        .fillMaxWidth(),
-                    shape = RoundedCornerShape(30.dp),
+                tabs.forEachIndexed { index, title ->
+                    val selected = selectedTab == index
+                    Tab(
+                        selected = selected,
 
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    ),
+                        onClick = {
+                            selectedTab = index
+                        },
+                        selectedContentColor = Color.Black,
+                        unselectedContentColor = Color(0xFF9CA3AF),
+                        modifier = Modifier.height(46.dp),
 
-                    elevation = CardDefaults.cardElevation(4.dp)
+                        text = {
+                            Text(
+                                text = when (title) {
+                                    "IMPORT" -> "Nhập kho"
+                                    "EXPORT" -> "Xuất kho"
+                                    "PRODUCT_ADD" ->
+                                        "Thuốc đã thêm"
+                                    "PRODUCT_UPDATE" ->
+                                        "Thuốc đã cập nhật"
+                                    "PRODUCT_DELETE" ->
+                                        "Thuốc đã bị xóa"
+                                    else -> title
+                                },
+
+                                fontWeight = if (selected)
+                                    FontWeight.Bold
+                                else
+                                    FontWeight.Medium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        }
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.height(10.dp))
+
+            if (filteredLogs.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
                 ) {
 
-                    ScrollableTabRow(
-                        selectedTabIndex = selectedTab,
-                        modifier = Modifier
-                            .padding(6.dp)
-                            .clip(RoundedCornerShape(50)),
-
-                        edgePadding = 4.dp,
-                        containerColor = Color.Transparent,
-                        divider = {},
-
-                        indicator = { tabPositions ->
-                            Box(
-                                modifier = Modifier
-                                    .tabIndicatorOffset(
-                                        tabPositions[selectedTab]
-                                    )
-                                    .fillMaxHeight()
-                                    .padding(4.dp)
-                                    .background(
-                                        Color.Black,
-                                        RoundedCornerShape(50)
-                                    )
-                                    .zIndex(-1f)
-                            )
-                        }
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
 
-                        tabs.forEachIndexed { index, title ->
+                        Box(
+                            modifier = Modifier
+                                .size(100.dp)
+                                .background(
+                                    Color(0xFFE0F2FE),
+                                    shape = RoundedCornerShape(100)
+                                ),
 
-                            val selected = selectedTab == index
-
-                            Tab(
-                                selected = selected,
-
-                                onClick = {
-                                    selectedTab = index
-                                },
-                                selectedContentColor = Color.White,
-                                unselectedContentColor = Color.Black,
-                                modifier = Modifier
-                                    .height(46.dp)
-                                    .padding(horizontal = 4.dp),
-
-                                text = {
-                                    Text(
-                                        text = when (title) {
-                                            "IMPORT" -> "Nhập kho"
-                                            "EXPORT" -> "Xuất kho"
-                                            "PRODUCT_ADD" -> "Thuốc đã thêm"
-                                            "PRODUCT_UPDATE" -> "Thuốc đã cập nhật"
-                                            "PRODUCT_DELETE" -> "Thuốc đã bị xóa"
-                                            else -> title
-                                        },
-                                        fontWeight = FontWeight.SemiBold,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Visible
-                                    )
-                                }
-                            )
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.height(10.dp))
-
-                if (filteredLogs.isEmpty()) {
-                    Box(
-                        modifier = Modifier.fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-
-                        Column(
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            contentAlignment = Alignment.Center
                         ) {
 
-                            Box(
-                                modifier = Modifier
-                                    .size(100.dp)
-                                    .background(
-                                        Color(0xFFE0F2FE),
-                                        shape = RoundedCornerShape(100)
-                                    ),
-                                contentAlignment = Alignment.Center
-                            ) {
-
-                                Icon(
-                                    imageVector = Icons.Default.Inventory2,
-                                    contentDescription = null,
-                                    tint = Color(0xFF0EA5E9),
-                                    modifier = Modifier.size(50.dp)
-                                )
-                            }
-                            Spacer(modifier = Modifier.height(16.dp))
-
-                            Text(
-                                text = "Không có dữ liệu",
-                                color = Color.Gray,
-                                fontSize = 17.sp,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                            Spacer(modifier = Modifier.height(4.dp))
-
-                            Text(
-                                text = "Hiện chưa có hoạt động nào!",
-                                color = Color.LightGray,
-                                fontSize = 14.sp
+                            Icon(
+                                imageVector = Icons.Default.Inventory2,
+                                contentDescription = null,
+                                tint = Color(0xFF0EA5E9),
+                                modifier = Modifier.size(50.dp)
                             )
                         }
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = "Không có dữ liệu",
+                            color = Color.Gray,
+                            fontSize = 17.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+
+                        Text(
+                            text = "Hiện chưa có hoạt động nào!",
+                            color = Color.LightGray,
+                            fontSize = 14.sp
+                        )
                     }
+                }
 
-                } else {
+            } else {
 
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(horizontal = 12.dp),
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 12.dp),
 
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
-                    ) {
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
 
-                        items(filteredLogs) { log ->
+                    items(filteredLogs) { log ->
 
-                            ActivityLogItem(
-                                log = log,
-                                userName = users[log.userId] ?: "Unknown"
-                            )
-                        }
+                        ActivityLogItem(
+                            log = log,
+                            userName = users[log.userId]
+                                ?: "Unknown"
+                        )
                     }
                 }
             }

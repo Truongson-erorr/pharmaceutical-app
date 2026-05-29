@@ -32,10 +32,6 @@ import com.example.suggested_food.screens.drug_look_up.DrugLookupScreen
 import com.example.suggested_food.screens.export_receipt.ExportStockScreen
 import com.example.suggested_food.screens.home.MainScreen
 import com.example.suggested_food.screens.import_receipt.ImportStockScreen
-import com.example.suggested_food.screens.inventory.InventoryAddScreen
-import com.example.suggested_food.screens.inventory.InventoryDetailScreen
-import com.example.suggested_food.screens.inventory.InventoryEditScreen
-import com.example.suggested_food.screens.inventory.InventoryScreen
 import com.example.suggested_food.screens.invoice.InvoiceDashboardScreen
 import com.example.suggested_food.screens.invoice.InvoiceScreen
 import com.example.suggested_food.screens.invoice_history.ExportDetailScreen
@@ -45,8 +41,6 @@ import com.example.suggested_food.screens.notifications.NotificationScreen
 import com.example.suggested_food.screens.patient.PatientDetailScreen
 import com.example.suggested_food.screens.patient.PatientScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
-import com.example.suggested_food.screens.promotion.AddPromoCodeScreen
-import com.example.suggested_food.screens.promotion.PromoCodeScreen
 import com.example.suggested_food.screens.reminder.AddReminderScreen
 import com.example.suggested_food.screens.reminder.ReminderScreen
 import com.example.suggested_food.screens.search.SearchScreen
@@ -174,20 +168,6 @@ fun AppNavigation(
         composable("AllProductScreen") {
             AllProductScreen(navController)
         }
-        composable("InventoryScreen") {
-            InventoryScreen(navController)
-        }
-        composable("product_detail/{id}") { backStack ->
-            val id = backStack.arguments?.getString("id") ?: ""
-            InventoryDetailScreen(navController, id)
-        }
-        composable("inventory_edit/{id}") {
-            val id = it.arguments?.getString("id")!!
-            InventoryEditScreen(navController, id)
-        }
-        composable("InventoryAddScreen") {
-            InventoryAddScreen(navController)
-        }
         composable("StockScreen") {
             StockScreen(navController)
         }
@@ -244,12 +224,6 @@ fun AppNavigation(
                 viewModel = viewModel,
                 productViewModel
             )
-        }
-        composable("PromoCodeScreen") {
-            PromoCodeScreen(navController, promoViewModel)
-        }
-        composable("AddPromoCodeScreen") {
-            AddPromoCodeScreen(navController, promoViewModel)
         }
         composable("PatientScreen") {
             PatientScreen(navController)
