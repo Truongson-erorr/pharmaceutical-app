@@ -32,11 +32,21 @@ class ActivityLogViewModel : ViewModel() {
 
     fun loadLogs() {
         db.collection("activity_logs")
-            .orderBy("timestamp", com.google.firebase.firestore.Query.Direction.DESCENDING)
+            .orderBy(
+                "timestamp",
+                com.google.firebase.firestore.Query.Direction.DESCENDING
+            )
             .addSnapshotListener { snapshot, _ ->
-                _logs.value = snapshot?.documents?.mapNotNull {
+
+                val allLogs = snapshot?.documents?.mapNotNull {
                     it.toObject(ActivityLog::class.java)?.copy(id = it.id)
                 } ?: emptyList()
+
+                val filteredLogs = allLogs.filter { log ->
+                    log.type == "IMPORT" || log.type == "EXPORT"
+                }
+
+                _logs.value = filteredLogs
             }
     }
 }

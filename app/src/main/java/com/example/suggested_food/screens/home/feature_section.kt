@@ -56,8 +56,8 @@ fun FeatureSection(
                     icon = Icons.Default.Search,
                     route = "drug_lookup",
                     gradient = listOf(
-                        Color(0xFFEF4444),
-                        Color(0xFFDC2626)
+                        Color(0xFF38BDF8),
+                        Color(0xFF0EA5E9)
                     )
                 ),
                 FeatureItem(
@@ -66,10 +66,10 @@ fun FeatureSection(
                     icon = Icons.Default.PeopleAlt,
                     route = "SuggestScreen",
                     gradient = listOf(
-                        Color(0xFF22C55E),
-                        Color(0xFF86EFAC)
+                        Color(0xFF38BDF8),
+                        Color(0xFF0EA5E9)
                     )
-                ),
+                )
             )
         ),
     )

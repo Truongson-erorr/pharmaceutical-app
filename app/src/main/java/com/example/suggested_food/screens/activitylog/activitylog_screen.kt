@@ -1,8 +1,14 @@
 package com.example.suggested_food.screens.activitylog
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,7 +42,6 @@ fun ActivityLogScreen(
     navController: NavController,
     viewModel: ActivityLogViewModel = viewModel()
 ) {
-
     val logs by viewModel.logs.collectAsState()
     val users by viewModel.users.collectAsState()
 
@@ -76,19 +81,14 @@ fun ActivityLogScreen(
         label = ""
     )
 
-    // FILTER TYPES
     val tabs = listOf(
         "Tất cả",
         "IMPORT",
         "EXPORT",
-        "PRODUCT_ADD",
-        "PRODUCT_UPDATE",
-        "PRODUCT_DELETE"
     )
 
-    var selectedTab by remember {
-        mutableStateOf(0)
-    }
+    var selectedTab by remember { mutableStateOf(0) }
+    var previousTab by remember { mutableStateOf(0) }
 
     val filteredLogs = remember(
         logs,
@@ -195,6 +195,7 @@ fun ActivityLogScreen(
                         selected = selected,
 
                         onClick = {
+                            previousTab = selectedTab
                             selectedTab = index
                         },
                         selectedContentColor = Color.Black,
@@ -206,12 +207,6 @@ fun ActivityLogScreen(
                                 text = when (title) {
                                     "IMPORT" -> "Nhập kho"
                                     "EXPORT" -> "Xuất kho"
-                                    "PRODUCT_ADD" ->
-                                        "Thuốc đã thêm"
-                                    "PRODUCT_UPDATE" ->
-                                        "Thuốc đã cập nhật"
-                                    "PRODUCT_DELETE" ->
-                                        "Thuốc đã bị xóa"
                                     else -> title
                                 },
 
@@ -228,69 +223,107 @@ fun ActivityLogScreen(
             }
             Spacer(modifier = Modifier.height(10.dp))
 
-            if (filteredLogs.isEmpty()) {
-                Box(
-                    modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
+            AnimatedContent(
+                targetState = selectedTab,
+                transitionSpec = {
 
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    if (targetState > initialState) {
+
+                        (
+                                slideInHorizontally(
+                                    initialOffsetX = { it / 3 }
+                                ) + fadeIn()
+                                ).togetherWith(
+                                slideOutHorizontally(
+                                    targetOffsetX = { -it / 3 }
+                                ) + fadeOut()
+                            )
+
+                    } else {
+
+                        (
+                                slideInHorizontally(
+                                    initialOffsetX = { -it / 3 }
+                                ) + fadeIn()
+                                ).togetherWith(
+                                slideOutHorizontally(
+                                    targetOffsetX = { it / 3 }
+                                ) + fadeOut()
+                            )
+                    }
+                },
+                label = ""
+            ) { currentTab ->
+
+                val currentLogs =
+                    if (currentTab == 0)
+                        logs
+                    else
+                        logs.filter {
+                            it.type == tabs[currentTab]
+                        }
+
+                if (currentLogs.isEmpty()) {
+
+                    Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
 
-                        Box(
-                            modifier = Modifier
-                                .size(100.dp)
-                                .background(
-                                    Color(0xFFE0F2FE),
-                                    shape = RoundedCornerShape(100)
-                                ),
-
-                            contentAlignment = Alignment.Center
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally
                         ) {
 
-                            Icon(
-                                imageVector = Icons.Default.Inventory2,
-                                contentDescription = null,
-                                tint = Color(0xFF0EA5E9),
-                                modifier = Modifier.size(50.dp)
+                            Box(
+                                modifier = Modifier
+                                    .size(100.dp)
+                                    .background(
+                                        Color(0xFFE0F2FE),
+                                        shape = RoundedCornerShape(100)
+                                    ),
+                                contentAlignment = Alignment.Center
+                            ) {
+
+                                Icon(
+                                    imageVector = Icons.Default.Inventory2,
+                                    contentDescription = null,
+                                    tint = Color(0xFF0EA5E9),
+                                    modifier = Modifier.size(50.dp)
+                                )
+                            }
+                            Spacer(modifier = Modifier.height(16.dp))
+
+                            Text(
+                                text = "Không có dữ liệu",
+                                color = Color.Gray,
+                                fontSize = 17.sp,
+                                fontWeight = FontWeight.SemiBold
+                            )
+                            Spacer(modifier = Modifier.height(4.dp))
+
+                            Text(
+                                text = "Hiện chưa có hoạt động nào!",
+                                color = Color.LightGray,
+                                fontSize = 14.sp
                             )
                         }
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = "Không có dữ liệu",
-                            color = Color.Gray,
-                            fontSize = 17.sp,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                        Spacer(modifier = Modifier.height(4.dp))
-
-                        Text(
-                            text = "Hiện chưa có hoạt động nào!",
-                            color = Color.LightGray,
-                            fontSize = 14.sp
-                        )
                     }
-                }
 
-            } else {
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(horizontal = 12.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(currentLogs) { log ->
 
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 12.dp),
-
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-
-                    items(filteredLogs) { log ->
-
-                        ActivityLogItem(
-                            log = log,
-                            userName = users[log.userId]
-                                ?: "Unknown"
-                        )
+                            ActivityLogItem(
+                                log = log,
+                                userName = users[log.userId]
+                                    ?: "Unknown"
+                            )
+                        }
                     }
                 }
             }
