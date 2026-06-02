@@ -32,7 +32,7 @@ fun CategoryHorizontalItem(
     Surface(
         modifier = Modifier
             .width(90.dp)
-            .height(160.dp)
+            .height(100.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(14.dp),
         color = Color.Transparent,

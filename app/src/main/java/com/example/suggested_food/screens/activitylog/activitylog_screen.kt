@@ -1,8 +1,14 @@
 package com.example.suggested_food.screens.activitylog
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -36,7 +42,6 @@ fun ActivityLogScreen(
     navController: NavController,
     viewModel: ActivityLogViewModel = viewModel()
 ) {
-
     val logs by viewModel.logs.collectAsState()
     val users by viewModel.users.collectAsState()
 
@@ -76,19 +81,14 @@ fun ActivityLogScreen(
         label = ""
     )
 
-    // FILTER TYPES
     val tabs = listOf(
         "Tất cả",
         "IMPORT",
         "EXPORT",
-        "PRODUCT_ADD",
-        "PRODUCT_UPDATE",
-        "PRODUCT_DELETE"
     )
 
-    var selectedTab by remember {
-        mutableStateOf(0)
-    }
+    var selectedTab by remember { mutableStateOf(0) }
+    var previousTab by remember { mutableStateOf(0) }
 
     val filteredLogs = remember(
         logs,
@@ -106,9 +106,7 @@ fun ActivityLogScreen(
     }
 
     Scaffold(
-
         topBar = {
-
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -124,7 +122,6 @@ fun ActivityLogScreen(
 
                 TopAppBar(
                     title = {
-
                         Text(
                             text = "Nhật ký hoạt động",
                             fontWeight = FontWeight.Bold,
@@ -157,100 +154,117 @@ fun ActivityLogScreen(
 
     ) { padding ->
 
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
+                .padding(padding)
                 .graphicsLayer {
                     alpha = screenAlpha
                     translationY = screenTranslationY
                 }
                 .background(Color(0xFFF5F5F5))
-                .padding(padding)
         ) {
+            Spacer(modifier = Modifier.height(10.dp))
 
-            Column(
-                modifier = Modifier.fillMaxSize()
+            ScrollableTabRow(
+                selectedTabIndex = selectedTab,
+                modifier = Modifier.fillMaxWidth(),
+                edgePadding = 12.dp,
+                containerColor = Color.Transparent,
+                divider = {},
+                indicator = { tabPositions ->
+
+                    Box(
+                        modifier = Modifier
+                            .tabIndicatorOffset(
+                                tabPositions[selectedTab]
+                            )
+                            .padding(horizontal = 16.dp)
+                            .height(3.dp)
+                            .background(
+                                Color(0xFF2563EB),
+                                RoundedCornerShape(50)
+                            )
+                    )
+                }
             ) {
 
-                Spacer(modifier = Modifier.height(10.dp))
-                Card(
-                    modifier = Modifier
-                        .padding(horizontal = 12.dp)
-                        .fillMaxWidth(),
-                    shape = RoundedCornerShape(30.dp),
+                tabs.forEachIndexed { index, title ->
+                    val selected = selectedTab == index
+                    Tab(
+                        selected = selected,
 
-                    colors = CardDefaults.cardColors(
-                        containerColor = Color.White
-                    ),
+                        onClick = {
+                            previousTab = selectedTab
+                            selectedTab = index
+                        },
+                        selectedContentColor = Color.Black,
+                        unselectedContentColor = Color(0xFF9CA3AF),
+                        modifier = Modifier.height(46.dp),
 
-                    elevation = CardDefaults.cardElevation(4.dp)
-                ) {
-
-                    ScrollableTabRow(
-                        selectedTabIndex = selectedTab,
-                        modifier = Modifier
-                            .padding(6.dp)
-                            .clip(RoundedCornerShape(50)),
-
-                        edgePadding = 4.dp,
-                        containerColor = Color.Transparent,
-                        divider = {},
-
-                        indicator = { tabPositions ->
-                            Box(
-                                modifier = Modifier
-                                    .tabIndicatorOffset(
-                                        tabPositions[selectedTab]
-                                    )
-                                    .fillMaxHeight()
-                                    .padding(4.dp)
-                                    .background(
-                                        Color.Black,
-                                        RoundedCornerShape(50)
-                                    )
-                                    .zIndex(-1f)
-                            )
-                        }
-                    ) {
-
-                        tabs.forEachIndexed { index, title ->
-
-                            val selected = selectedTab == index
-
-                            Tab(
-                                selected = selected,
-
-                                onClick = {
-                                    selectedTab = index
+                        text = {
+                            Text(
+                                text = when (title) {
+                                    "IMPORT" -> "Nhập kho"
+                                    "EXPORT" -> "Xuất kho"
+                                    else -> title
                                 },
-                                selectedContentColor = Color.White,
-                                unselectedContentColor = Color.Black,
-                                modifier = Modifier
-                                    .height(46.dp)
-                                    .padding(horizontal = 4.dp),
 
-                                text = {
-                                    Text(
-                                        text = when (title) {
-                                            "IMPORT" -> "Nhập kho"
-                                            "EXPORT" -> "Xuất kho"
-                                            "PRODUCT_ADD" -> "Thuốc đã thêm"
-                                            "PRODUCT_UPDATE" -> "Thuốc đã cập nhật"
-                                            "PRODUCT_DELETE" -> "Thuốc đã bị xóa"
-                                            else -> title
-                                        },
-                                        fontWeight = FontWeight.SemiBold,
-                                        maxLines = 1,
-                                        overflow = TextOverflow.Visible
-                                    )
-                                }
+                                fontWeight = if (selected)
+                                    FontWeight.Bold
+                                else
+                                    FontWeight.Medium,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
-                    }
+                    )
                 }
-                Spacer(modifier = Modifier.height(10.dp))
+            }
+            Spacer(modifier = Modifier.height(10.dp))
 
-                if (filteredLogs.isEmpty()) {
+            AnimatedContent(
+                targetState = selectedTab,
+                transitionSpec = {
+
+                    if (targetState > initialState) {
+
+                        (
+                                slideInHorizontally(
+                                    initialOffsetX = { it / 3 }
+                                ) + fadeIn()
+                                ).togetherWith(
+                                slideOutHorizontally(
+                                    targetOffsetX = { -it / 3 }
+                                ) + fadeOut()
+                            )
+
+                    } else {
+
+                        (
+                                slideInHorizontally(
+                                    initialOffsetX = { -it / 3 }
+                                ) + fadeIn()
+                                ).togetherWith(
+                                slideOutHorizontally(
+                                    targetOffsetX = { it / 3 }
+                                ) + fadeOut()
+                            )
+                    }
+                },
+                label = ""
+            ) { currentTab ->
+
+                val currentLogs =
+                    if (currentTab == 0)
+                        logs
+                    else
+                        logs.filter {
+                            it.type == tabs[currentTab]
+                        }
+
+                if (currentLogs.isEmpty()) {
+
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.Center
@@ -296,20 +310,18 @@ fun ActivityLogScreen(
                     }
 
                 } else {
-
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
                             .padding(horizontal = 12.dp),
-
                         verticalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
-
-                        items(filteredLogs) { log ->
+                        items(currentLogs) { log ->
 
                             ActivityLogItem(
                                 log = log,
-                                userName = users[log.userId] ?: "Unknown"
+                                userName = users[log.userId]
+                                    ?: "Unknown"
                             )
                         }
                     }

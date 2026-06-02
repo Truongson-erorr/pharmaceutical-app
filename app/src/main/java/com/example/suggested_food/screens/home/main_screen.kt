@@ -133,11 +133,8 @@ fun MainScreen(
                 TextButton(
                     onClick = {
                         showLogoutDialog = false
-
                         scope.launch { drawerState.close() }
-
                         authViewModel.logout()
-
                         Toast.makeText(
                             context,
                             "Đã đăng xuất",
@@ -235,18 +232,6 @@ fun MainScreen(
                         "Lịch nhắc nhở",
                         Icons.Outlined.NotificationsActive,
                         "ReminderScreen"
-                    )
-
-                    DrawerItem(
-                        "Mã khuyến mãi",
-                        Icons.Outlined.LocalOffer,
-                        "PromoCodeScreen"
-                    )
-
-                    DrawerItem(
-                        "Quản lý kho thuốc",
-                        Icons.Outlined.MedicalServices,
-                        "InventoryScreen"
                     )
 
                     DrawerItem(
