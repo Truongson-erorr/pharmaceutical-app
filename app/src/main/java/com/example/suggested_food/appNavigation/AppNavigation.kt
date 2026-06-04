@@ -26,7 +26,6 @@ import com.example.suggested_food.screens.activitylog.ActivityLogScreen
 import com.example.suggested_food.screens.ai.AISearchScreen
 import com.example.suggested_food.screens.category.AllCategoriesScreen
 import com.example.suggested_food.screens.category.CategoryProductsScreen
-import com.example.suggested_food.screens.chat_ai.ChatScreen
 import com.example.suggested_food.screens.drug.AllProductScreen
 import com.example.suggested_food.screens.drug_look_up.DrugLookupScreen
 import com.example.suggested_food.screens.export_receipt.ExportStockScreen
@@ -147,9 +146,6 @@ fun AppNavigation(
                 navController = navController,
                 productId = productId,
             )
-        }
-        composable("chat") {
-            ChatScreen(navController)
         }
         composable("drug_lookup") {
             DrugLookupScreen(navController)

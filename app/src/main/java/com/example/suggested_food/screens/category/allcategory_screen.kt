@@ -169,7 +169,7 @@ fun CategoryGridItem(
             .clickable { onClick() },
         shape = RoundedCornerShape(14.dp),
         color = Color.White,
-        shadowElevation = 2.dp
+        shadowElevation = 1.dp
     ) {
         Column(
             modifier = Modifier.padding(8.dp),

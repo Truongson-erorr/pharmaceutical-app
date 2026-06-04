@@ -54,7 +54,6 @@ fun MainScreen(
 
     Scaffold(
         topBar = {
-            if (selectedTab == 0) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -71,8 +70,8 @@ fun MainScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                start = 16.dp,
-                                end = 16.dp,
+                                start = 18.dp,
+                                end = 22.dp,
                                 top = 40.dp,
                                 bottom = 20.dp
                             ),
@@ -133,7 +132,6 @@ fun MainScreen(
                         }
                     }
                 }
-            }
         },
 
         bottomBar = {
