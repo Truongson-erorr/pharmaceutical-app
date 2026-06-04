@@ -82,7 +82,7 @@ fun AllFeaturesScreen(
         FeatureItem(
             title = "Gợi ý thuốc",
             desc = "AI đề xuất thuốc phù hợp theo triệu chứng",
-            icon = Icons.Default.PeopleAlt,
+            icon = Icons.Outlined.PeopleAlt,
             route = "SuggestScreen",
             gradient = listOf(
                 Color(0xFF38BDF8),

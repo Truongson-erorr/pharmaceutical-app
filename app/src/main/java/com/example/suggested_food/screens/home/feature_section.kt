@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.PeopleAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -64,7 +65,7 @@ fun FeatureSection(
                 FeatureItem(
                     title = "Gợi ý thuốc",
                     desc = "AI đề xuất thuốc phù hợp theo triệu chứng mô tả...",
-                    icon = Icons.Default.PeopleAlt,
+                    icon = Icons.Outlined.PeopleAlt,
                     route = "SuggestScreen",
                     gradient = listOf(
                         Color(0xFF38BDF8),
