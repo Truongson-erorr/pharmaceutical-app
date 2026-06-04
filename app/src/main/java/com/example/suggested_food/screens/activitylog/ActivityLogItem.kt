@@ -1,6 +1,7 @@
 package com.example.suggested_food.screens.activitylog
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
@@ -22,7 +23,8 @@ import java.util.Locale
 @Composable
 fun ActivityLogItem(
     log: ActivityLog,
-    userName: String
+    userName: String,
+    onClick: () -> Unit
 ) {
     val date = remember(log.timestamp) {
         SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault())
@@ -32,14 +34,13 @@ fun ActivityLogItem(
     val actionColor = when (log.type) {
         "IMPORT" -> Color(0xFF22C55E)
         "EXPORT" -> Color(0xFFEF4444)
-        "PRODUCT_ADD" -> Color(0xFF3B82F6)
-        "PRODUCT_UPDATE" -> Color(0xFFF59E0B)
-        "PRODUCT_DELETE" -> Color(0xFF6B7280)
         else -> Color(0xFF9CA3AF)
     }
 
     Column(
-        modifier = Modifier
+            modifier = Modifier.clickable {
+                onClick()
+            }
             .fillMaxWidth()
             .background(Color.Transparent)
             .padding(horizontal = 12.dp, vertical = 8.dp)
@@ -74,13 +75,6 @@ fun ActivityLogItem(
                         color = Color.Black
                     )
                 }
-                Spacer(modifier = Modifier.height(2.dp))
-
-                Text(
-                    text = log.message,
-                    fontSize = 13.sp,
-                    color = Color.DarkGray
-                )
             }
         }
         Spacer(modifier = Modifier.height(6.dp))

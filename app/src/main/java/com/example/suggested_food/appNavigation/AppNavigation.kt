@@ -30,6 +30,7 @@ import com.example.suggested_food.screens.chat_ai.ChatScreen
 import com.example.suggested_food.screens.drug.AllProductScreen
 import com.example.suggested_food.screens.drug_look_up.DrugLookupScreen
 import com.example.suggested_food.screens.export_receipt.ExportStockScreen
+import com.example.suggested_food.screens.home.AllFeaturesScreen
 import com.example.suggested_food.screens.home.MainScreen
 import com.example.suggested_food.screens.import_receipt.ImportStockScreen
 import com.example.suggested_food.screens.invoice.InvoiceDashboardScreen
@@ -240,6 +241,11 @@ fun AppNavigation(
         }
         composable("ActivityLogScreen") {
             ActivityLogScreen(navController)
+        }
+        composable("all_features") {
+            AllFeaturesScreen(
+                navController = navController,
+            )
         }
     }
 }

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.suggested_food.models.ActivityLog
 import com.example.suggested_food.viewmodels.ActivityLogViewModel
 import kotlinx.coroutines.delay
 
@@ -44,6 +45,10 @@ fun ActivityLogScreen(
 ) {
     val logs by viewModel.logs.collectAsState()
     val users by viewModel.users.collectAsState()
+
+    var selectedLog by remember {
+        mutableStateOf<ActivityLog?>(null)
+    }
 
     LaunchedEffect(Unit) {
         viewModel.loadUsers()
@@ -320,13 +325,24 @@ fun ActivityLogScreen(
 
                             ActivityLogItem(
                                 log = log,
-                                userName = users[log.userId]
-                                    ?: "Unknown"
+                                userName = users[log.userId] ?: "Unknown",
+                                onClick = {
+                                    selectedLog = log
+                                }
                             )
                         }
                     }
                 }
             }
+        }
+
+        selectedLog?.let { log ->
+            ActivityLogDetailDialog(
+                log = log,
+                onDismiss = {
+                    selectedLog = null
+                }
+            )
         }
     }
 }
