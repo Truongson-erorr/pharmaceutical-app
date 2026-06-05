@@ -1,7 +1,6 @@
-package com.example.suggested_food.screens.invoice
+package com.example.suggested_food.screens.statistical
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -21,35 +20,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
-fun DashboardCard(
+fun StatCardGradient(
     title: String,
     value: String,
     icon: ImageVector,
     colors: List<Color>,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    modifier: Modifier = Modifier
 ) {
+
     Card(
-        modifier = modifier
-            .height(130.dp)
-            .clickable {
-                onClick()
-            },
+        modifier = modifier.height(130.dp),
         shape = RoundedCornerShape(22.dp),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Brush.linearGradient(colors))
+                .background(
+                    Brush.linearGradient(colors)
+                )
                 .padding(16.dp)
         ) {
 
             Text(
                 text = title,
                 color = Color.White.copy(alpha = 0.9f),
+                fontWeight = FontWeight.Medium,
                 modifier = Modifier.align(Alignment.TopStart)
             )
 
@@ -64,10 +66,9 @@ fun DashboardCard(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    icon,
+                    imageVector = icon,
                     contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(22.dp)
+                    tint = Color.White
                 )
             }
 
@@ -80,4 +81,24 @@ fun DashboardCard(
             )
         }
     }
+}
+
+@Composable
+fun SectionTitle(text: String) {
+    Text(
+        text = text,
+        fontSize = 16.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color(0xFF111827),
+        modifier = Modifier.padding(top = 8.dp, bottom = 4.dp)
+    )
+}
+
+fun formatMoney(
+    amount: Int
+): String {
+
+    return NumberFormat
+        .getNumberInstance(Locale("vi", "VN"))
+        .format(amount) + " đ"
 }

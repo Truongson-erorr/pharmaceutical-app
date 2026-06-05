@@ -44,6 +44,7 @@ import com.example.suggested_food.screens.product.ProductDetailScreen
 import com.example.suggested_food.screens.reminder.AddReminderScreen
 import com.example.suggested_food.screens.reminder.ReminderScreen
 import com.example.suggested_food.screens.search.SearchScreen
+import com.example.suggested_food.screens.statistical.StatisticalScreen
 import com.example.suggested_food.screens.stock.StockAllScreen
 import com.example.suggested_food.screens.stock.StockScreen
 import com.example.suggested_food.screens.suggest.SuggestScreen
@@ -66,7 +67,6 @@ fun AppNavigation(
     productViewModel: ProductViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
-    val promoViewModel: PromoCodeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
     val role by authViewModel.userRole.collectAsState()
 
@@ -240,6 +240,11 @@ fun AppNavigation(
         }
         composable("all_features") {
             AllFeaturesScreen(
+                navController = navController,
+            )
+        }
+        composable("StatisticalScreen") {
+            StatisticalScreen(
                 navController = navController,
             )
         }

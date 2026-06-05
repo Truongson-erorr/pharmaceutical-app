@@ -220,6 +220,7 @@ fun navigateFeature(
         "StockScreen" -> navController.navigate("StockScreen")
         "InvoiceDashboardScreen" -> navController.navigate("InvoiceDashboardScreen")
         "ActivityLogScreen" -> navController.navigate("ActivityLogScreen")
+        "StatisticalScreen" -> navController.navigate("StatisticalScreen")
     }
 }
 

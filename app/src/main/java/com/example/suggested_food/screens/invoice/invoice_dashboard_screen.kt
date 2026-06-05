@@ -247,14 +247,17 @@ fun InvoiceDashboardScreen(
                     DashboardCard(
                         "Tổng tiền",
                         totalMoney,
-                        Icons.Default.AttachMoney,
+                        Icons.Default.NavigateNext,
 
                         listOf(
                             Color(0xFF4FACFE),
                             Color(0xFF6A11CB)
                         ),
 
-                        Modifier.weight(1f)
+                        Modifier.weight(1f),
+                        onClick = {
+                            navController.navigate("StatisticalScreen")
+                        }
                     )
                 }
 
@@ -320,7 +323,6 @@ fun InvoiceDashboardScreen(
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White
                                 ),
-
                                 elevation = CardDefaults.cardElevation(0.dp),
 
                                 modifier = Modifier.fillMaxWidth()

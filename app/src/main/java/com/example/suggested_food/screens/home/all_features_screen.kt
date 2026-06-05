@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.outlined.BarChart
 import androidx.compose.material.icons.outlined.History
 import androidx.compose.material.icons.outlined.NotificationsActive
 import androidx.compose.material.icons.outlined.PeopleAlt
@@ -119,13 +120,24 @@ fun AllFeaturesScreen(
         ),
 
         FeatureItem(
-            title = "Hóa đơn",
+            title = "Quản lý hóa đơn",
             desc = "Quản lý hóa đơn và lịch sử giao dịch",
             icon = Icons.Outlined.ReceiptLong,
             route = "InvoiceDashboardScreen",
             gradient = listOf(
                 Color(0xFFEC4899),
                 Color(0xFFDB2777)
+            )
+        ),
+
+        FeatureItem(
+            title = "Báo cáo thống kê",
+            desc = "Theo dõi nhập hàng, bán hàng và doanh thu",
+            icon = Icons.Outlined.BarChart,
+            route = "StatisticalScreen",
+            gradient = listOf(
+                Color(0xFFEF4444),
+                Color(0xFFDC2626)
             )
         ),
 
@@ -138,7 +150,7 @@ fun AllFeaturesScreen(
                 Color(0xFF64748B),
                 Color(0xFF475569)
             )
-        )
+        ),
     )
 
     Scaffold(
