@@ -182,46 +182,51 @@ fun ExportDetailScreen(
                     )
 
                     Spacer(Modifier.height(22.dp))
-                    Divider()
-
-                    InvoiceRow("Mã số phiếu", data.id)
-                    InvoiceRow("Người xuất", data.user)
-                    InvoiceRow(
-                        "Ngày",
-                        formatter.format(Date(data.date))
+                    HorizontalDivider(
+                        color = Color(0xFFE5E7EB),
+                        thickness = 0.5.dp
                     )
-                    Divider()
 
-                    InvoiceRow("Sản phẩm", data.productName)
+                    InvoiceRow("Mã hóa đơn: ", "#${data.id}")
+                    InvoiceRow("Người xuất: ", data.user)
+                    InvoiceRow("Ngày: ", formatter.format(Date(data.date)))
+                    HorizontalDivider(
+                        color = Color(0xFFE5E7EB),
+                        thickness = 0.5.dp
+                    )
+
+                    InvoiceRow("Sản phẩm: ", data.productName)
 
                     InvoiceRow(
-                        "Số lượng",
+                        "Số lượng: ",
                         data.quantity.toString()
                     )
-                    Divider()
+                    HorizontalDivider(
+                        color = Color(0xFFE5E7EB),
+                        thickness = 0.5.dp
+                    )
 
                     InvoiceRow2Col(
-                        "Lô", data.lot,
-                        "HSD", data.expiryDate
+                        "HSD: ", data.expiryDate,
+                        "Khách hàng: ", data.customer
                     )
 
                     InvoiceRow(
-                        "Khách hàng",
-                        data.customer
-                    )
-                    InvoiceRow(
-                        "Số điện thoại",
+                        "Số điện thoại: ",
                         data.customerPhone
                     )
-                    Divider()
+                    HorizontalDivider(
+                        color = Color(0xFFE5E7EB),
+                        thickness = 0.5.dp
+                    )
 
                     InvoiceRow(
-                        "Giá xuất",
+                        "Giá xuất: ",
                         "${currency.format(data.price)} đ"
                     )
 
                     InvoiceRow(
-                        "Tổng tiền",
+                        "Tổng tiền: ",
                         "${currency.format(data.totalPrice)} đ"
                     )
                 }

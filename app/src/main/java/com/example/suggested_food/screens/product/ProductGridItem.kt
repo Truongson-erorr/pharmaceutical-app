@@ -29,45 +29,10 @@ fun ProductGridItem(
     product: ProductModel,
     onClick: () -> Unit
 ) {
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        delay(80)
-        visible = true
-    }
-
-    val alpha by animateFloatAsState(
-        targetValue = if (visible) 1f else 0f,
-
-        animationSpec = tween(
-            durationMillis = 650,
-            easing = FastOutSlowInEasing
-        ),
-
-        label = ""
-    )
-
-    val translationY by animateFloatAsState(
-        targetValue = if (visible) 0f else 25f,
-
-        animationSpec = tween(
-            durationMillis = 650,
-            easing = FastOutSlowInEasing
-        ),
-
-        label = ""
-    )
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .graphicsLayer {
-                this.alpha = alpha
-                this.translationY = translationY
-            }
-            .clickable {
-                onClick()
-            }
+            .clickable { onClick() }
     ) {
 
         Card(

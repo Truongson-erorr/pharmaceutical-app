@@ -41,6 +41,7 @@ import com.example.suggested_food.screens.notifications.NotificationScreen
 import com.example.suggested_food.screens.patient.PatientDetailScreen
 import com.example.suggested_food.screens.patient.PatientScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
+import com.example.suggested_food.screens.profile.ProfileScreen
 import com.example.suggested_food.screens.reminder.AddReminderScreen
 import com.example.suggested_food.screens.reminder.ReminderScreen
 import com.example.suggested_food.screens.search.SearchScreen
@@ -245,6 +246,11 @@ fun AppNavigation(
         }
         composable("StatisticalScreen") {
             StatisticalScreen(
+                navController = navController,
+            )
+        }
+        composable("ProfileScreen") {
+            ProfileScreen(
                 navController = navController,
             )
         }

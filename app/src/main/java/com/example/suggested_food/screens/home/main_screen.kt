@@ -154,7 +154,7 @@ fun MainScreen(
 
             when (selectedTab) {
                 0 -> { HomeContent(navController) }
-                1 -> { SettingsScreen(authViewModel = authViewModel) }
+                1 -> { SettingsScreen(navController ,authViewModel = authViewModel) }
             }
         }
     }

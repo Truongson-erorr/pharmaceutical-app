@@ -1,6 +1,7 @@
 package com.example.suggested_food.screens.settings
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
@@ -29,37 +31,29 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun SettingsCard(
     items: List<SettingItem>,
+    onItemClick: (SettingItem) -> Unit,
     onLogoutClick: (() -> Unit)? = null
 ) {
-    Card(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp),
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(Color.White),
-        elevation = CardDefaults.cardElevation(0.dp),
+            .padding(horizontal = 16.dp)
     ) {
-        Column(modifier = Modifier.padding(vertical = 8.dp)) {
 
-            items.forEachIndexed { index, item ->
-                val isLogout = item.title == "Đăng xuất"
+        items.forEach { item ->
 
-                Box(
-                    modifier = Modifier.clickable {
-                        if (isLogout) {
-                            onLogoutClick?.invoke()
-                        }
+            Box(
+                modifier = Modifier.clickable {
+
+                    if (item.title == "Đăng xuất") {
+                        onLogoutClick?.invoke()
+                    } else {
+                        onItemClick(item)
                     }
-                ) {
-                    SettingRow(item = item)
+
                 }
-                if (index != items.lastIndex) {
-                    Divider(
-                        color = Color(0xFFF5F5F5),
-                        thickness = 0.5.dp,
-                        modifier = Modifier.padding(horizontal = 16.dp)
-                    )
-                }
+            ) {
+                SettingRow(item = item)
             }
         }
     }
@@ -73,20 +67,18 @@ private fun SettingRow(item: SettingItem) {
             .padding(horizontal = 16.dp, vertical = 14.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
         Column(modifier = Modifier.weight(1f)) {
-
             Text(
                 text = item.title,
                 fontSize = 15.sp,
-                fontWeight = FontWeight.Medium,
+                fontWeight = FontWeight.Bold,
                 color = Color(0xFF1F2937)
             )
 
             if (item.subtitle != null) {
                 Text(
                     text = item.subtitle,
-                    fontSize = 13.sp,
+                    fontSize = 15.sp,
                     color = Color(0xFF6B7280),
                     modifier = Modifier.padding(top = 2.dp)
                 )
@@ -96,7 +88,7 @@ private fun SettingRow(item: SettingItem) {
         if (item.value != null) {
             Text(
                 text = item.value,
-                fontSize = 14.sp,
+                fontSize = 15.sp,
                 color = Color(0xFF374151)
             )
             Spacer(modifier = Modifier.width(8.dp))
