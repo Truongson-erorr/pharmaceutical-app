@@ -109,13 +109,17 @@ fun SettingsScreen(
             items = listOf(
                 SettingItem("Thông tin cá nhân", Icons.Outlined.Person),
                 SettingItem("Đổi mật khẩu", Icons.Outlined.Lock),
-                SettingItem("Cập nhật số điện thoại", Icons.Outlined.Lock),
-                SettingItem("Đổi địa chỉ", Icons.Outlined.Lock),
+                SettingItem("Chia sẻ ứng dụng", Icons.Default.Share),
+                SettingItem("Phiên bản", Icons.Default.Info, "v1.0.0"),
             ),
             onItemClick = { item ->
                 when (item.title) {
                     "Thông tin cá nhân" -> {
                         navController.navigate("ProfileScreen")
+                    }
+
+                    "Đổi mật khẩu" -> {
+                        navController.navigate("ChangePasswordScreen")
                     }
                 }
             },
@@ -138,8 +142,6 @@ fun SettingsScreen(
 
         SettingsCard(
             items = listOf(
-                SettingItem("Chia sẻ ứng dụng", Icons.Default.Share),
-                SettingItem("Phiên bản", Icons.Default.Info, "v1.0.0"),
                 SettingItem(
                     title = "Đăng xuất",
                     icon = Icons.Default.Logout,

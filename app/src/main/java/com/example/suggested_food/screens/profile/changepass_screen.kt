@@ -13,48 +13,29 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.suggested_food.viewmodel.ProfileViewModel
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
-import java.text.SimpleDateFormat
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(
+fun ChangePasswordScreen(
     navController: NavController,
     viewModel: ProfileViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
 ) {
-    val user = viewModel.user.value
-    val loading = viewModel.loading.value
-    val uid = FirebaseAuth.getInstance().currentUser?.uid
+    var currentPassword by remember { mutableStateOf("") }
+    var newPassword by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
 
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var address by remember { mutableStateOf("") }
-
-    var showSuccessDialog by remember {
-        mutableStateOf(false)
-    }
-
-    LaunchedEffect(uid) {
-        uid?.let { viewModel.loadCurrentUser(it) }
-    }
-
-    LaunchedEffect(user) {
-        user?.let {
-            name = it.name
-            email = it.email
-            address = it.address
-        }
-    }
+    val message by viewModel.message
+    val loading by viewModel.loading
 
     var visible by remember {
         mutableStateOf(false)
@@ -94,20 +75,27 @@ fun ProfileScreen(
                     .fillMaxWidth()
                     .background(
                         Brush.horizontalGradient(
-                            listOf(Color(0xFF2563EB), Color(0xFF38BDF8))
+                            listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
                         )
                     )
             ) {
                 TopAppBar(
                     title = {
                         Text(
-                            "Thông tin cá nhân",
+                            "Đổi mật khẩu",
                             color = Color.White,
                             fontWeight = FontWeight.Bold
                         )
                     },
                     navigationIcon = {
-                        IconButton(onClick = { navController.popBackStack() }) {
+                        IconButton(
+                            onClick = {
+                                navController.popBackStack()
+                            }
+                        ) {
                             Icon(
                                 Icons.Default.ArrowBackIosNew,
                                 null,
@@ -126,18 +114,13 @@ fun ProfileScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .alpha(alpha)
-                .offset(y = translationY.dp)
+                .graphicsLayer {
+                    this.alpha = alpha
+                    this.translationY = translationY
+                }
                 .background(Color(0xFFF5F5F5))
                 .padding(padding)
         ) {
-
-            if (loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
-                return@Box
-            }
 
             Column(
                 modifier = Modifier
@@ -146,21 +129,30 @@ fun ProfileScreen(
             ) {
 
                 Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxWidth(),
+                    modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
 
-                    ProfileInput("Email", email, false) { email = it }
-                    ProfileInput("Tên", name, true) { name = it }
-                    ProfileInput("Địa chỉ", address, true) { address = it }
+                    PasswordInput(
+                        "Mật khẩu hiện tại",
+                        currentPassword
+                    ) {
+                        currentPassword = it
+                    }
 
-                    val date = user?.createdAt?.let {
-                        SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(it))
-                    } ?: ""
+                    PasswordInput(
+                        "Mật khẩu mới",
+                        newPassword
+                    ) {
+                        newPassword = it
+                    }
 
-                    ProfileInput("Ngày tạo tài khoản", date, false) {}
+                    PasswordInput(
+                        "Xác nhận mật khẩu mới",
+                        confirmPassword
+                    ) {
+                        confirmPassword = it
+                    }
                 }
 
                 Box(
@@ -169,61 +161,84 @@ fun ProfileScreen(
                         .height(45.dp)
                         .background(
                             Brush.horizontalGradient(
-                                colors = listOf(deepBlue, blue)
+                                listOf(
+                                    Color(0xFF2563EB),
+                                    Color(0xFF38BDF8)
+                                )
                             ),
-                            shape = RoundedCornerShape(25.dp)
+                            RoundedCornerShape(25.dp)
                         )
                         .clickable {
-                            user?.let {
-                                viewModel.updateUser(
-                                    it.copy(
-                                        name = name,
-                                        address = address
-                                    )
-                                )
-
-                                showSuccessDialog = true
-                            }
+                            viewModel.changePassword(
+                                currentPassword,
+                                newPassword,
+                                confirmPassword
+                            )
                         },
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(
-                        text = "Lưu thông tin",
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
+
+                    if (loading) {
+                        CircularProgressIndicator(
+                            color = Color.White,
+                            strokeWidth = 2.dp,
+                            modifier = Modifier.size(22.dp)
+                        )
+                    } else {
+                        Text(
+                            text = "Đổi mật khẩu",
+                            color = Color.White,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }
     }
 
-    if (showSuccessDialog) {
+    message?.let { msg ->
+
         AlertDialog(
             onDismissRequest = {
-                showSuccessDialog = false
+                viewModel.clearMessage()
             },
             shape = RoundedCornerShape(20.dp),
             containerColor = Color.White,
+
             title = {
                 Text(
-                    "Cập nhật thành công",
-                    fontWeight = FontWeight.Bold
+                    text = "Thông báo",
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
                 )
             },
+
             text = {
-                Text("Thông tin của bạn đã được lưu.")
+                Text(
+                    text = msg,
+                    color = Color(0xFF444444)
+                )
             },
+
             confirmButton = {
                 Button(
                     onClick = {
-                        showSuccessDialog = false
+                        viewModel.clearMessage()
+
+                        if (msg == "Đổi mật khẩu thành công") {
+                            navController.popBackStack()
+                        }
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = deepBlue
-                    )
+                        containerColor = Color(0xFF2563EB)
+                    ),
+                    shape = RoundedCornerShape(12.dp)
                 ) {
-                    Text("Đóng")
+                    Text(
+                        text = "Đóng",
+                        color = Color.White
+                    )
                 }
             }
         )

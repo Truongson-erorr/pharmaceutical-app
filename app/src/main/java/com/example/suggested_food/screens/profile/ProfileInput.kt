@@ -39,7 +39,6 @@ fun ProfileInput(
             fontSize = 12.sp,
             color = Color(0xFF6B7280)
         )
-
         Spacer(modifier = Modifier.height(6.dp))
 
         if (enabled) {
@@ -51,8 +50,9 @@ fun ProfileInput(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = Color(0xFFE5E7EB),
                     unfocusedBorderColor = Color(0xFFE5E7EB),
-                    focusedContainerColor = Color.Transparent,
-                    unfocusedContainerColor = Color.Transparent
+                    focusedContainerColor = Color.White,
+                    unfocusedContainerColor = Color.White,
+                    disabledContainerColor = Color.White
                 )
             )
         }

@@ -41,6 +41,7 @@ import com.example.suggested_food.screens.notifications.NotificationScreen
 import com.example.suggested_food.screens.patient.PatientDetailScreen
 import com.example.suggested_food.screens.patient.PatientScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
+import com.example.suggested_food.screens.profile.ChangePasswordScreen
 import com.example.suggested_food.screens.profile.ProfileScreen
 import com.example.suggested_food.screens.reminder.AddReminderScreen
 import com.example.suggested_food.screens.reminder.ReminderScreen
@@ -253,6 +254,9 @@ fun AppNavigation(
             ProfileScreen(
                 navController = navController,
             )
+        }
+        composable("ChangePasswordScreen") {
+            ChangePasswordScreen(navController)
         }
     }
 }
