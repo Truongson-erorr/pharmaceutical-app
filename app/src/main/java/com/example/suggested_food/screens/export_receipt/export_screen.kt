@@ -1,6 +1,7 @@
 package com.example.suggested_food.screens.export_receipt
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -185,35 +186,46 @@ fun ExportStockScreen(
         },
 
         bottomBar = {
-            Button(
-                enabled = !loading,
-                onClick = {
-                    val receipt = ExportReceipt(
-                        id = receiptCode,
-                        date = exportDate.time,
-                        user = user?.uid ?: "",
-                        productId = selectedProductId,
-                        productName = selectedProductName,
-                        quantity = quantity.toIntOrNull() ?: 0,
-                        price = price.toIntOrNull() ?: 0,
-                        lot = lot,
-                        expiryDate = dateFormat.format(expiryDate),
-                        customer = customer,
-                        customerPhone = customerPhone,
-                        totalPrice = totalPrice
-                    )
-                    exportViewModel.saveExportReceipt(receipt)
-                },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                ),
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .height(40.dp)
+                    .height(45.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
+                        ),
+                        shape = RoundedCornerShape(25.dp)
+                    )
+                    .clickable(enabled = !loading) {
+
+                        val receipt = ExportReceipt(
+                            id = receiptCode,
+                            date = exportDate.time,
+                            user = user?.uid ?: "",
+                            productId = selectedProductId,
+                            productName = selectedProductName,
+                            quantity = quantity.toIntOrNull() ?: 0,
+                            price = price.toIntOrNull() ?: 0,
+                            lot = lot,
+                            expiryDate = dateFormat.format(expiryDate),
+                            customer = customer,
+                            customerPhone = customerPhone,
+                            totalPrice = totalPrice
+                        )
+                        exportViewModel.saveExportReceipt(receipt)
+                    },
+                contentAlignment = Alignment.Center
             ) {
-                Text("Xác nhận xuất")
+
+                Text(
+                    text = "Xác nhận xuất",
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
@@ -295,6 +307,12 @@ fun ExportStockScreen(
                     "0",
                     Modifier.weight(1f)
                 )
+            }
+            DateField(
+                "Hạn sử dụng",
+                dateFormat.format(expiryDate)
+            ) {
+                showExpiryPicker = true
             }
 
             FormField("Khách hàng", customer, { customer = it }, "")

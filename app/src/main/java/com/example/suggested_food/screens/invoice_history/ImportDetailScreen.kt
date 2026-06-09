@@ -32,15 +32,21 @@ fun ImportDetailScreen(
 ) {
     val receipt by viewModel.selectedReceipt.collectAsState()
     val loading by viewModel.loading.collectAsState()
-    val context = androidx.compose.ui.platform.LocalContext.current
 
-    LaunchedEffect(receiptId) {
-        viewModel.loadImportReceipt(receiptId)
-    }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val users by viewModel.users.collectAsState()
 
     val currency = NumberFormat.getInstance(Locale("vi", "VN"))
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     var showDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.loadUsers()
+    }
+
+    LaunchedEffect(receiptId) {
+        viewModel.loadImportReceipt(receiptId)
+    }
 
     Scaffold(
         containerColor = Color.White,
@@ -82,7 +88,7 @@ fun ImportDetailScreen(
                         TextButton(
                             onClick = {
                                 receipt?.let { data ->
-                                    ImportReceiptImageExporter.export(context, data)
+                                    ImportReceiptImageExporter.export(context, data, userName = users[data.user] ?: data.user)
                                     showDialog = true
                                 }
                             },
@@ -166,9 +172,12 @@ fun ImportDetailScreen(
                     )
 
                     InvoiceRow("Mã hóa đơn: ", "#${data.id}")
-                    InvoiceRow("Người nhập: ", data.user)
+                    InvoiceRow(
+                        "Người nhập: ",
+                        users[data.user] ?: data.user
+                    )
 
-                    InvoiceRow("Ngày: ", formatter.format(Date(data.date)))
+                    InvoiceRow("Ngày nhập: ", formatter.format(Date(data.date)))
                     HorizontalDivider(
                         color = Color(0xFFE5E7EB),
                         thickness = 0.5.dp
@@ -185,7 +194,7 @@ fun ImportDetailScreen(
                     )
 
                     InvoiceRow2Col(
-                        "HSD: ", data.expiryDate,
+                        "Hạn sử dụng: ", data.expiryDate,
                         "Nhà cung cấp: ", data.supplier
                     )
 

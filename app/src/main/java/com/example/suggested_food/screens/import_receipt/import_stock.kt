@@ -1,6 +1,7 @@
 package com.example.suggested_food.screens.import_receipt
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -174,44 +175,53 @@ fun ImportStockScreen(
         },
 
         bottomBar = {
-            Button(
-                enabled = !loading,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                ),
-                onClick = {
-
-                    val receipt = ImportReceipt(
-                        id = receiptCode,
-                        productId = selectedProductId,
-                        user = user?.uid ?: "",
-                        date = importDate.time,
-                        productName = selectedProductName,
-                        quantity = quantity.toIntOrNull() ?: 0,
-                        price = price.toIntOrNull() ?: 0,
-                        lot = lot,
-                        expiryDate = dateFormat.format(expiryDate),
-                        supplier = supplier,
-                        note = note,
-                        totalPrice = totalPrice
-                    )
-                    importViewModel.saveImportReceipt(receipt)
-                },
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .height(40.dp),
-                shape = RoundedCornerShape(25.dp)
+                    .height(45.dp)
+                    .background(
+                        Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
+                        ),
+                        shape = RoundedCornerShape(25.dp)
+                    )
+                    .clickable(enabled = !loading) {
+                        val receipt = ImportReceipt(
+                            id = receiptCode,
+                            productId = selectedProductId,
+                            user = user?.uid ?: "",
+                            date = importDate.time,
+                            productName = selectedProductName,
+                            quantity = quantity.toIntOrNull() ?: 0,
+                            price = price.toIntOrNull() ?: 0,
+                            lot = lot,
+                            expiryDate = dateFormat.format(expiryDate),
+                            supplier = supplier,
+                            note = note,
+                            totalPrice = totalPrice
+                        )
+                        importViewModel.saveImportReceipt(receipt)
+                    },
+                contentAlignment = Alignment.Center
             ) {
-                if (loading)
+
+                if (loading) {
                     CircularProgressIndicator(
                         color = Color.White,
                         strokeWidth = 2.dp,
                         modifier = Modifier.size(20.dp)
                     )
-                else
-                    Text("Xác nhận nhập")
+                } else {
+                    Text(
+                        text = "Xác nhận nhập",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
 

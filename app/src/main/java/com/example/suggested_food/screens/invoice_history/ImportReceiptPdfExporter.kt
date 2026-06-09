@@ -8,11 +8,12 @@ import android.provider.MediaStore
 import com.example.suggested_food.models.ImportReceipt
 import com.example.suggested_food.utils.generateQR
 import java.text.NumberFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
 object ImportReceiptImageExporter {
 
-    fun export(context: Context, data: ImportReceipt): Uri {
+    fun export(context: Context, data: ImportReceipt, userName: String): Uri {
         val currency = NumberFormat.getInstance(Locale("vi", "VN"))
 
         val width = 800f
@@ -22,16 +23,19 @@ object ImportReceiptImageExporter {
         val lineHeight = 70f
         val sectionSpacing = 30f
 
+        val dateFormat =
+            SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+
         val fields = listOf(
-            "Mã phiếu" to data.id,
-            "Người nhập" to data.user,
-            "Ngày" to data.date,
-            "Sản phẩm" to data.productName,
-            "Số lượng" to data.quantity.toString(),
-            "HSD" to data.expiryDate,
-            "Nhà cung cấp" to data.supplier,
-            "Giá nhập" to "${currency.format(data.price)} đ",
-            "Tổng tiền" to "${currency.format(data.totalPrice)} đ"
+            "Mã phiếu: " to data.id,
+            "Người nhập: " to userName,
+            "Ngày nhập: " to dateFormat.format(Date(data.date)),
+            "Sản phẩm: " to data.productName,
+            "Số lượng: " to data.quantity.toString(),
+            "Hạn sử dụng: " to data.expiryDate,
+            "Nhà cung cấp: " to data.supplier,
+            "Giá nhập: " to "${currency.format(data.price)} đ",
+            "Tổng tiền: " to "${currency.format(data.totalPrice)} đ"
         )
         val height = 1700f
 
@@ -58,15 +62,16 @@ object ImportReceiptImageExporter {
         }
 
         val labelPaint = Paint().apply {
-            color = Color.DKGRAY
+            color = Color.BLACK
             textSize = 30f
+            isFakeBoldText = true
             isAntiAlias = true
         }
 
         val valuePaint = Paint().apply {
             color = Color.BLACK
-            textSize = 32f
-            isFakeBoldText = true
+            textSize = 30f
+            isFakeBoldText = false
             isAntiAlias = true
         }
 

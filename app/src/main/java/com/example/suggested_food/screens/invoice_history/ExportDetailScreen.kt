@@ -46,6 +46,11 @@ fun ExportDetailScreen(
 
     val context = androidx.compose.ui.platform.LocalContext.current
     var showDialog by remember { mutableStateOf(false) }
+    val users by viewModel.users.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadUsers()
+    }
 
     Scaffold(
         containerColor = Color.White,
@@ -97,7 +102,7 @@ fun ExportDetailScreen(
                                     ).launch {
 
                                         val file =
-                                            ExportHistoryImageExporter.export(context, data)
+                                            ExportHistoryImageExporter.export(context, data, userName = users[data.user] ?: data.user)
 
                                         kotlinx.coroutines.withContext(
                                             kotlinx.coroutines.Dispatchers.Main
@@ -188,8 +193,11 @@ fun ExportDetailScreen(
                     )
 
                     InvoiceRow("Mã hóa đơn: ", "#${data.id}")
-                    InvoiceRow("Người xuất: ", data.user)
-                    InvoiceRow("Ngày: ", formatter.format(Date(data.date)))
+                    InvoiceRow(
+                        "Người xuất: ",
+                        users[data.user] ?: data.user
+                    )
+                    InvoiceRow("Ngày xuất: ", formatter.format(Date(data.date)))
                     HorizontalDivider(
                         color = Color(0xFFE5E7EB),
                         thickness = 0.5.dp
@@ -201,17 +209,16 @@ fun ExportDetailScreen(
                         "Số lượng: ",
                         data.quantity.toString()
                     )
+                    InvoiceRow(
+                        "Hạn sử dụng: ", data.expiryDate,
+                    )
                     HorizontalDivider(
                         color = Color(0xFFE5E7EB),
                         thickness = 0.5.dp
                     )
 
                     InvoiceRow2Col(
-                        "HSD: ", data.expiryDate,
-                        "Khách hàng: ", data.customer
-                    )
-
-                    InvoiceRow(
+                        "Khách hàng: ", data.customer,
                         "Số điện thoại: ",
                         data.customerPhone
                     )

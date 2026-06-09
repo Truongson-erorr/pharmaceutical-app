@@ -27,6 +27,7 @@ import java.util.Locale
 @Composable
 fun ActivityLogDetailDialog(
     log: ActivityLog,
+    userName: String,
     onDismiss: () -> Unit
 ) {
     Dialog(
@@ -88,7 +89,7 @@ fun ActivityLogDetailDialog(
 
                 DetailRow(
                     label = "Người thực hiện",
-                    value = log.userName
+                    value = userName
                 )
 
                 DetailRow(
@@ -118,11 +119,11 @@ fun ActivityLogDetailDialog(
                         containerColor = Color(0xFF2563EB)
                     )
                 ) {
-
                     Text(
                         text = "Đóng",
                         fontSize = 15.sp,
-                        fontWeight = FontWeight.SemiBold
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color.White
                     )
                 }
             }

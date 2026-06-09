@@ -338,6 +338,7 @@ fun ActivityLogScreen(
         selectedLog?.let { log ->
             ActivityLogDetailDialog(
                 log = log,
+                userName = users[log.userId] ?: "Không xác định",
                 onDismiss = {
                     selectedLog = null
                 }
