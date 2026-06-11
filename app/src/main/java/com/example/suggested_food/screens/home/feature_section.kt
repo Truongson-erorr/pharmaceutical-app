@@ -1,6 +1,7 @@
 package com.example.suggested_food.screens.home
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -145,7 +146,7 @@ fun FeatureSection(
                             },
                         shape = RoundedCornerShape(30.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White),
-                        elevation = CardDefaults.cardElevation(0.dp)
+                        elevation = CardDefaults.cardElevation(0.dp),
                     ) {
 
                         Column(

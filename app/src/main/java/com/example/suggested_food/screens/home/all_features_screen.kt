@@ -250,7 +250,7 @@ fun AllFeaturesScreen(
                     colors = CardDefaults.cardColors(
                         containerColor = Color.White
                     ),
-                    elevation = CardDefaults.cardElevation(0.dp)
+                    elevation = CardDefaults.cardElevation(0.dp),
                 ) {
 
                     Column(
