@@ -197,22 +197,29 @@ fun StatisticalScreen(
             }
 
             item {
-                SectionTitle("Top 5 thuốc nhập nhiều nhất")
-            }
-            item {
-                StatCardChip(
-                    items = state.topImported5
+                SectionTitle(
+                    text = "Top 5 thuốc nhập nhiều nhất",
+                    onViewAllClick = {
+                        navController.navigate("all_imported")
+                    }
                 )
             }
 
             item {
-                SectionTitle("Top 5 thuốc bán nhiều nhất")
+                StatCardChip(items = state.topImported5)
             }
-            item {
-                StatCardChip(
 
-                    items = state.topExported5
+            item {
+                SectionTitle(
+                    text = "Top 5 thuốc bán nhiều nhất",
+                    onViewAllClick = {
+                        navController.navigate("all_exported")
+                    }
                 )
+            }
+
+            item {
+                StatCardChip(items = state.topExported5)
             }
         }
     }

@@ -46,6 +46,8 @@ import com.example.suggested_food.screens.profile.ProfileScreen
 import com.example.suggested_food.screens.reminder.AddReminderScreen
 import com.example.suggested_food.screens.reminder.ReminderScreen
 import com.example.suggested_food.screens.search.SearchScreen
+import com.example.suggested_food.screens.statistical.AllExportedScreen
+import com.example.suggested_food.screens.statistical.AllImportedScreen
 import com.example.suggested_food.screens.statistical.StatisticalScreen
 import com.example.suggested_food.screens.stock.StockAllScreen
 import com.example.suggested_food.screens.stock.StockScreen
@@ -56,6 +58,7 @@ import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.example.suggested_food.viewmodels.PromoCodeViewModel
 import com.example.suggested_food.viewmodels.ReminderViewModel
+import com.example.suggested_food.viewmodels.StatisticalViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -67,6 +70,7 @@ fun AppNavigation(
     importViewModel: ImportViewModel = viewModel(),
     exportViewModel: ExportViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
+    statisticalViewModel: StatisticalViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
     val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
@@ -257,6 +261,18 @@ fun AppNavigation(
         }
         composable("ChangePasswordScreen") {
             ChangePasswordScreen(navController)
+        }
+        composable("all_imported") {
+            AllImportedScreen(
+                navController = navController,
+                viewModel = statisticalViewModel
+            )
+        }
+        composable("all_exported") {
+            AllExportedScreen(
+                navController = navController,
+                viewModel = statisticalViewModel
+            )
         }
     }
 }

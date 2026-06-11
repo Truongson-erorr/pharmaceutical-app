@@ -78,24 +78,6 @@ class StatisticalViewModel : ViewModel() {
         val totalExportCount =
             exports.size
 
-        val topImported5 = imports
-            .groupBy { it.productName }
-            .mapValues { entry ->
-                entry.value.sumOf { it.quantity }
-            }
-            .toList()
-            .sortedByDescending { it.second }
-            .take(5)
-
-        val topExported5 = exports
-            .groupBy { it.productName }
-            .mapValues { entry ->
-                entry.value.sumOf { it.quantity }
-            }
-            .toList()
-            .sortedByDescending { it.second }
-            .take(5)
-
         val monthlyImports =
             imports
                 .groupBy {
@@ -122,18 +104,40 @@ class StatisticalViewModel : ViewModel() {
                     }
                 }
 
+        val allImported = imports
+            .groupBy { it.productName }
+            .mapValues { entry ->
+                entry.value.sumOf { it.quantity }
+            }
+            .toList()
+            .sortedByDescending { it.second }
+
+        val topImported5 = allImported.take(5)
+
+        val allExported = exports
+            .groupBy { it.productName }
+            .mapValues { entry ->
+                entry.value.sumOf { it.quantity }
+            }
+            .toList()
+            .sortedByDescending { it.second }
+
+        val topExported5 = allExported.take(5)
+
         _uiState.update {
             it.copy(
                 totalImportAmount = totalImportAmount,
                 totalExportAmount = totalExportAmount,
-                totalProfit =
-                totalExportAmount - totalImportAmount,
+                totalProfit = totalExportAmount - totalImportAmount,
 
                 totalImportCount = totalImportCount,
                 totalExportCount = totalExportCount,
 
                 topImported5 = topImported5,
                 topExported5 = topExported5,
+
+                allImported = allImported,
+                allExported = allExported,
 
                 monthlyImportAmounts = monthlyImports,
                 monthlyExportAmounts = monthlyExports

@@ -158,8 +158,9 @@ fun HomeContent(
                     ) {
                         Text(
                             "Xem tất cả",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium,
                             color = Color.Gray,
-                            fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.width(4.dp))
 
@@ -216,8 +217,9 @@ fun HomeContent(
                     ) {
                         Text(
                             text = "Xem tất cả",
+                            fontSize = 13.sp,
+                            fontWeight = FontWeight.Medium,
                             color = Color.Gray,
-                            fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.width(4.dp))
 

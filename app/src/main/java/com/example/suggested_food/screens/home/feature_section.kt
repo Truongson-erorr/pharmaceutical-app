@@ -101,7 +101,8 @@ fun FeatureSection(
                     Text(
                         "Xem tất cả",
                         color = Color.Gray,
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 13.sp
                     )
                     Spacer(modifier = Modifier.width(4.dp))
 

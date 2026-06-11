@@ -58,9 +58,6 @@ fun ReminderScreen(
             .toLocalDate() == selectedDate
     }
 
-    val blue = Color(0xFF38BDF8)
-    val deepBlue = Color(0xFF2563EB)
-
     var visible by remember {
         mutableStateOf(false)
     }
