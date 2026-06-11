@@ -103,14 +103,7 @@ fun ProductDetailScreen(
     ) { innerPadding ->
         when {
             loading -> {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(innerPadding),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator(color = Color.Black)
-                }
+                ProductDetailShimmer()
             }
 
             product == null -> {

@@ -158,7 +158,7 @@ fun HomeContent(
                     ) {
                         Text(
                             "Xem tất cả",
-                            color = Color(0xFF38BDF8),
+                            color = Color.Gray,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -166,7 +166,7 @@ fun HomeContent(
                         Icon(
                             imageVector = Icons.Outlined.KeyboardArrowRight,
                             contentDescription = null,
-                            tint = Color(0xFF38BDF8),
+                            tint = Color.Gray,
                             modifier = Modifier.size(20.dp)
                         )
                     }
@@ -216,7 +216,7 @@ fun HomeContent(
                     ) {
                         Text(
                             text = "Xem tất cả",
-                            color = Color(0xFF38BDF8),
+                            color = Color.Gray,
                             fontWeight = FontWeight.Bold
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -224,7 +224,7 @@ fun HomeContent(
                         Icon(
                             imageVector = Icons.Outlined.KeyboardArrowRight,
                             contentDescription = null,
-                            tint = Color(0xFF38BDF8),
+                            tint = Color.Gray,
                             modifier = Modifier.size(18.dp)
                         )
                     }

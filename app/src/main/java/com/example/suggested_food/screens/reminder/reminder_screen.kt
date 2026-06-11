@@ -30,6 +30,7 @@ import kotlin.math.abs
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.clickable
 import kotlinx.coroutines.delay
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -56,6 +57,9 @@ fun ReminderScreen(
             .atZone(ZoneId.systemDefault())
             .toLocalDate() == selectedDate
     }
+
+    val blue = Color(0xFF38BDF8)
+    val deepBlue = Color(0xFF2563EB)
 
     var visible by remember {
         mutableStateOf(false)
@@ -122,22 +126,45 @@ fun ReminderScreen(
                 )
             }
         },
-        floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = {
-                    navController.navigate("AddReminderScreen")
-                },
-                containerColor = Color.Black,
-                contentColor = Color.White,
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Icon(Icons.Default.Add, contentDescription = null)
-                Spacer(modifier = Modifier.width(6.dp))
 
-                Text(
-                    text = "Tạo lịch nhắc",
-                    fontWeight = FontWeight.SemiBold
-                )
+        floatingActionButton = {
+            Box(
+                modifier = Modifier
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .clickable {
+                        navController.navigate("AddReminderScreen")
+                    }
+                    .padding(
+                        horizontal = 16.dp,
+                        vertical = 14.dp
+                    )
+            ) {
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+
+                    Icon(
+                        imageVector = Icons.Default.Add,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
+                    Spacer(modifier = Modifier.width(6.dp))
+
+                    Text(
+                        text = "Tạo lịch nhắc",
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     ) { padding ->
