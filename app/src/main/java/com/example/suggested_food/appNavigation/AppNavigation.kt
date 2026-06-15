@@ -26,7 +26,7 @@ import com.example.suggested_food.screens.activitylog.ActivityLogScreen
 import com.example.suggested_food.screens.ai.AISearchScreen
 import com.example.suggested_food.screens.category.AllCategoriesScreen
 import com.example.suggested_food.screens.category.CategoryProductsScreen
-import com.example.suggested_food.screens.drug.AllProductScreen
+import com.example.suggested_food.screens.product.AllProductScreen
 import com.example.suggested_food.screens.drug_look_up.DrugLookupScreen
 import com.example.suggested_food.screens.export_receipt.ExportStockScreen
 import com.example.suggested_food.screens.home.AllFeaturesScreen
@@ -56,7 +56,6 @@ import com.example.suggested_food.viewmodel.ExportViewModel
 import com.example.suggested_food.viewmodel.ImportViewModel
 import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
-import com.example.suggested_food.viewmodels.PromoCodeViewModel
 import com.example.suggested_food.viewmodels.ReminderViewModel
 import com.example.suggested_food.viewmodels.StatisticalViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost

@@ -37,6 +37,29 @@ fun NotificationScreen(
     var expandedIds by remember { mutableStateOf(setOf<String>()) }
     var isLoading by remember { mutableStateOf(true) }
 
+    var visible by remember {
+        mutableStateOf(false)
+    }
+
+    LaunchedEffect(isLoading) {
+        if (!isLoading) {
+            delay(80)
+            visible = true
+        }
+    }
+
+    val animatedAlpha by animateFloatAsState(
+        targetValue = if (visible) 1f else 0f,
+        animationSpec = tween(700, easing = FastOutSlowInEasing),
+        label = ""
+    )
+
+    val animatedTranslationY by animateFloatAsState(
+        targetValue = if (visible) 0f else 35f,
+        animationSpec = tween(700, easing = FastOutSlowInEasing),
+        label = ""
+    )
+
     LaunchedEffect(Unit) {
 
         viewModel.loadNotifications()
@@ -118,7 +141,11 @@ fun NotificationScreen(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                            .padding(horizontal = 12.dp, vertical = 8.dp)
+                            .graphicsLayer {
+                                alpha = animatedAlpha
+                                translationY = animatedTranslationY
+                            },
                         verticalArrangement = Arrangement.spacedBy(1.dp)
                     ) {
 
@@ -127,58 +154,18 @@ fun NotificationScreen(
                             key = { _, item -> item.id }
                         ) { index, item ->
 
-                            var visible by remember {
-                                mutableStateOf(false)
-                            }
-
-                            LaunchedEffect(Unit) {
-                                delay(index * 55L)
-                                visible = true
-                            }
-
-                            val alpha by animateFloatAsState(
-                                targetValue = if (visible) 1f else 0f,
-
-                                animationSpec = tween(
-                                    durationMillis = 650,
-                                    easing = FastOutSlowInEasing
-                                ),
-
-                                label = ""
-                            )
-
-                            val translationY by animateFloatAsState(
-                                targetValue = if (visible) 0f else 28f,
-
-                                animationSpec = tween(
-                                    durationMillis = 650,
-                                    easing = FastOutSlowInEasing
-                                ),
-
-                                label = ""
-                            )
-
-                            Box(
-                                modifier = Modifier.graphicsLayer {
-                                    this.alpha = alpha
-                                    this.translationY = translationY
+                            NotificationItem(
+                                item = item,
+                                isExpanded = expandedIds.contains(item.id),
+                                onToggle = {
+                                    expandedIds =
+                                        if (expandedIds.contains(item.id)) {
+                                            expandedIds - item.id
+                                        } else {
+                                            expandedIds + item.id
+                                        }
                                 }
-                            ) {
-
-                                NotificationItem(
-                                    item = item,
-                                    isExpanded = expandedIds.contains(item.id),
-                                    onToggle = {
-
-                                        expandedIds =
-                                            if (expandedIds.contains(item.id)) {
-                                                expandedIds - item.id
-                                            } else {
-                                                expandedIds + item.id
-                                            }
-                                    }
-                                )
-                            }
+                            )
                         }
                     }
                 }
@@ -246,7 +233,6 @@ fun ShimmerNotificationCard() {
 fun formatTime(time: Long): String {
 
     val diff = System.currentTimeMillis() - time
-
     val seconds = diff / 1000
     val minutes = seconds / 60
     val hours = minutes / 60

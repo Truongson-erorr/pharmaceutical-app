@@ -1,6 +1,7 @@
 package com.example.suggested_food.screens.notifications
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -43,8 +44,17 @@ fun NotificationItem(
             .animateContentSize(),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = if (isExpanded)
+                Color.White
+            else
+                Color.White
         ),
+        border = if (isExpanded)
+            BorderStroke(
+                1.dp,
+                Color(0xFF9CA3AF)
+            )
+        else null,
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
 
@@ -118,81 +128,61 @@ fun NotificationItem(
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(
-                            Color.White,
-                            RoundedCornerShape(12.dp)
+                                Color.White,
+                            RoundedCornerShape(16.dp)
                         )
-                        .padding(14.dp)
+                        .padding(16.dp)
                 ) {
+                    HorizontalDivider(
+                        color = Color(0xFFE5E7EB),
+                        thickness = 1.dp
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
                         text = "Chi tiết thông báo",
+                        fontSize = 15.sp,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF1C1C1C)
-                    )
-                    Text(
-                        text = "----------------------------------------------------------------",
-                        color = Color(0xFFBDBDBD)
-                    )
-                    Spacer(Modifier.height(10.dp))
-
-                    Text(
-                        text = "Vấn đề",
-                        fontWeight = FontWeight.SemiBold,
                         color = Color.Black
                     )
-                    Text(
-                        text = item.title,
-                        color = Color.Gray
-                    )
-                    Spacer(Modifier.height(10.dp))
-
-                    Text(
-                        text = "Nội dung",
-                        fontWeight = FontWeight.SemiBold,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = item.message,
-                        color = Color.Gray
-                    )
-                    Spacer(Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(6.dp))
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        verticalAlignment = Alignment.Top
                     ) {
 
                         Box(
                             modifier = Modifier
+                                .width(4.dp)
+                                .height(20.dp)
                                 .background(
-                                    color.copy(alpha = 0.15f),
-                                    RoundedCornerShape(30.dp)
+                                    color = color,
+                                    shape = RoundedCornerShape(10.dp)
                                 )
-                                .padding(horizontal = 10.dp, vertical = 6.dp)
-                        ) {
-                            Text(
-                                text = item.type,
-                                color = color,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                        }
+                        )
+                        Spacer(modifier = Modifier.width(10.dp))
 
-                        Box(
-                            modifier = Modifier
-                                .background(
-                                    Color(0xFFECEFF1),
-                                    RoundedCornerShape(30.dp)
-                                )
-                                .padding(horizontal = 10.dp, vertical = 6.dp)
-                        ) {
-                            Text(
-                                text = formatDate(item.time),
-                                color = Color(0xFF37474F),
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
-                            )
-                        }
+                        Text(
+                            text = item.message,
+                            color = Color.Gray,
+                            lineHeight = 22.sp,
+                            fontSize = 14.sp
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.End,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+
+                        Text(
+                            text = formatDate(item.time),
+                            color = Color.Black,
+                            fontSize = 13.sp
+                        )
                     }
                 }
             }
