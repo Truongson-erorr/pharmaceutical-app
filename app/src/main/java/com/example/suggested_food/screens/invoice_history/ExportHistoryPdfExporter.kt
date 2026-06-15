@@ -13,7 +13,7 @@ import java.util.*
 
 object ExportHistoryImageExporter {
 
-    fun export(context: Context, data: ExportReceipt): Uri {
+    fun export(context: Context, data: ExportReceipt, userName: String): Uri {
 
         val currency = NumberFormat.getInstance(Locale("vi", "VN"))
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
@@ -47,15 +47,16 @@ object ExportHistoryImageExporter {
         }
 
         val labelPaint = Paint().apply {
-            color = Color.DKGRAY
+            color = Color.BLACK
             textSize = 30f
+            isFakeBoldText = true
             isAntiAlias = true
         }
 
         val valuePaint = Paint().apply {
             color = Color.BLACK
-            textSize = 32f
-            isFakeBoldText = true
+            textSize = 30f
+            isFakeBoldText = false
             isAntiAlias = true
         }
 
@@ -101,10 +102,10 @@ object ExportHistoryImageExporter {
 
         y += qrBitmap.height + 5f
         divider()
-        drawRow("Mã phiếu", data.id)
-        drawRow("Người xuất", data.user)
+        drawRow("Mã phiếu: ", data.id)
+        drawRow("Người xuất: ", userName)
         drawRow(
-            "Ngày",
+            "Ngày xuất: ",
             try {
                 dateFormat.format(Date(data.date))
             } catch (e: Exception) {
@@ -113,25 +114,24 @@ object ExportHistoryImageExporter {
         )
         divider()
 
-        drawRow("Sản phẩm", data.productName)
-        drawRow("Số lượng", data.quantity.toString())
-        drawRow("HSD", data.expiryDate ?: "-")
+        drawRow("Sản phẩm: ", data.productName)
+        drawRow("Số lượng: ", data.quantity.toString())
+        drawRow("Hạn sử dụng: ", data.expiryDate ?: "-")
         divider()
 
-        drawRow("Khách hàng", data.customer)
-        drawRow("Số điện thoại", data.customerPhone)
+        drawRow("Khách hàng: ", data.customer)
+        drawRow("Số điện thoại: ", data.customerPhone)
         divider()
 
         drawRow(
-            "Giá xuất",
+            "Giá xuất: ",
             "${currency.format(data.price)} đ"
         )
 
         drawRow(
-            "Tổng tiền",
+            "Tổng tiền: ",
             "${currency.format(data.totalPrice)} đ"
         )
-        divider()
 
         val footerPaint = Paint().apply {
             color = Color.BLACK

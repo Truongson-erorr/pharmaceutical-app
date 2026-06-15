@@ -1,13 +1,18 @@
-package com.example.suggested_food.screens.invoice
+package com.example.suggested_food.screens.statistical
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -21,35 +26,38 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import java.text.NumberFormat
+import java.util.Locale
 
 @Composable
-fun DashboardCard(
+fun StatCardGradient(
     title: String,
     value: String,
     icon: ImageVector,
     colors: List<Color>,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    modifier: Modifier = Modifier
 ) {
+
     Card(
-        modifier = modifier
-            .height(130.dp)
-            .clickable {
-                onClick()
-            },
+        modifier = modifier.height(130.dp),
         shape = RoundedCornerShape(22.dp),
         elevation = CardDefaults.cardElevation(0.dp)
     ) {
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Brush.linearGradient(colors))
+                .background(
+                    Brush.linearGradient(colors)
+                )
                 .padding(16.dp)
         ) {
 
             Text(
                 text = title,
                 color = Color.White.copy(alpha = 0.9f),
+                fontWeight = FontWeight.Medium,
                 modifier = Modifier.align(Alignment.TopStart)
             )
 
@@ -64,10 +72,9 @@ fun DashboardCard(
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
-                    icon,
+                    imageVector = icon,
                     contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(22.dp)
+                    tint = Color.White
                 )
             }
 
@@ -80,4 +87,56 @@ fun DashboardCard(
             )
         }
     }
+}
+
+@Composable
+fun SectionTitle(
+    text: String,
+    onViewAllClick: (() -> Unit)? = null
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp, bottom = 4.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        Text(
+            text = text,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF111827)
+        )
+
+        if (onViewAllClick != null) {
+            Row(
+                modifier = Modifier.clickable { onViewAllClick() },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "Xem tất cả",
+                    fontSize = 13.sp,
+                    color = Color.Gray,
+                    fontWeight = FontWeight.Medium
+                )
+
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = Color.Gray,
+                    modifier = Modifier.size(16.dp)
+                )
+            }
+        }
+    }
+}
+
+fun formatMoney(
+    amount: Int
+): String {
+
+    return NumberFormat
+        .getNumberInstance(Locale("vi", "VN"))
+        .format(amount) + " đ"
 }

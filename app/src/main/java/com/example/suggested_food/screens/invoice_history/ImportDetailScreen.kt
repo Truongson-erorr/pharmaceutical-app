@@ -32,15 +32,21 @@ fun ImportDetailScreen(
 ) {
     val receipt by viewModel.selectedReceipt.collectAsState()
     val loading by viewModel.loading.collectAsState()
-    val context = androidx.compose.ui.platform.LocalContext.current
 
-    LaunchedEffect(receiptId) {
-        viewModel.loadImportReceipt(receiptId)
-    }
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val users by viewModel.users.collectAsState()
 
     val currency = NumberFormat.getInstance(Locale("vi", "VN"))
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     var showDialog by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) {
+        viewModel.loadUsers()
+    }
+
+    LaunchedEffect(receiptId) {
+        viewModel.loadImportReceipt(receiptId)
+    }
 
     Scaffold(
         containerColor = Color.White,
@@ -82,7 +88,7 @@ fun ImportDetailScreen(
                         TextButton(
                             onClick = {
                                 receipt?.let { data ->
-                                    ImportReceiptImageExporter.export(context, data)
+                                    ImportReceiptImageExporter.export(context, data, userName = users[data.user] ?: data.user)
                                     showDialog = true
                                 }
                             },
@@ -159,43 +165,54 @@ fun ImportDetailScreen(
                         fontWeight = FontWeight.Bold
                     )
                     Spacer(modifier = Modifier.height(22.dp))
-                    Divider()
 
-                    InvoiceRow("Mã số phiếu", data.id)
-                    InvoiceRow("Người nhập", data.user)
+                    HorizontalDivider(
+                        color = Color(0xFFE5E7EB),
+                        thickness = 0.5.dp
+                    )
+
+                    InvoiceRow("Mã hóa đơn: ", "#${data.id}")
                     InvoiceRow(
-                        "Ngày",
-                        formatter.format(Date(data.date))
+                        "Người nhập: ",
+                        users[data.user] ?: data.user
                     )
-                    Divider()
 
-                    InvoiceRow("Sản phẩm", data.productName)
+                    InvoiceRow("Ngày nhập: ", formatter.format(Date(data.date)))
+                    HorizontalDivider(
+                        color = Color(0xFFE5E7EB),
+                        thickness = 0.5.dp
+                    )
 
                     InvoiceRow2Col(
-                        "Đơn vị", data.unit,
-                        "Số lượng", data.quantity.toString()
+                        "Sản phẩm: ", data.productName,
+                        "Số lượng: ", data.quantity.toString(),
                     )
-                    Divider()
+
+                    HorizontalDivider(
+                        color = Color(0xFFE5E7EB),
+                        thickness = 0.5.dp
+                    )
 
                     InvoiceRow2Col(
-                        "Lô", data.lot,
-                        "HSD", data.expiryDate
+                        "Hạn sử dụng: ", data.expiryDate,
+                        "Nhà cung cấp: ", data.supplier
                     )
-
-                    InvoiceRow("Nhà cung cấp", data.supplier)
 
                     if (data.note.isNotEmpty()) {
-                        InvoiceRow("Ghi chú", data.note)
+                        InvoiceRow("Ghi chú: ", data.note)
                     }
-                    Divider()
+                    HorizontalDivider(
+                        color = Color(0xFFE5E7EB),
+                        thickness = 0.5.dp
+                    )
 
                     InvoiceRow(
-                        "Giá nhập",
+                        "Giá nhập: ",
                         "${currency.format(data.price)} đ"
                     )
 
                     InvoiceRow(
-                        "Tổng tiền",
+                        "Tổng tiền: ",
                         "${currency.format(data.totalPrice)} đ"
                     )
                 }
@@ -215,13 +232,13 @@ fun InvoiceRow(
     ) {
         Text(
             text = label,
-            color = Color.Gray
+            color = Color.Black,
+            fontWeight = FontWeight.Bold
         )
 
         Text(
             text = value.ifEmpty { "-" },
             color = Color.Black,
-            fontWeight = FontWeight.Bold
         )
     }
 }

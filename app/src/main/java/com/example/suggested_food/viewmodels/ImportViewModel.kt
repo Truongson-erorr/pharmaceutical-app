@@ -25,6 +25,23 @@ class ImportViewModel : ViewModel() {
         MutableStateFlow<List<ImportReceipt>>(emptyList())
     val importList: StateFlow<List<ImportReceipt>> = _importList
 
+    private val _users = MutableStateFlow<Map<String, String>>(emptyMap())
+    val users: StateFlow<Map<String, String>> = _users
+
+    fun loadUsers() {
+        FirebaseFirestore.getInstance()
+            .collection("users")
+            .get()
+            .addOnSuccessListener { snapshot ->
+
+                val map = snapshot.documents.associate { doc ->
+                    doc.id to (doc.getString("name") ?: "Unknown")
+                }
+
+                _users.value = map
+            }
+    }
+
     fun loadAllImports() {
         db.collection("import_receipts")
             .addSnapshotListener { snapshot, _ ->

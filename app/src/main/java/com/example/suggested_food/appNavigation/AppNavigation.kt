@@ -26,10 +26,10 @@ import com.example.suggested_food.screens.activitylog.ActivityLogScreen
 import com.example.suggested_food.screens.ai.AISearchScreen
 import com.example.suggested_food.screens.category.AllCategoriesScreen
 import com.example.suggested_food.screens.category.CategoryProductsScreen
-import com.example.suggested_food.screens.chat_ai.ChatScreen
 import com.example.suggested_food.screens.drug.AllProductScreen
 import com.example.suggested_food.screens.drug_look_up.DrugLookupScreen
 import com.example.suggested_food.screens.export_receipt.ExportStockScreen
+import com.example.suggested_food.screens.home.AllFeaturesScreen
 import com.example.suggested_food.screens.home.MainScreen
 import com.example.suggested_food.screens.import_receipt.ImportStockScreen
 import com.example.suggested_food.screens.invoice.InvoiceDashboardScreen
@@ -41,9 +41,14 @@ import com.example.suggested_food.screens.notifications.NotificationScreen
 import com.example.suggested_food.screens.patient.PatientDetailScreen
 import com.example.suggested_food.screens.patient.PatientScreen
 import com.example.suggested_food.screens.product.ProductDetailScreen
+import com.example.suggested_food.screens.profile.ChangePasswordScreen
+import com.example.suggested_food.screens.profile.ProfileScreen
 import com.example.suggested_food.screens.reminder.AddReminderScreen
 import com.example.suggested_food.screens.reminder.ReminderScreen
 import com.example.suggested_food.screens.search.SearchScreen
+import com.example.suggested_food.screens.statistical.AllExportedScreen
+import com.example.suggested_food.screens.statistical.AllImportedScreen
+import com.example.suggested_food.screens.statistical.StatisticalScreen
 import com.example.suggested_food.screens.stock.StockAllScreen
 import com.example.suggested_food.screens.stock.StockScreen
 import com.example.suggested_food.screens.suggest.SuggestScreen
@@ -53,6 +58,7 @@ import com.example.suggested_food.viewmodels.AuthViewModel
 import com.example.suggested_food.viewmodels.ProductViewModel
 import com.example.suggested_food.viewmodels.PromoCodeViewModel
 import com.example.suggested_food.viewmodels.ReminderViewModel
+import com.example.suggested_food.viewmodels.StatisticalViewModel
 import com.google.accompanist.navigation.animation.AnimatedNavHost
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 
@@ -64,9 +70,9 @@ fun AppNavigation(
     importViewModel: ImportViewModel = viewModel(),
     exportViewModel: ExportViewModel = viewModel(),
     productViewModel: ProductViewModel = viewModel(),
+    statisticalViewModel: StatisticalViewModel = viewModel(),
 ) {
     val navController = rememberAnimatedNavController()
-    val promoViewModel: PromoCodeViewModel = androidx.lifecycle.viewmodel.compose.viewModel()
     val isLoggedIn by authViewModel.isLoggedInFlow.collectAsState()
     val role by authViewModel.userRole.collectAsState()
 
@@ -146,9 +152,6 @@ fun AppNavigation(
                 navController = navController,
                 productId = productId,
             )
-        }
-        composable("chat") {
-            ChatScreen(navController)
         }
         composable("drug_lookup") {
             DrugLookupScreen(navController)
@@ -240,6 +243,36 @@ fun AppNavigation(
         }
         composable("ActivityLogScreen") {
             ActivityLogScreen(navController)
+        }
+        composable("all_features") {
+            AllFeaturesScreen(
+                navController = navController,
+            )
+        }
+        composable("StatisticalScreen") {
+            StatisticalScreen(
+                navController = navController,
+            )
+        }
+        composable("ProfileScreen") {
+            ProfileScreen(
+                navController = navController,
+            )
+        }
+        composable("ChangePasswordScreen") {
+            ChangePasswordScreen(navController)
+        }
+        composable("all_imported") {
+            AllImportedScreen(
+                navController = navController,
+                viewModel = statisticalViewModel
+            )
+        }
+        composable("all_exported") {
+            AllExportedScreen(
+                navController = navController,
+                viewModel = statisticalViewModel
+            )
         }
     }
 }

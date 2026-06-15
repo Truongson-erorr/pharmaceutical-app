@@ -1,18 +1,19 @@
 package com.example.suggested_food.screens.stock
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.FilterAlt
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -30,6 +31,7 @@ import coil.compose.AsyncImage
 import com.example.suggested_food.viewmodels.ProductViewModel
 import kotlinx.coroutines.delay
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockAllScreen(
@@ -37,79 +39,36 @@ fun StockAllScreen(
     productViewModel: ProductViewModel = viewModel()
 ) {
     val products by productViewModel.products.collectAsState()
-
     var filter by remember { mutableStateOf("ALL") }
-    var tempFilter by remember { mutableStateOf("ALL") }
     var showDialog by remember { mutableStateOf(false) }
 
-    val mainColor = Color.DarkGray
-    val lightColor = Color(0xFFF5F5F5)
-
-    val today = "2026-05-08"
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
 
     val filteredProducts = when (filter) {
-        "AVAILABLE" -> products.filter { it.stock > 10 }
-        "LOW" -> products.filter { it.stock in 1..10 }
-        "OUT" -> products.filter { it.stock == 0 }
-        else -> products
-    }
 
-    if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { showDialog = false },
-            containerColor = Color.White,
-            title = { Text("Lọc tồn kho", fontWeight = FontWeight.Bold) },
-            text = {
+        "AVAILABLE" ->
+            products.filter { it.stock > 10 }
 
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        "LOW" ->
+            products.filter { it.stock in 1..10 }
 
-                    FilterItem("Tất cả", tempFilter == "ALL", mainColor, lightColor) {
-                        tempFilter = "ALL"
-                    }
+        "OUT" ->
+            products.filter { it.stock == 0 }
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(10.dp)
-                    ) {
-                        FilterItem(
-                            "Còn hàng",
-                            tempFilter == "AVAILABLE",
-                            mainColor,
-                            lightColor,
-                            Modifier.weight(1f)
-                        ) { tempFilter = "AVAILABLE" }
-
-                        FilterItem(
-                            "Sắp hết",
-                            tempFilter == "LOW",
-                            mainColor,
-                            lightColor,
-                            Modifier.weight(1f)
-                        ) { tempFilter = "LOW" }
-                    }
-
-                    FilterItem("Hết hàng", tempFilter == "OUT", mainColor, lightColor) {
-                        tempFilter = "OUT"
-                    }
-                }
-            },
-            confirmButton = {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                        .background(Color.Black, RoundedCornerShape(12.dp))
-                        .clickable {
-                            filter = tempFilter
-                            showDialog = false
-                        }
-                        .padding(12.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text("Xác nhận", color = Color.White, fontWeight = FontWeight.Bold)
-                }
+        "EXPIRING" ->
+            products.filter {
+                isExpiringSoon(it.expiryDate)
             }
-        )
+
+        "EXPIRED" ->
+            products.filter {
+                isExpired(it.expiryDate)
+            }
+
+        else ->
+            products
     }
 
     Scaffold(
@@ -152,7 +111,7 @@ fun StockAllScreen(
                             showDialog = true
                         }) {
                             Icon(
-                                imageVector = Icons.Default.FilterList,
+                                imageVector = Icons.Default.FilterAlt,
                                 contentDescription = "Filter",
                                 tint = Color.White
                             )
@@ -174,7 +133,6 @@ fun StockAllScreen(
         ) {
 
             itemsIndexed(filteredProducts) { index, item ->
-
                 var visible by remember {
                     mutableStateOf(false)
                 }
@@ -220,10 +178,15 @@ fun StockAllScreen(
                 val statusBg = statusColor.copy(alpha = 0.12f)
 
                 val expiryColor = when {
-                    item.expiryDate.isBlank() -> Color.Gray
-                    item.expiryDate < today -> Color(0xFFFF5A5F)
-                    item.expiryDate <= "2026-06-01" -> Color(0xFFFFB020)
-                    else -> Color(0xFF22C55E)
+
+                    isExpired(item.expiryDate) ->
+                        Color(0xFFFF5A5F)
+
+                    isExpiringSoon(item.expiryDate) ->
+                        Color(0xFFFFB020)
+
+                    else ->
+                        Color(0xFF22C55E)
                 }
                 val expiryBg = expiryColor.copy(alpha = 0.12f)
 
@@ -312,7 +275,7 @@ fun StockAllScreen(
                                         ) {
 
                                             Text(
-                                                "HSD: ${item.expiryDate}",
+                                                "Hạn sử dụng: ${item.expiryDate}",
                                                 color = expiryColor,
                                                 fontSize = 11.sp,
                                                 fontWeight = FontWeight.SemiBold
@@ -327,37 +290,80 @@ fun StockAllScreen(
             }
         }
     }
-}
 
-@Composable
-fun FilterItem(
-    text: String,
-    selected: Boolean,
-    mainColor: Color,
-    lightColor: Color,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(
-                color = lightColor,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .then(
-                if (selected)
-                    Modifier.border(2.dp, mainColor, RoundedCornerShape(12.dp))
-                else Modifier
-            )
-            .clickable { onClick() }
-            .padding(vertical = 14.dp),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = text,
-            color = mainColor,
-            fontWeight = FontWeight.Bold
-        )
+    if (showDialog) {
+
+        ModalBottomSheet(
+            onDismissRequest = {
+                showDialog = false
+            },
+            sheetState = sheetState,
+            containerColor = Color.White
+        ) {
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp, vertical = 12.dp)
+            ) {
+
+                Text(
+                    text = "Lọc theo trạng thái",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp
+                )
+                Spacer(Modifier.height(20.dp))
+
+                FilterMenuItem(
+                    title = "Tất cả thuốc trong kho",
+                    selected = filter == "ALL"
+                ) {
+                    filter = "ALL"
+                    showDialog = false
+                }
+
+                FilterMenuItem(
+                    title = "Thuốc còn hàng",
+                    selected = filter == "AVAILABLE"
+                ) {
+                    filter = "AVAILABLE"
+                    showDialog = false
+                }
+
+                FilterMenuItem(
+                    title = "Thuốc sắp hết hàng",
+                    selected = filter == "LOW"
+                ) {
+                    filter = "LOW"
+                    showDialog = false
+                }
+
+                FilterMenuItem(
+                    title = "Thuốc đã hết hàng",
+                    selected = filter == "OUT"
+                ) {
+                    filter = "OUT"
+                    showDialog = false
+                }
+
+                FilterMenuItem(
+                    title = "Thuốc sắp hết hạn sử dụng",
+                    selected = filter == "EXPIRING"
+                ) {
+                    filter = "EXPIRING"
+                    showDialog = false
+                }
+
+                FilterMenuItem(
+                    title = "Thuốc đã hết hạn sử dụng",
+                    selected = filter == "EXPIRED"
+                ) {
+                    filter = "EXPIRED"
+                    showDialog = false
+                }
+
+                Spacer(Modifier.height(20.dp))
+            }
+        }
     }
 }

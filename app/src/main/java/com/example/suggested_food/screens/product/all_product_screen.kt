@@ -21,6 +21,7 @@ import com.example.suggested_food.viewmodels.ProductViewModel
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.graphics.graphicsLayer
+import com.example.suggested_food.screens.product.ProductShimmerItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -72,13 +73,20 @@ fun AllProductScreen(
 
         if (loading) {
 
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                modifier = Modifier
+                    .padding(padding)
+                    .fillMaxSize()
+                    .background(Color(0xFFF5F5F5))
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                CircularProgressIndicator(
-                    color = Color(0xFF2563EB)
-                )
+
+                items(8) {
+                    ProductShimmerItem()
+                }
             }
 
         } else {

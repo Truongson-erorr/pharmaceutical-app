@@ -8,7 +8,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -83,14 +82,20 @@ fun AllCategoriesScreen(
     ) { innerPadding ->
 
         if (loading) {
-            Box(
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(3),
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                contentAlignment = Alignment.Center
+                    .padding(innerPadding)
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                CircularProgressIndicator(color = Color(0xFF5848CE))
+
+                items(14) {
+                    CategoryShimmerItem()
+                }
             }
+
         } else {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(3),
@@ -169,7 +174,7 @@ fun CategoryGridItem(
             .clickable { onClick() },
         shape = RoundedCornerShape(14.dp),
         color = Color.White,
-        shadowElevation = 2.dp
+        shadowElevation = 1.dp
     ) {
         Column(
             modifier = Modifier.padding(8.dp),

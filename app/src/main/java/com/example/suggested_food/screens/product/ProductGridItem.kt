@@ -7,8 +7,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,45 +32,10 @@ fun ProductGridItem(
     product: ProductModel,
     onClick: () -> Unit
 ) {
-    var visible by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) {
-        delay(80)
-        visible = true
-    }
-
-    val alpha by animateFloatAsState(
-        targetValue = if (visible) 1f else 0f,
-
-        animationSpec = tween(
-            durationMillis = 650,
-            easing = FastOutSlowInEasing
-        ),
-
-        label = ""
-    )
-
-    val translationY by animateFloatAsState(
-        targetValue = if (visible) 0f else 25f,
-
-        animationSpec = tween(
-            durationMillis = 650,
-            easing = FastOutSlowInEasing
-        ),
-
-        label = ""
-    )
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .graphicsLayer {
-                this.alpha = alpha
-                this.translationY = translationY
-            }
-            .clickable {
-                onClick()
-            }
+            .clickable { onClick() }
     ) {
 
         Card(
@@ -129,28 +97,24 @@ fun ProductGridItem(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically
             ) {
 
-                Box(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(50))
-                        .background(
-                            Color(0xFFE0F2FE)
-                        )
-                        .padding(
-                            horizontal = 10.dp,
-                            vertical = 4.dp
-                        )
-                ) {
+                Text(
+                    text = "Xem chi tiết",
+                    fontSize = 12.sp,
+                    color = Color(0xFF6B7280),
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(modifier = Modifier.width(2.dp))
 
-                    Text(
-                        text = "Xem chi tiết",
-                        fontSize = 12.sp,
-                        color = Color(0xFF1D4ED8),
-                        fontWeight = FontWeight.SemiBold
-                    )
-                }
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight,
+                    contentDescription = null,
+                    tint = Color(0xFF9CA3AF),
+                    modifier = Modifier.size(16.dp)
+                )
             }
         }
     }

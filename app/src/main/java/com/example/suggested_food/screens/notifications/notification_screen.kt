@@ -106,7 +106,6 @@ fun NotificationScreen(
             }
 
             else {
-
                 if (notifications.isEmpty()) {
                     Box(
                         modifier = Modifier.fillMaxSize(),

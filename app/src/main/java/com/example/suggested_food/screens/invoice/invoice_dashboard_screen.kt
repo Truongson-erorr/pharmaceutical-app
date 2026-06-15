@@ -4,6 +4,7 @@ import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -147,15 +148,29 @@ fun InvoiceDashboardScreen(
         },
 
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = { navController.navigate("InvoiceScreen") },
-                containerColor = Color(0xFF111827)
+            Box(
+                modifier = Modifier
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .clickable { navController.navigate("InvoiceScreen") }
+                    .padding(horizontal = 16.dp, vertical = 14.dp)
             ) {
+
                 Row(
-                    modifier = Modifier.padding(horizontal = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(Icons.Default.Add, null, tint = Color.White)
+                    Icon(
+                        Icons.Default.Add,
+                        contentDescription = null,
+                        tint = Color.White
+                    )
                     Spacer(modifier = Modifier.width(6.dp))
 
                     Text(
@@ -247,14 +262,17 @@ fun InvoiceDashboardScreen(
                     DashboardCard(
                         "Tổng tiền",
                         totalMoney,
-                        Icons.Default.AttachMoney,
+                        Icons.Default.NavigateNext,
 
                         listOf(
                             Color(0xFF4FACFE),
                             Color(0xFF6A11CB)
                         ),
 
-                        Modifier.weight(1f)
+                        Modifier.weight(1f),
+                        onClick = {
+                            navController.navigate("StatisticalScreen")
+                        }
                     )
                 }
 
@@ -320,7 +338,6 @@ fun InvoiceDashboardScreen(
                                 colors = CardDefaults.cardColors(
                                     containerColor = Color.White
                                 ),
-
                                 elevation = CardDefaults.cardElevation(0.dp),
 
                                 modifier = Modifier.fillMaxWidth()

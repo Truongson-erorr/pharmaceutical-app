@@ -107,45 +107,64 @@ fun AddReminderScreen(
         },
 
         bottomBar = {
-            Button(
-                onClick = {
-                    if (
-                        title.isNotBlank() &&
-                        selectedProduct != null
-                    ) {
-                        viewModel.addReminder(
-                            context,
-                            ReminderEntity(
-                                title = title,
-                                description = description,
-                                actionType = actionType,
-                                medicineId =
-                                selectedProduct!!
-                                    .id
-                                    .toLongOrNull(),
-                                medicineName =
-                                selectedProduct!!.name,
-                                triggerTime = triggerTime,
-                                repeatInterval =
-                                repeatInterval,
-                                isDone = false,
-                                isEnabled = true,
-                                createdAt =
-                                System.currentTimeMillis()
-                            )
-                        )
-                        navController.popBackStack()
-                    }
-                },
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                )
+                    .padding(16.dp)
+                    .background(
+                        brush = Brush.horizontalGradient(
+                            listOf(
+                                Color(0xFF2563EB),
+                                Color(0xFF38BDF8)
+                            )
+                        ),
+                        shape = RoundedCornerShape(25.dp)
+                    )
             ) {
-                Text("Lưu nhắc nhở")
+
+                Button(
+                    onClick = {
+
+                        if (
+                            title.isNotBlank() &&
+                            selectedProduct != null
+                        ) {
+
+                            viewModel.addReminder(
+                                context,
+                                ReminderEntity(
+                                    title = title,
+                                    description = description,
+                                    actionType = actionType,
+                                    medicineId = selectedProduct!!.id.toLongOrNull(),
+                                    medicineName = selectedProduct!!.name,
+                                    triggerTime = triggerTime,
+                                    repeatInterval = repeatInterval,
+                                    isDone = false,
+                                    isEnabled = true,
+                                    createdAt = System.currentTimeMillis()
+                                )
+                            )
+                            navController.popBackStack()
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(45.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 0.dp
+                    ),
+                    shape = RoundedCornerShape(25.dp)
+                ) {
+                    Text(
+                        text = "Lưu nhắc nhở",
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
     ) { padding ->
@@ -275,14 +294,14 @@ fun AddReminderScreen(
                     Text(
                         text = "Chọn ngày",
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF03A9F4)
+                        color = Color.Gray
                     )
                     Spacer(modifier = Modifier.width(4.dp))
 
                     Icon(
                         imageVector = Icons.Default.ChevronRight,
                         contentDescription = null,
-                        tint = Color(0xFF03A9F4)
+                        tint = Color.Gray
                     )
                 }
             }

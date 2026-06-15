@@ -1,6 +1,7 @@
 package com.example.suggested_food.screens.home
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -10,6 +11,8 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.PeopleAlt
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -63,7 +66,7 @@ fun FeatureSection(
                 FeatureItem(
                     title = "Gợi ý thuốc",
                     desc = "AI đề xuất thuốc phù hợp theo triệu chứng mô tả...",
-                    icon = Icons.Default.PeopleAlt,
+                    icon = Icons.Outlined.PeopleAlt,
                     route = "SuggestScreen",
                     gradient = listOf(
                         Color(0xFF38BDF8),
@@ -75,16 +78,45 @@ fun FeatureSection(
     )
 
     Column(modifier = Modifier.fillMaxWidth()) {
+
+        Spacer(modifier = Modifier.height(20.dp))
         featureGroups.forEach { group ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = group.title,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    color = Color(0xFF1E293B)
+                )
 
-            Text(
-                text = group.title,
-                fontWeight = FontWeight.Bold,
-                fontSize = 18.sp,
-                color = Color(0xFF1E293B),
-                modifier = Modifier.padding(top = 8.dp, bottom = 12.dp)
-            )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.clickable {
+                        navController.navigate("all_features")
+                    }
+                ) {
+                    Text(
+                        "Xem tất cả",
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 13.sp
+                    )
+                    Spacer(modifier = Modifier.width(4.dp))
 
+                    Icon(
+                        imageVector = Icons.Outlined.KeyboardArrowRight,
+                        contentDescription = null,
+                        tint = Color.Gray,
+                        modifier = Modifier.size(20.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(10.dp))
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 userScrollEnabled = false,
@@ -114,7 +146,7 @@ fun FeatureSection(
                             },
                         shape = RoundedCornerShape(30.dp),
                         colors = CardDefaults.cardColors(containerColor = Color.White),
-                        elevation = CardDefaults.cardElevation(0.dp)
+                        elevation = CardDefaults.cardElevation(0.dp),
                     ) {
 
                         Column(
@@ -185,5 +217,12 @@ fun navigateFeature(
     when (feature.route) {
         "SuggestScreen" -> navController.navigate("SuggestScreen")
         "drug_lookup" -> navController.navigate("drug_lookup")
+        "PatientScreen" -> navController.navigate("PatientScreen")
+        "ReminderScreen" -> navController.navigate("ReminderScreen")
+        "StockScreen" -> navController.navigate("StockScreen")
+        "InvoiceDashboardScreen" -> navController.navigate("InvoiceDashboardScreen")
+        "ActivityLogScreen" -> navController.navigate("ActivityLogScreen")
+        "StatisticalScreen" -> navController.navigate("StatisticalScreen")
     }
 }
+

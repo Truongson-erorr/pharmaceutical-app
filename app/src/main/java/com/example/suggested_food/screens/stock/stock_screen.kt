@@ -207,16 +207,16 @@ fun StockScreen(
                 ) {
                     Text(
                         text = "Xem tất cả",
-                        fontSize = 16.sp,
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
+                        fontSize = 13.sp,
+                        color = Color.Gray,
+                        fontWeight = FontWeight.Medium
                     )
                     Spacer(modifier = Modifier.width(4.dp))
 
                     Icon(
                         imageVector = Icons.Default.ArrowForwardIos,
                         contentDescription = null,
-                        tint = Color.Black,
+                        tint = Color.Gray,
                         modifier = Modifier.size(14.dp)
                     )
                 }

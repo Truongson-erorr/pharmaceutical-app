@@ -285,16 +285,20 @@ fun SuggestScreen(
 @Composable
 fun ShimmerDrugCard() {
 
-    val shimmerColor = Color.Gray
+    val shimmerColor = Color(0xFFC7CBD1)
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .shimmer(),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
 
         Column(
-            modifier = Modifier.padding(14.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
