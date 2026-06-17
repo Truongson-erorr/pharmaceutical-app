@@ -1,4 +1,4 @@
-package com.example.suggested_food.screens.drug
+package com.example.suggested_food.screens.product
 
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.foundation.background
@@ -20,8 +20,10 @@ import com.example.suggested_food.screens.product.ProductGridItem
 import com.example.suggested_food.viewmodels.ProductViewModel
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.graphics.graphicsLayer
 import com.example.suggested_food.screens.product.ProductShimmerItem
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -103,36 +105,37 @@ fun AllProductScreen(
                 horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
 
-                itemsIndexed(products) { index, product ->
+                itemsIndexed(
+                    products,
+                    key = { _, item -> item.id }
+                ) { index, product ->
 
-                    var visible by remember {
+                    var animated by rememberSaveable(product.id) {
                         mutableStateOf(false)
                     }
 
                     LaunchedEffect(Unit) {
-                        kotlinx.coroutines.delay(index * 55L)
-                        visible = true
+                        if (!animated) {
+                            delay(index * 50L)
+                            animated = true
+                        }
                     }
 
                     val alpha by animateFloatAsState(
-                        targetValue = if (visible) 1f else 0f,
-
+                        targetValue = if (animated) 1f else 0f,
                         animationSpec = tween(
-                            durationMillis = 650,
+                            durationMillis = 600,
                             easing = FastOutSlowInEasing
                         ),
-
                         label = ""
                     )
 
                     val translationY by animateFloatAsState(
-                        targetValue = if (visible) 0f else 25f,
-
+                        targetValue = if (animated) 0f else 25f,
                         animationSpec = tween(
-                            durationMillis = 650,
+                            durationMillis = 600,
                             easing = FastOutSlowInEasing
                         ),
-
                         label = ""
                     )
 
@@ -142,10 +145,8 @@ fun AllProductScreen(
                             this.translationY = translationY
                         }
                     ) {
-
                         ProductGridItem(
                             product = product,
-
                             onClick = {
                                 navController.navigate(
                                     "ProductDetail/${product.id}"
